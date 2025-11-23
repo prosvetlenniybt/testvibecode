@@ -1,0 +1,356 @@
+import React, { useState, useMemo } from 'react';
+import { View, Text, TouchableOpacity, StyleSheet, Modal, TextInput } from 'react-native';
+import Svg, { Path, Line, Circle } from 'react-native-svg';
+
+type Gender = 'male' | 'female' | null;
+
+export const StrengthScreen = () => {
+  const [gender, setGender] = useState<Gender>(null);
+  const [age, setAge] = useState<number | null>(null);
+  const [bodyWeight, setBodyWeight] = useState<number | null>(null);
+
+  const [currentLift, setCurrentLift] = useState<number | null>(null); // значение прогресс-бара
+  const [goalLift, setGoalLift] = useState<number | null>(null);      // цель (макс. вес)
+
+  // Простая модалка для ввода чисел
+  const [numberModalVisible, setNumberModalVisible] = useState(false);
+  const [numberModalLabel, setNumberModalLabel] = useState('');
+  const [numberModalInitial, setNumberModalInitial] = useState<string>('');
+  const [numberModalOnSave, setNumberModalOnSave] = useState<(v: number) => void>(() => {});
+
+  const openNumberModal = (label: string, initial: number | null, onSave: (v: number) => void) => {
+    setNumberModalLabel(label);
+    setNumberModalInitial(initial != null ? String(initial) : '');
+    setNumberModalOnSave(() => onSave);
+    setNumberModalVisible(true);
+  };
+
+  const canShowChart = gender !== null && age !== null && bodyWeight !== null;
+
+  // Параметры графика
+  const chartMin = 30;
+  const chartMax = 180;
+
+  const mapX = (value: number) => {
+    'worklet';
+    if (value < chartMin) value = chartMin;
+    if (value > chartMax) value = chartMax;
+    const width = 320; // ширина svg
+    return ((value - chartMin) / (chartMax - chartMin)) * width;
+  };
+
+  return (
+    <View style={styles.container}>
+      <Text style={styles.title}>Стандарт упражнения</Text>
+
+      {/* Ряд: пол, возраст, вес */}
+      <View style={styles.row}>
+        <SelectorButton
+          label="Пол"
+          value={gender === 'male' ? 'Мужск' : gender === 'female' ? 'Женск' : ''}
+          onPress={() => {
+            // простейший toggle для примера
+            setGender(prev => (prev === 'male' ? 'female' : 'male'));
+          }}
+        />
+        <SelectorButton
+          label="Возраст"
+          value={age != null ? String(age) : ''}
+          onPress={() =>
+            openNumberModal('Возраст', age, v => setAge(v))
+          }
+        />
+        <SelectorButton
+          label="Вес тела"
+          value={bodyWeight != null ? String(bodyWeight) : ''}
+          onPress={() =>
+            openNumberModal('Вес тела', bodyWeight, v => setBodyWeight(v))
+          }
+        />
+      </View>
+
+      {/* График */}
+      {canShowChart && (
+        <View style={styles.chartContainer}>
+          <Svg width={320} height={160}>
+            {/* Линия распределения (условная кривая-колокол) */}
+            <Path
+              d="M0 130 C 60 40, 140 10, 200 40 C 260 70, 320 120, 320 130"
+              strokeWidth={2}
+              fill="none"
+              stroke="white"
+            />
+
+            {/* Иконка человека */}
+            {currentLift != null && (
+              <>
+                <Line
+                  x1={mapX(currentLift)}
+                  y1={130}
+                  x2={mapX(currentLift)}
+                  y2={40}
+                  strokeWidth={1}
+                  stroke="white"
+                  strokeDasharray="4 4"
+                />
+                <Circle
+                  cx={mapX(currentLift)}
+                  cy={35}
+                  r={6}
+                  fill="white"
+                />
+              </>
+            )}
+
+            {/* Иконка флага */}
+            {goalLift != null && (
+              <>
+                <Line
+                  x1={mapX(goalLift)}
+                  y1={130}
+                  x2={mapX(goalLift)}
+                  y2={25}
+                  strokeWidth={1}
+                  stroke="white"
+                  strokeDasharray="4 4"
+                />
+                {/* флажок условный */}
+                <Path
+                  d={`
+                    M ${mapX(goalLift)} 25
+                    l 0 -10
+                    l 14 5
+                    l -14 5
+                    z
+                  `}
+                  fill="white"
+                />
+              </>
+            )}
+          </Svg>
+
+          <Text style={styles.chartCaption}>
+            Вы поднимаете больше, чем 41,2% атлетов
+          </Text>
+        </View>
+      )}
+
+      {/* Блок цели и прогресс-бара */}
+      <View style={styles.goalBlock}>
+        <View style={styles.goalHeader}>
+          <Text style={styles.goalTitle}>Цель (Макс. вес)</Text>
+          <TouchableOpacity
+            onPress={() =>
+              openNumberModal('Цель (макс. вес)', goalLift, v => setGoalLift(v))
+            }>
+            <Text style={styles.goalValue}>
+              {goalLift != null ? `${goalLift.toFixed(1)} кг` : '—'}
+            </Text>
+          </TouchableOpacity>
+        </View>
+
+        {/* Простейший «прогресс-бар»: клик по нему будет увеличивать вес для примера */}
+        <TouchableOpacity
+          style={styles.progressBarBackground}
+          onPress={() => {
+            // В реальном приложении тут будет Slider
+            const next = (currentLift ?? 0) + 5;
+            setCurrentLift(next);
+          }}>
+          <View
+            style={[
+              styles.progressBarFill,
+              {
+                width: `${Math.min(
+                  100,
+                  goalLift ? (100 * (currentLift ?? 0)) / goalLift : 0,
+                )}%`,
+              },
+            ]}
+          />
+        </TouchableOpacity>
+
+        <Text style={styles.currentLiftLabel}>
+          {currentLift != null ? `${currentLift} кг` : 'Нажмите, чтобы задать вес'}
+        </Text>
+      </View>
+
+      {/* Модалка с вводом числа */}
+      <Modal visible={numberModalVisible} transparent animationType="fade">
+        <View style={styles.modalBackdrop}>
+          <View style={styles.modal}>
+            <Text style={styles.modalTitle}>{numberModalLabel}</Text>
+            <NumberInput
+              initial={numberModalInitial}
+              onCancel={() => setNumberModalVisible(false)}
+              onSave={value => {
+                setNumberModalVisible(false);
+                numberModalOnSave(value);
+              }}
+            />
+          </View>
+        </View>
+      </Modal>
+    </View>
+  );
+};
+
+const SelectorButton = ({
+  label,
+  value,
+  onPress,
+}: {
+  label: string;
+  value: string;
+  onPress: () => void;
+}) => (
+  <TouchableOpacity style={styles.selector} onPress={onPress}>
+    <Text style={styles.selectorLabel}>{label}</Text>
+    <Text style={styles.selectorValue}>{value || '—'}</Text>
+  </TouchableOpacity>
+);
+
+const NumberInput = ({
+  initial,
+  onCancel,
+  onSave,
+}: {
+  initial: string;
+  onCancel: () => void;
+  onSave: (v: number) => void;
+}) => {
+  const [text, setText] = useState(initial);
+
+  return (
+    <>
+      <TextInput
+        style={styles.input}
+        keyboardType="numeric"
+        value={text}
+        onChangeText={setText}
+      />
+      <View style={styles.modalButtons}>
+        <TouchableOpacity onPress={onCancel}>
+          <Text style={styles.modalButtonText}>Отмена</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => {
+            const num = Number(text.replace(',', '.'));
+            if (!isNaN(num)) onSave(num);
+          }}>
+          <Text style={styles.modalButtonText}>Сохранить</Text>
+        </TouchableOpacity>
+      </View>
+    </>
+  );
+};
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#000',
+    paddingHorizontal: 16,
+    paddingTop: 24,
+  },
+  title: {
+    color: '#fff',
+    fontSize: 20,
+    marginBottom: 24,
+  },
+  row: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 24,
+  },
+  selector: {
+    flex: 1,
+    backgroundColor: '#111',
+    borderRadius: 24,
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+    marginHorizontal: 4,
+    borderWidth: 1,
+    borderColor: '#333',
+  },
+  selectorLabel: {
+    fontSize: 11,
+    color: '#999',
+  },
+  selectorValue: {
+    marginTop: 4,
+    fontSize: 16,
+    color: '#fff',
+  },
+  chartContainer: {
+    alignItems: 'center',
+    marginBottom: 24,
+  },
+  chartCaption: {
+    color: '#fff',
+    marginTop: 8,
+  },
+  goalBlock: {
+    marginTop: 8,
+  },
+  goalHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 8,
+  },
+  goalTitle: {
+    color: '#999',
+    fontSize: 13,
+  },
+  goalValue: {
+    color: '#fff',
+    fontSize: 16,
+  },
+  progressBarBackground: {
+    height: 20,
+    borderRadius: 10,
+    backgroundColor: '#222',
+    overflow: 'hidden',
+  },
+  progressBarFill: {
+    height: '100%',
+    backgroundColor: '#1e90ff',
+  },
+  currentLiftLabel: {
+    color: '#fff',
+    marginTop: 6,
+  },
+  modalBackdrop: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.6)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  modal: {
+    width: '80%',
+    backgroundColor: '#111',
+    padding: 16,
+    borderRadius: 12,
+  },
+  modalTitle: {
+    color: '#fff',
+    fontSize: 16,
+    marginBottom: 12,
+  },
+  input: {
+    backgroundColor: '#222',
+    color: '#fff',
+    borderRadius: 8,
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    marginBottom: 12,
+  },
+  modalButtons: {
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+  },
+  modalButtonText: {
+    color: '#1e90ff',
+    marginLeft: 16,
+  },
+});
