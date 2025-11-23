@@ -1,356 +1,704 @@
-import React, { useState, useMemo } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Modal, TextInput } from 'react-native';
-import Svg, { Path, Line, Circle } from 'react-native-svg';
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <title>Стандарт упражнения</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
+        "Segoe UI", sans-serif;
+    }
 
-type Gender = 'male' | 'female' | null;
+    body {
+      background: #000;
+      color: #fff;
+    }
 
-export const StrengthScreen = () => {
-  const [gender, setGender] = useState<Gender>(null);
-  const [age, setAge] = useState<number | null>(null);
-  const [bodyWeight, setBodyWeight] = useState<number | null>(null);
+    .app {
+      max-width: 420px;
+      margin: 0 auto;
+      padding: 16px 16px 40px;
+    }
 
-  const [currentLift, setCurrentLift] = useState<number | null>(null); // значение прогресс-бара
-  const [goalLift, setGoalLift] = useState<number | null>(null);      // цель (макс. вес)
+    .title {
+      font-size: 22px;
+      font-weight: 600;
+      margin-bottom: 20px;
+    }
 
-  // Простая модалка для ввода чисел
-  const [numberModalVisible, setNumberModalVisible] = useState(false);
-  const [numberModalLabel, setNumberModalLabel] = useState('');
-  const [numberModalInitial, setNumberModalInitial] = useState<string>('');
-  const [numberModalOnSave, setNumberModalOnSave] = useState<(v: number) => void>(() => {});
+    .row {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 20px;
+    }
 
-  const openNumberModal = (label: string, initial: number | null, onSave: (v: number) => void) => {
-    setNumberModalLabel(label);
-    setNumberModalInitial(initial != null ? String(initial) : '');
-    setNumberModalOnSave(() => onSave);
-    setNumberModalVisible(true);
-  };
+    .field-btn {
+      flex: 1;
+      border-radius: 24px;
+      background: #111;
+      border: 1px solid #333;
+      padding: 8px 10px;
+      text-align: left;
+      cursor: pointer;
+      position: relative;
+    }
 
-  const canShowChart = gender !== null && age !== null && bodyWeight !== null;
+    .field-label {
+      font-size: 11px;
+      color: #888;
+      margin-bottom: 4px;
+      display: block;
+    }
 
-  // Параметры графика
-  const chartMin = 30;
-  const chartMax = 180;
+    .field-value {
+      font-size: 15px;
+      color: #fff;
+      min-height: 18px;
+    }
 
-  const mapX = (value: number) => {
-    'worklet';
-    if (value < chartMin) value = chartMin;
-    if (value > chartMax) value = chartMax;
-    const width = 320; // ширина svg
-    return ((value - chartMin) / (chartMax - chartMin)) * width;
-  };
+    .placeholder {
+      color: #666;
+    }
 
-  return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Стандарт упражнения</Text>
+    /* Dropdown для пола */
+    .dropdown {
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 100%;
+      margin-top: 4px;
+      background: #111;
+      border-radius: 16px;
+      border: 1px solid #333;
+      overflow: hidden;
+      z-index: 10;
+    }
 
-      {/* Ряд: пол, возраст, вес */}
-      <View style={styles.row}>
-        <SelectorButton
-          label="Пол"
-          value={gender === 'male' ? 'Мужск' : gender === 'female' ? 'Женск' : ''}
-          onPress={() => {
-            // простейший toggle для примера
-            setGender(prev => (prev === 'male' ? 'female' : 'male'));
-          }}
+    .dropdown-option {
+      padding: 8px 10px;
+      font-size: 14px;
+      cursor: pointer;
+    }
+    .dropdown-option:hover {
+      background: #1f1f1f;
+    }
+
+    /* График */
+    .chart-section {
+      margin-bottom: 24px;
+      padding: 12px 0;
+    }
+
+    .chart-wrapper {
+      width: 100%;
+      overflow: hidden;
+      display: flex;
+      justify-content: center;
+    }
+
+    .chart-caption {
+      margin-top: 10px;
+      font-size: 14px;
+      text-align: left;
+    }
+
+    .chart-subcaption {
+      font-size: 12px;
+      color: #777;
+    }
+
+    /* Блок цели и прогресса */
+    .goal-section {
+      margin-bottom: 24px;
+      padding-top: 8px;
+      border-top: 1px solid #222;
+    }
+
+    .goal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .goal-title {
+      font-size: 13px;
+      color: #aaa;
+    }
+
+    .goal-value-btn {
+      background: transparent;
+      border: none;
+      color: #fff;
+      font-size: 16px;
+      font-weight: 500;
+      cursor: pointer;
+      padding: 4px 8px;
+      border-radius: 12px;
+    }
+
+    .goal-value-btn:hover {
+      background: #111;
+    }
+
+    .range-wrapper {
+      margin-bottom: 6px;
+    }
+
+    .range {
+      width: 100%;
+      -webkit-appearance: none;
+      appearance: none;
+      height: 10px;
+      border-radius: 999px;
+      background: #222;
+      outline: none;
+    }
+
+    .range::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: #3b82f6;
+      cursor: pointer;
+      border: 2px solid #000;
+      margin-top: -6px;
+    }
+
+    .range::-moz-range-thumb {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: #3b82f6;
+      cursor: pointer;
+      border: 2px solid #000;
+    }
+
+    .range::-moz-range-track {
+      height: 10px;
+      border-radius: 999px;
+      background: #222;
+    }
+
+    .range-labels {
+      display: flex;
+      justify-content: space-between;
+      font-size: 12px;
+      color: #999;
+    }
+
+    /* Легенда уровней силы (просто декор, чтобы было похоже) */
+    .levels-section {
+      margin-top: 24px;
+    }
+
+    .levels-title {
+      font-size: 22px;
+      margin-bottom: 12px;
+    }
+
+    .level-name {
+      font-size: 15px;
+      margin-bottom: 6px;
+    }
+
+    .stars {
+      margin-bottom: 8px;
+      font-size: 14px;
+    }
+    .star-filled {
+      color: #facc15;
+    }
+    .star-empty {
+      color: #555;
+    }
+
+    .level-desc {
+      font-size: 12px;
+      color: #b3b3b3;
+      line-height: 1.45;
+    }
+
+    /* Модальное окно для ввода чисел */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.6);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 50;
+    }
+
+    .modal {
+      background: #111;
+      border-radius: 16px;
+      padding: 16px 16px 12px;
+      width: min(90vw, 320px);
+      border: 1px solid #333;
+    }
+
+    .modal-title {
+      font-size: 16px;
+      margin-bottom: 12px;
+    }
+
+    .modal-input {
+      width: 100%;
+      padding: 8px 10px;
+      border-radius: 10px;
+      border: 1px solid #333;
+      background: #000;
+      color: #fff;
+      font-size: 15px;
+      margin-bottom: 14px;
+      outline: none;
+    }
+
+    .modal-btn-row {
+      display: flex;
+      justify-content: flex-end;
+      gap: 12px;
+      font-size: 14px;
+    }
+
+    .modal-btn {
+      border: none;
+      background: transparent;
+      color: #3b82f6;
+      cursor: pointer;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <h1 class="title">Стандарт упражнения</h1>
+
+    <!-- Ряд пол / возраст / вес -->
+    <div class="row">
+      <!-- Пол -->
+      <button class="field-btn" id="genderBtn" type="button">
+        <span class="field-label">Пол</span>
+        <span class="field-value placeholder" id="genderValue">Выбрать</span>
+        <div class="dropdown hidden" id="genderDropdown">
+          <div class="dropdown-option" data-gender="male">Мужск</div>
+          <div class="dropdown-option" data-gender="female">Женск</div>
+        </div>
+      </button>
+
+      <!-- Возраст -->
+      <button class="field-btn" id="ageBtn" type="button" data-field="age">
+        <span class="field-label">Возраст</span>
+        <span class="field-value placeholder" id="ageValue">Введите</span>
+      </button>
+
+      <!-- Вес тела -->
+      <button class="field-btn" id="weightBtn" type="button" data-field="weight">
+        <span class="field-label">Вес тела (кг)</span>
+        <span class="field-value placeholder" id="weightValue">Введите</span>
+      </button>
+    </div>
+
+    <!-- График -->
+    <section id="chartSection" class="chart-section hidden">
+      <div class="chart-wrapper">
+        <svg id="chartSvg" width="320" height="160" viewBox="0 0 320 160">
+          <!-- линия распределения -->
+          <path
+            d="M0 130 C 40 80, 80 40, 140 30 C 200 20, 260 70, 320 130"
+            stroke="#3b82f6"
+            stroke-width="2"
+            fill="none"
+          ></path>
+
+          <!-- линия для текущего поднятого веса -->
+          <line
+            id="personLine"
+            x1="0"
+            x2="0"
+            y1="130"
+            y2="45"
+            stroke="#ffffff"
+            stroke-width="1"
+            stroke-dasharray="4 4"
+            class="hidden"
+          ></line>
+
+          <!-- иконка человека -->
+          <g id="personIcon" class="hidden">
+            <circle cx="0" cy="40" r="6" fill="#ffffff"></circle>
+            <line
+              x1="0"
+              y1="46"
+              x2="0"
+              y2="60"
+              stroke="#ffffff"
+              stroke-width="2"
+            ></line>
+            <line
+              x1="-7"
+              y1="52"
+              x2="7"
+              y2="52"
+              stroke="#ffffff"
+              stroke-width="2"
+            ></line>
+            <line
+              x1="-5"
+              y1="60"
+              x2="-10"
+              y2="72"
+              stroke="#ffffff"
+              stroke-width="2"
+            ></line>
+            <line
+              x1="5"
+              y1="60"
+              x2="10"
+              y2="72"
+              stroke="#ffffff"
+              stroke-width="2"
+            ></line>
+          </g>
+
+          <!-- линия для цели -->
+          <line
+            id="flagLine"
+            x1="0"
+            x2="0"
+            y1="130"
+            y2="30"
+            stroke="#ffffff"
+            stroke-width="1"
+            stroke-dasharray="4 4"
+            class="hidden"
+          ></line>
+
+          <!-- иконка флага -->
+          <g id="flagIcon" class="hidden">
+            <line
+              x1="0"
+              y1="30"
+              x2="0"
+              y2="15"
+              stroke="#ffffff"
+              stroke-width="2"
+            ></line>
+            <path
+              id="flagPolygon"
+              d="M0 15 L14 20 L0 25 Z"
+              fill="#ffffff"
+            ></path>
+          </g>
+        </svg>
+      </div>
+
+      <p class="chart-caption">
+        Вы поднимаете больше, чем 41,2% атлетов
+      </p>
+      <p class="chart-subcaption">
+        для выбранного возраста и веса
+      </p>
+    </section>
+
+    <!-- Цель и прогресс-бар -->
+    <section class="goal-section">
+      <div class="goal-header">
+        <div class="goal-title">Цель (Макс. вес)</div>
+        <button id="goalBtn" class="goal-value-btn" type="button">
+          —
+        </button>
+      </div>
+
+      <div class="range-wrapper">
+        <input
+          type="range"
+          id="liftRange"
+          class="range"
+          min="0"
+          max="100"
+          value="0"
         />
-        <SelectorButton
-          label="Возраст"
-          value={age != null ? String(age) : ''}
-          onPress={() =>
-            openNumberModal('Возраст', age, v => setAge(v))
-          }
-        />
-        <SelectorButton
-          label="Вес тела"
-          value={bodyWeight != null ? String(bodyWeight) : ''}
-          onPress={() =>
-            openNumberModal('Вес тела', bodyWeight, v => setBodyWeight(v))
-          }
-        />
-      </View>
+      </div>
 
-      {/* График */}
-      {canShowChart && (
-        <View style={styles.chartContainer}>
-          <Svg width={320} height={160}>
-            {/* Линия распределения (условная кривая-колокол) */}
-            <Path
-              d="M0 130 C 60 40, 140 10, 200 40 C 260 70, 320 120, 320 130"
-              strokeWidth={2}
-              fill="none"
-              stroke="white"
-            />
+      <div class="range-labels">
+        <span id="currentLiftLabel">Текущий вес: —</span>
+        <span id="maxLiftLabel">Макс: 100 кг</span>
+      </div>
+    </section>
 
-            {/* Иконка человека */}
-            {currentLift != null && (
-              <>
-                <Line
-                  x1={mapX(currentLift)}
-                  y1={130}
-                  x2={mapX(currentLift)}
-                  y2={40}
-                  strokeWidth={1}
-                  stroke="white"
-                  strokeDasharray="4 4"
-                />
-                <Circle
-                  cx={mapX(currentLift)}
-                  cy={35}
-                  r={6}
-                  fill="white"
-                />
-              </>
-            )}
+    <!-- Блок уровней силы (декор) -->
+    <section class="levels-section">
+      <h2 class="levels-title">Что означают уровни силы?</h2>
+      <div class="level-name">Начинающий (57,5 кг)</div>
+      <div class="stars">
+        <span class="star-filled">★</span>
+        <span class="star-empty">★</span>
+        <span class="star-empty">★</span>
+        <span class="star-empty">★</span>
+        <span class="star-empty">★</span>
+      </div>
+      <p class="level-desc">
+        Сильнее, чем 5% поднимающих веса на выбранном возрасте и весе.
+        Новичок обычно тренируется по меньшей мере месяц и может выполнять
+        движение правильно.
+      </p>
+    </section>
+  </div>
 
-            {/* Иконка флага */}
-            {goalLift != null && (
-              <>
-                <Line
-                  x1={mapX(goalLift)}
-                  y1={130}
-                  x2={mapX(goalLift)}
-                  y2={25}
-                  strokeWidth={1}
-                  stroke="white"
-                  strokeDasharray="4 4"
-                />
-                {/* флажок условный */}
-                <Path
-                  d={`
-                    M ${mapX(goalLift)} 25
-                    l 0 -10
-                    l 14 5
-                    l -14 5
-                    z
-                  `}
-                  fill="white"
-                />
-              </>
-            )}
-          </Svg>
-
-          <Text style={styles.chartCaption}>
-            Вы поднимаете больше, чем 41,2% атлетов
-          </Text>
-        </View>
-      )}
-
-      {/* Блок цели и прогресс-бара */}
-      <View style={styles.goalBlock}>
-        <View style={styles.goalHeader}>
-          <Text style={styles.goalTitle}>Цель (Макс. вес)</Text>
-          <TouchableOpacity
-            onPress={() =>
-              openNumberModal('Цель (макс. вес)', goalLift, v => setGoalLift(v))
-            }>
-            <Text style={styles.goalValue}>
-              {goalLift != null ? `${goalLift.toFixed(1)} кг` : '—'}
-            </Text>
-          </TouchableOpacity>
-        </View>
-
-        {/* Простейший «прогресс-бар»: клик по нему будет увеличивать вес для примера */}
-        <TouchableOpacity
-          style={styles.progressBarBackground}
-          onPress={() => {
-            // В реальном приложении тут будет Slider
-            const next = (currentLift ?? 0) + 5;
-            setCurrentLift(next);
-          }}>
-          <View
-            style={[
-              styles.progressBarFill,
-              {
-                width: `${Math.min(
-                  100,
-                  goalLift ? (100 * (currentLift ?? 0)) / goalLift : 0,
-                )}%`,
-              },
-            ]}
-          />
-        </TouchableOpacity>
-
-        <Text style={styles.currentLiftLabel}>
-          {currentLift != null ? `${currentLift} кг` : 'Нажмите, чтобы задать вес'}
-        </Text>
-      </View>
-
-      {/* Модалка с вводом числа */}
-      <Modal visible={numberModalVisible} transparent animationType="fade">
-        <View style={styles.modalBackdrop}>
-          <View style={styles.modal}>
-            <Text style={styles.modalTitle}>{numberModalLabel}</Text>
-            <NumberInput
-              initial={numberModalInitial}
-              onCancel={() => setNumberModalVisible(false)}
-              onSave={value => {
-                setNumberModalVisible(false);
-                numberModalOnSave(value);
-              }}
-            />
-          </View>
-        </View>
-      </Modal>
-    </View>
-  );
-};
-
-const SelectorButton = ({
-  label,
-  value,
-  onPress,
-}: {
-  label: string;
-  value: string;
-  onPress: () => void;
-}) => (
-  <TouchableOpacity style={styles.selector} onPress={onPress}>
-    <Text style={styles.selectorLabel}>{label}</Text>
-    <Text style={styles.selectorValue}>{value || '—'}</Text>
-  </TouchableOpacity>
-);
-
-const NumberInput = ({
-  initial,
-  onCancel,
-  onSave,
-}: {
-  initial: string;
-  onCancel: () => void;
-  onSave: (v: number) => void;
-}) => {
-  const [text, setText] = useState(initial);
-
-  return (
-    <>
-      <TextInput
-        style={styles.input}
-        keyboardType="numeric"
-        value={text}
-        onChangeText={setText}
+  <!-- Модалка для ввода чисел -->
+  <div id="numberModal" class="modal-backdrop hidden">
+    <div class="modal">
+      <div class="modal-title" id="modalTitle"></div>
+      <input
+        type="text"
+        id="modalInput"
+        class="modal-input"
+        inputmode="decimal"
+        autocomplete="off"
       />
-      <View style={styles.modalButtons}>
-        <TouchableOpacity onPress={onCancel}>
-          <Text style={styles.modalButtonText}>Отмена</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          onPress={() => {
-            const num = Number(text.replace(',', '.'));
-            if (!isNaN(num)) onSave(num);
-          }}>
-          <Text style={styles.modalButtonText}>Сохранить</Text>
-        </TouchableOpacity>
-      </View>
-    </>
-  );
-};
+      <div class="modal-btn-row">
+        <button class="modal-btn" id="modalCancel">Отмена</button>
+        <button class="modal-btn" id="modalOk">Сохранить</button>
+      </div>
+    </div>
+  </div>
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#000',
-    paddingHorizontal: 16,
-    paddingTop: 24,
-  },
-  title: {
-    color: '#fff',
-    fontSize: 20,
-    marginBottom: 24,
-  },
-  row: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginBottom: 24,
-  },
-  selector: {
-    flex: 1,
-    backgroundColor: '#111',
-    borderRadius: 24,
-    paddingVertical: 8,
-    paddingHorizontal: 12,
-    marginHorizontal: 4,
-    borderWidth: 1,
-    borderColor: '#333',
-  },
-  selectorLabel: {
-    fontSize: 11,
-    color: '#999',
-  },
-  selectorValue: {
-    marginTop: 4,
-    fontSize: 16,
-    color: '#fff',
-  },
-  chartContainer: {
-    alignItems: 'center',
-    marginBottom: 24,
-  },
-  chartCaption: {
-    color: '#fff',
-    marginTop: 8,
-  },
-  goalBlock: {
-    marginTop: 8,
-  },
-  goalHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 8,
-  },
-  goalTitle: {
-    color: '#999',
-    fontSize: 13,
-  },
-  goalValue: {
-    color: '#fff',
-    fontSize: 16,
-  },
-  progressBarBackground: {
-    height: 20,
-    borderRadius: 10,
-    backgroundColor: '#222',
-    overflow: 'hidden',
-  },
-  progressBarFill: {
-    height: '100%',
-    backgroundColor: '#1e90ff',
-  },
-  currentLiftLabel: {
-    color: '#fff',
-    marginTop: 6,
-  },
-  modalBackdrop: {
-    flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.6)',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  modal: {
-    width: '80%',
-    backgroundColor: '#111',
-    padding: 16,
-    borderRadius: 12,
-  },
-  modalTitle: {
-    color: '#fff',
-    fontSize: 16,
-    marginBottom: 12,
-  },
-  input: {
-    backgroundColor: '#222',
-    color: '#fff',
-    borderRadius: 8,
-    paddingHorizontal: 12,
-    paddingVertical: 8,
-    marginBottom: 12,
-  },
-  modalButtons: {
-    flexDirection: 'row',
-    justifyContent: 'flex-end',
-  },
-  modalButtonText: {
-    color: '#1e90ff',
-    marginLeft: 16,
-  },
-});
+  <script>
+    // -------- Состояние --------
+    const state = {
+      gender: null,
+      age: null,
+      weight: null,
+      currentLift: null,
+      goal: null,
+    };
+
+    const CHART_MIN = 30;
+    const CHART_MAX = 180;
+    const CHART_WIDTH = 320;
+
+    function valueToX(value) {
+      const v = Math.min(Math.max(value, CHART_MIN), CHART_MAX);
+      return ((v - CHART_MIN) / (CHART_MAX - CHART_MIN)) * CHART_WIDTH;
+    }
+
+    // -------- DOM элементы --------
+    const genderBtn = document.getElementById("genderBtn");
+    const genderValue = document.getElementById("genderValue");
+    const genderDropdown = document.getElementById("genderDropdown");
+
+    const ageBtn = document.getElementById("ageBtn");
+    const ageValue = document.getElementById("ageValue");
+    const weightBtn = document.getElementById("weightBtn");
+    const weightValue = document.getElementById("weightValue");
+
+    const chartSection = document.getElementById("chartSection");
+    const personIcon = document.getElementById("personIcon");
+    const personLine = document.getElementById("personLine");
+    const flagIcon = document.getElementById("flagIcon");
+    const flagLine = document.getElementById("flagLine");
+
+    const goalBtn = document.getElementById("goalBtn");
+    const liftRange = document.getElementById("liftRange");
+    const currentLiftLabel = document.getElementById("currentLiftLabel");
+    const maxLiftLabel = document.getElementById("maxLiftLabel");
+
+    const numberModal = document.getElementById("numberModal");
+    const modalTitle = document.getElementById("modalTitle");
+    const modalInput = document.getElementById("modalInput");
+    const modalCancel = document.getElementById("modalCancel");
+    const modalOk = document.getElementById("modalOk");
+
+    let modalField = null;
+
+    // -------- Обновление UI --------
+    function updateChartVisibility() {
+      const canShow =
+        state.gender !== null && state.age !== null && state.weight !== null;
+
+      chartSection.classList.toggle("hidden", !canShow);
+    }
+
+    function updateGenderUI() {
+      if (state.gender === "male") {
+        genderValue.textContent = "Мужск";
+        genderValue.classList.remove("placeholder");
+      } else if (state.gender === "female") {
+        genderValue.textContent = "Женск";
+        genderValue.classList.remove("placeholder");
+      } else {
+        genderValue.textContent = "Выбрать";
+        genderValue.classList.add("placeholder");
+      }
+    }
+
+    function updateNumericFieldUI() {
+      if (state.age != null) {
+        ageValue.textContent = state.age;
+        ageValue.classList.remove("placeholder");
+      }
+      if (state.weight != null) {
+        weightValue.textContent = state.weight;
+        weightValue.classList.remove("placeholder");
+      }
+    }
+
+    function updateGoalUI() {
+      if (state.goal != null) {
+        goalBtn.textContent = state.goal.toFixed(1) + " кг";
+        liftRange.max = state.goal;
+        maxLiftLabel.textContent = "Макс: " + state.goal.toFixed(1) + " кг";
+
+        if (state.currentLift != null && state.currentLift > state.goal) {
+          state.currentLift = state.goal;
+          liftRange.value = state.goal;
+        }
+      } else {
+        goalBtn.textContent = "—";
+        liftRange.max = 100;
+        maxLiftLabel.textContent = "Макс: 100 кг";
+      }
+      updateIcons();
+      updateCurrentLiftLabel();
+    }
+
+    function updateCurrentLiftLabel() {
+      if (state.currentLift != null) {
+        currentLiftLabel.textContent = "Текущий вес: " + state.currentLift + " кг";
+      } else {
+        currentLiftLabel.textContent = "Текущий вес: —";
+      }
+    }
+
+    function updateIcons() {
+      // Иконка человека
+      if (state.currentLift != null && !isNaN(state.currentLift)) {
+        const x = valueToX(state.currentLift);
+        personIcon.classList.remove("hidden");
+        personLine.classList.remove("hidden");
+        personIcon.setAttribute("transform", "translate(" + x + ",0)");
+        personLine.setAttribute("x1", x);
+        personLine.setAttribute("x2", x);
+      } else {
+        personIcon.classList.add("hidden");
+        personLine.classList.add("hidden");
+      }
+
+      // Иконка флага
+      if (state.goal != null && !isNaN(state.goal)) {
+        const x = valueToX(state.goal);
+        flagIcon.classList.remove("hidden");
+        flagLine.classList.remove("hidden");
+        flagIcon.setAttribute("transform", "translate(" + x + ",0)");
+        flagLine.setAttribute("x1", x);
+        flagLine.setAttribute("x2", x);
+      } else {
+        flagIcon.classList.add("hidden");
+        flagLine.classList.add("hidden");
+      }
+    }
+
+    // -------- Логика выбора пола --------
+    genderBtn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      genderDropdown.classList.toggle("hidden");
+    });
+
+    genderDropdown.addEventListener("click", (e) => {
+      const target = e.target;
+      if (target.classList.contains("dropdown-option")) {
+        const g = target.getAttribute("data-gender");
+        state.gender = g;
+        updateGenderUI();
+        updateChartVisibility();
+        genderDropdown.classList.add("hidden");
+      }
+    });
+
+    document.addEventListener("click", () => {
+      genderDropdown.classList.add("hidden");
+    });
+
+    // -------- Модалка ввода чисел --------
+    function openNumberModal(field, title, initialValue) {
+      modalField = field;
+      modalTitle.textContent = title;
+      modalInput.value =
+        initialValue != null && !isNaN(initialValue) ? String(initialValue) : "";
+      numberModal.classList.remove("hidden");
+      modalInput.focus();
+      modalInput.select();
+    }
+
+    function closeNumberModal() {
+      numberModal.classList.add("hidden");
+      modalField = null;
+    }
+
+    modalCancel.addEventListener("click", closeNumberModal);
+
+    modalOk.addEventListener("click", () => {
+      if (!modalField) return;
+      const raw = modalInput.value.trim().replace(",", ".");
+      const num = Number(raw);
+      if (Number.isFinite(num)) {
+        if (modalField === "age") {
+          state.age = Math.max(0, Math.round(num));
+        } else if (modalField === "weight") {
+          state.weight = Math.max(0, Math.round(num));
+        } else if (modalField === "goal") {
+          state.goal = Math.max(1, num);
+        }
+      }
+      closeNumberModal();
+      updateNumericFieldUI();
+      updateGoalUI();
+      updateChartVisibility();
+    });
+
+    numberModal.addEventListener("click", (e) => {
+      if (e.target === numberModal) {
+        closeNumberModal();
+      }
+    });
+
+    // Кнопки, которые открывают модалку
+    ageBtn.addEventListener("click", () => {
+      openNumberModal("age", "Возраст", state.age);
+    });
+
+    weightBtn.addEventListener("click", () => {
+      openNumberModal("weight", "Вес тела (кг)", state.weight);
+    });
+
+    goalBtn.addEventListener("click", () => {
+      openNumberModal("goal", "Цель (макс. вес, кг)", state.goal);
+    });
+
+    // -------- Прогресс-бар (поднятый вес) --------
+    liftRange.addEventListener("input", () => {
+      const val = Number(liftRange.value);
+      state.currentLift = val;
+      updateCurrentLiftLabel();
+      updateIcons();
+    });
+
+    // Изначальное состояние
+    updateGenderUI();
+    updateNumericFieldUI();
+    updateGoalUI();
+    updateChartVisibility();
+    updateIcons();
+  </script>
+</body>
+</html>
