@@ -52,57 +52,14 @@
     .screen {
       border-radius: 22px;
       background: radial-gradient(circle at 50% -40%, #1a2a40 0, #020308 52%);
-      padding: 10px 14px 24px;
+      padding: 16px 14px 24px;
       position: relative;
       overflow: hidden;
-    }
-
-    .status-bar {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      font-size: 12px;
-      color: var(--text-secondary);
-      margin-bottom: 8px;
-    }
-
-    .status-left,
-    .status-right {
-      display: flex;
-      align-items: center;
-      gap: 4px;
-    }
-
-    .status-dot {
-      width: 3px;
-      height: 3px;
-      border-radius: 999px;
-      background: var(--text-secondary);
-    }
-
-    .status-icon {
-      width: 13px;
-      height: 8px;
-      border-radius: 2px;
-      border: 1px solid var(--text-secondary);
-      position: relative;
-    }
-
-    .status-icon::after {
-      content: "";
-      position: absolute;
-      right: -2px;
-      top: 2px;
-      width: 2px;
-      height: 4px;
-      border-radius: 1px;
-      background: var(--text-secondary);
     }
 
     .header {
       display: flex;
       align-items: center;
-      margin-top: 6px;
       margin-bottom: 18px;
     }
 
@@ -171,7 +128,6 @@
 
     .graph-marker {
       position: absolute;
-      /* bottom задаём из JS, чтобы иконка была именно над кривой */
       bottom: 0;
       transform: translateX(-50%);
       font-size: 18px;
@@ -342,8 +298,6 @@
       color: var(--text-secondary);
     }
 
-    /* Modal */
-
     .modal-backdrop {
       position: absolute;
       inset: 0;
@@ -465,18 +419,6 @@
 <body>
   <div class="phone">
     <div class="screen">
-      <div class="status-bar">
-        <div class="status-left">
-          <span>17:10</span>
-        </div>
-        <div class="status-right">
-          <div class="status-dot"></div>
-          <div class="status-dot"></div>
-          <div class="status-icon"></div>
-          <span style="font-size:11px;">18</span>
-        </div>
-      </div>
-
       <div class="header">
         <div class="back-btn">←</div>
         <div class="header-title">Стандарт упражнения</div>
@@ -615,7 +557,7 @@
     const GRAPH_MIN = 30;
     const GRAPH_MAX = 180;
     const GRAPH_HEIGHT = 190;
-    const ICON_OFFSET_ABOVE = 10; // пикселей над линией
+    const ICON_OFFSET_ABOVE = 10;
 
     const chipSex = document.getElementById('chip-sex');
     const chipAge = document.getElementById('chip-age');
@@ -651,15 +593,14 @@
 
     function mapWeightToX(weight) {
       const clamped = clamp(weight, GRAPH_MIN, GRAPH_MAX);
-      const rel = (clamped - GRAPH_MIN) / (GRAPH_MAX - GRAPH_MIN); // 0..1
-      return 5 + rel * 90; // %
+      const rel = (clamped - GRAPH_MIN) / (GRAPH_MAX - GRAPH_MIN);
+      return 5 + rel * 90;
     }
 
-    // Аппроксимируем форму кривой простой синусоидой: края ниже, середина выше
     function curveYAtWeight(weight) {
       const clamped = clamp(weight, GRAPH_MIN, GRAPH_MAX);
-      const t = (clamped - GRAPH_MIN) / (GRAPH_MAX - GRAPH_MIN); // 0..1
-      const base = 150 - 80 * Math.sin(Math.PI * t); // ~150 по краям, ~70 в центре
+      const t = (clamped - GRAPH_MIN) / (GRAPH_MAX - GRAPH_MIN);
+      const base = 150 - 80 * Math.sin(Math.PI * t);
       return base;
     }
 
@@ -748,8 +689,6 @@
       updateGraphMarkers();
     }
 
-    /* ----- Modal helpers ----- */
-
     function openModal(type) {
       currentModal = type;
       modalInput.value = '';
@@ -821,8 +760,6 @@
       btnSexMale.classList.toggle('modal-sex-btn--active', selectedSex === 'male');
       btnSexFemale.classList.toggle('modal-sex-btn--active', selectedSex === 'female');
     }
-
-    /* ----- Event bindings ----- */
 
     chipSex.addEventListener('click', () => openModal('sex'));
     chipAge.addEventListener('click', () => openModal('age'));
