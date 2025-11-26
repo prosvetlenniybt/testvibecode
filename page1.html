@@ -20,7 +20,6 @@
       width: 393px;
       min-height: 100vh;
       background: #000;
-      overflow: hidden;
     }
 
     .screen {
@@ -67,7 +66,7 @@
     }
 
     .btn-primary-light { background: #fff; color: #000; }
-    .btn-secondary-dark { background: #1b1b1b; color: #fff; }
+
     .btn-icon { margin-right: 8px; font-size: 18px; }
 
     .section-title {
@@ -77,94 +76,31 @@
       font-weight: 600;
     }
 
-    .muscle-images {
-      display: flex;
-      justify-content: center;
-      gap: 18px;
-    }
-
-    .muscle-img {
-      width: 130px;
-      height: auto;
-      border-radius: 12px;
-      background: #151515;
-      display: block;
-    }
-
-    .divider {
-      height: 1px;
-      background: #101010;
-      margin: 12px 0 4px;
-    }
-
-    /* ---------- Bench Press (экран 2) ---------- */
-    .top-bar {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 8px 0 4px;
-    }
-
-    .top-bar-left {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .top-bar-back {
-      width: 28px;
-      height: 28px;
-      border-radius: 999px;
-      background: #181818;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-
-    .top-bar-title { font-size: 20px; font-weight: 600; }
-    .top-bar-menu { font-size: 20px; letter-spacing: 2px; }
-
-    .tabs {
-      display: flex;
-      overflow-x: auto;
-      padding: 12px 0;
-      gap: 16px;
-      font-size: 14px;
-      white-space: nowrap;
-    }
-
-    .tab { opacity: 0.5; }
-    .tab-active { opacity: 1; font-weight: 600; position: relative; }
-
-    .tab-active::after {
-      content: "";
-      position: absolute;
-      left: 0;
-      bottom: -6px;
+    .muscle-img-single {
       width: 100%;
-      height: 2px;
-      background: #fff;
-      border-radius: 999px;
+      height: auto;
+      border-radius: 16px;
+      display: block;
+      margin-top: 12px;
     }
 
-    .legs-strip {
+    /* ---------- Нижний контент ---------- */
+    .muscle-section {
+      margin-top: 22px;
+    }
+
+    .muscle-label {
+      font-size: 14px;
+      margin-bottom: 4px;
       display: flex;
-      justify-content: space-between;
-      padding: 12px 0 20px;
+      gap: 6px;
+      align-items: center;
     }
-
-    .legs-placeholder {
-      width: calc(25% - 6px);
-      height: 80px;
-      background: #161616;
-      border-radius: 12px;
-    }
-
-    .muscle-section { margin-bottom: 18px; }
-    .muscle-label { font-size: 14px; margin-bottom: 4px; display: flex; gap: 6px; }
 
     .dot-red, .dot-blue {
-      width: 8px; height: 8px; border-radius: 50%;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
     }
 
     .dot-red { background: #ff3154; }
@@ -185,26 +121,18 @@
       padding: 16px;
     }
 
-    .card-header {
-      display: flex;
-      gap: 12px;
-      margin-bottom: 8px;
-      align-items: center;
+    .card-small-title {
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 6px;
     }
 
-    .avatars { display: flex; gap: 6px; }
-    .avatar {
-      width: 26px;
-      height: 26px;
-      border-radius: 50%;
-      background: #202020;
+    .card-text {
+      font-size: 13px;
+      color: #b0b0b0;
+      line-height: 1.4;
     }
 
-    .card-title { font-size: 16px; font-weight: 600; }
-    .card-subtitle { font-size: 13px; color: #b0b0b0; }
-
-    .card-small-title { font-size: 16px; font-weight: 600; margin-bottom: 6px; }
-    .card-text { font-size: 13px; color: #b0b0b0; line-height: 1.4; }
     .card-chart {
       width: 100%;
       height: 70px;
@@ -233,52 +161,17 @@
         Поделиться упражнением
       </button>
 
-      <button class="btn btn-secondary-dark">
-        <span class="btn-icon">🔖</span>
-        Сохранить в избранное
-      </button>
+      <!-- заменено -->
+      <div class="section-title">Основные мышцы</div>
 
-      <div class="section-title">Как записать это упражнение?</div>
+      <!-- оставлена одна картинка -->
+      <img
+        src="task_01kb0k01ykeska3daea0h07tme_1764177837_img_1.webp"
+        alt="Muscles"
+        class="muscle-img-single"
+      />
 
-      <div class="muscle-images">
-        <img
-          src="task_01kb0k01ykeska3daea0h07tme_1764177837_img_1.webp"
-          alt="Muscle Front & Back"
-          class="muscle-img"
-        />
-        <img
-          src="task_01kb0k01ykeska3daea0h07tme_1764177837_img_1.webp"
-          alt="Muscle Back"
-          class="muscle-img"
-        />
-      </div>
-
-      <div class="divider"></div>
-
-      <!-- ---------- ЭКРАН 2 ---------- -->
-      <div class="top-bar">
-        <div class="top-bar-left">
-          <div class="top-bar-back">‹</div>
-          <div class="top-bar-title">Bench Press</div>
-        </div>
-        <div class="top-bar-menu">⋮</div>
-      </div>
-
-      <div class="tabs">
-        <div class="tab tab-active">О нас</div>
-        <div class="tab">История</div>
-        <div class="tab">Прогресс</div>
-        <div class="tab">Записи</div>
-        <div class="tab">Таблица</div>
-      </div>
-
-      <div class="legs-strip">
-        <div class="legs-placeholder"></div>
-        <div class="legs-placeholder"></div>
-        <div class="legs-placeholder"></div>
-        <div class="legs-placeholder"></div>
-      </div>
-
+      <!-- ---------- Описание мышц ---------- -->
       <div class="muscle-section">
         <div class="muscle-label">
           <span class="dot-red"></span> Основные
@@ -295,23 +188,12 @@
         <div class="muscle-text">Трехглавая мышца плеча</div>
       </div>
 
-      <div class="card">
-        <div class="card-header">
-          <div class="avatars">
-            <div class="avatar"></div>
-            <div class="avatar"></div>
-            <div class="avatar"></div>
-          </div>
-          <div>
-            <div class="card-title">Таблица лидеров</div>
-            <div class="card-subtitle">Рейтинг — 1-е</div>
-          </div>
-        </div>
-      </div>
-
+      <!-- ---------- карточка "Насколько вы сильны?" ---------- -->
       <div class="card">
         <div class="card-small-title">На сколько вы сильны?</div>
-        <div class="card-text">Сравните вашу физическую силу с людьми того же возраста и веса.</div>
+        <div class="card-text">
+          Сравните вашу физическую силу с людьми того же возраста и веса.
+        </div>
         <div class="card-chart"></div>
       </div>
 
