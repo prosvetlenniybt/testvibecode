@@ -171,7 +171,8 @@
 
     .graph-marker {
       position: absolute;
-      bottom: 55px;
+      /* bottom задаём из JS, чтобы иконка была именно над кривой */
+      bottom: 0;
       transform: translateX(-50%);
       font-size: 18px;
       pointer-events: none;
@@ -613,6 +614,8 @@
 
     const GRAPH_MIN = 30;
     const GRAPH_MAX = 180;
+    const GRAPH_HEIGHT = 190;
+    const ICON_OFFSET_ABOVE = 10; // пикселей над линией
 
     const chipSex = document.getElementById('chip-sex');
     const chipAge = document.getElementById('chip-age');
@@ -639,7 +642,7 @@
     const btnSexMale = document.getElementById('btn-sex-male');
     const btnSexFemale = document.getElementById('btn-sex-female');
 
-    let currentModal = null; // 'sex' | 'age' | 'body' | 'goal' | 'current'
+    let currentModal = null;
     let selectedSex = null;
 
     function clamp(val, min, max) {
@@ -648,8 +651,16 @@
 
     function mapWeightToX(weight) {
       const clamped = clamp(weight, GRAPH_MIN, GRAPH_MAX);
-      const rel = (clamped - GRAPH_MIN) / (GRAPH_MAX - GRAPH_MIN);
-      return 5 + rel * 90;
+      const rel = (clamped - GRAPH_MIN) / (GRAPH_MAX - GRAPH_MIN); // 0..1
+      return 5 + rel * 90; // %
+    }
+
+    // Аппроксимируем форму кривой простой синусоидой: края ниже, середина выше
+    function curveYAtWeight(weight) {
+      const clamped = clamp(weight, GRAPH_MIN, GRAPH_MAX);
+      const t = (clamped - GRAPH_MIN) / (GRAPH_MAX - GRAPH_MIN); // 0..1
+      const base = 150 - 80 * Math.sin(Math.PI * t); // ~150 по краям, ~70 в центре
+      return base;
     }
 
     function updateGraphVisibility() {
@@ -709,7 +720,10 @@
 
       if (graphVisible && state.currentWeight) {
         const x = mapWeightToX(state.currentWeight);
+        const y = curveYAtWeight(state.currentWeight);
+        const bottomPx = GRAPH_HEIGHT - y + ICON_OFFSET_ABOVE;
         markerPerson.style.left = x + '%';
+        markerPerson.style.bottom = bottomPx + 'px';
         markerPerson.style.display = 'block';
       } else {
         markerPerson.style.display = 'none';
@@ -717,7 +731,10 @@
 
       if (graphVisible && state.goalWeight) {
         const x = mapWeightToX(state.goalWeight);
+        const y = curveYAtWeight(state.goalWeight);
+        const bottomPx = GRAPH_HEIGHT - y + ICON_OFFSET_ABOVE;
         markerFlag.style.left = x + '%';
+        markerFlag.style.bottom = bottomPx + 'px';
         markerFlag.style.display = 'block';
       } else {
         markerFlag.style.display = 'none';
@@ -746,7 +763,7 @@
         modalSexRow.style.display = 'flex';
         selectedSex = state.sex || 'male';
         updateSexButtons();
-        modalOk.style.display = 'none'; // выбор только через кнопки
+        modalOk.style.display = 'none';
       } else if (type === 'age') {
         modalTitle.textContent = 'Возраст';
         modalDescription.textContent = 'Введите ваш возраст в полных годах.';
