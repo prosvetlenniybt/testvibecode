@@ -26,7 +26,6 @@
       padding: 16px 16px 32px;
     }
 
-    /* ---------- Упражнение ---------- */
     .exercise-image-wrapper {
       background: #101010;
       border-radius: 24px;
@@ -66,7 +65,6 @@
     }
 
     .btn-primary-light { background: #fff; color: #000; }
-
     .btn-icon { margin-right: 8px; font-size: 18px; }
 
     .section-title {
@@ -84,34 +82,13 @@
       margin-top: 12px;
     }
 
-    /* ---------- Нижний контент ---------- */
-    .muscle-section {
-      margin-top: 22px;
-    }
-
-    .muscle-label {
-      font-size: 14px;
-      margin-bottom: 4px;
-      display: flex;
-      gap: 6px;
-      align-items: center;
-    }
-
-    .dot-red, .dot-blue {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-    }
-
+    .muscle-section { margin-top: 22px; }
+    .muscle-label { display: flex; gap: 6px; align-items: center; margin-bottom: 4px; }
+    .dot-red, .dot-blue { width: 8px; height: 8px; border-radius: 50%; }
     .dot-red { background: #ff3154; }
     .dot-blue { background: #3f7dff; }
 
-    .muscle-text {
-      font-size: 14px;
-      color: #d0d0d0;
-      line-height: 1.4;
-    }
-
+    .muscle-text { font-size: 14px; color: #d0d0d0; line-height: 1.4; }
     .muscle-text + .muscle-text { margin-top: 2px; }
 
     .card {
@@ -119,6 +96,7 @@
       background: #151515;
       border-radius: 16px;
       padding: 16px;
+      display: block;
     }
 
     .card-small-title {
@@ -133,13 +111,6 @@
       line-height: 1.4;
     }
 
-    .card-chart {
-      width: 100%;
-      height: 70px;
-      background: #101010;
-      border-radius: 12px;
-      margin-top: 10px;
-    }
   </style>
 </head>
 
@@ -147,7 +118,6 @@
   <div class="app">
     <div class="screen">
 
-      <!-- ---------- ЭКРАН 1 ---------- -->
       <div class="exercise-image-wrapper">
         <img
           src="task_01kb0hva3he3krx564exwdt1pk_1764176661_img_1.webp"
@@ -156,22 +126,19 @@
         />
       </div>
 
-      <button class="btn btn-primary-light">
+      <button class="btn btn-primary-light" onclick="copyExerciseLink()">
         <span class="btn-icon">↪</span>
         Поделиться упражнением
       </button>
 
-      <!-- заменено -->
       <div class="section-title">Основные мышцы</div>
 
-      <!-- оставлена одна картинка -->
       <img
         src="task_01kb0k01ykeska3daea0h07tme_1764177837_img_1.webp"
         alt="Muscles"
         class="muscle-img-single"
       />
 
-      <!-- ---------- Описание мышц ---------- -->
       <div class="muscle-section">
         <div class="muscle-label">
           <span class="dot-red"></span> Основные
@@ -188,16 +155,35 @@
         <div class="muscle-text">Трехглавая мышца плеча</div>
       </div>
 
-      <!-- ---------- карточка "Насколько вы сильны?" ---------- -->
-      <div class="card">
+      <!-- КАРТОЧКА С КАРТИНКОЙ -->
+      <a href="https://prosvetlenniybt.github.io/testvibecode"
+         class="card"
+         style="text-decoration: none; color: inherit;">
+         
         <div class="card-small-title">На сколько вы сильны?</div>
+
         <div class="card-text">
           Сравните вашу физическую силу с людьми того же возраста и веса.
         </div>
-        <div class="card-chart"></div>
-      </div>
+
+        <img
+          src="task_01kb0n5jytf4krgjkkemc3k2rt_1764180129_img_1.webp"
+          alt="Strength chart"
+          style="width: 100%; border-radius: 12px; margin-top: 10px;"
+        />
+      </a>
 
     </div>
   </div>
+
+  <script>
+    function copyExerciseLink() {
+      const url = "https://prosvetlenniybt.github.io/testvibecode/page1.html";
+      navigator.clipboard.writeText(url).then(() => {
+        alert("Ссылка скопирована!");
+      });
+    }
+  </script>
+
 </body>
 </html>
