@@ -1,41 +1,409 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Страница 1</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-            padding: 40px;
-        }
-        img {
-            max-width: 100%;
-            height: auto;
-        }
-        .btn {
-            display: inline-block;
-            margin-top: 30px;
-            padding: 12px 24px;
-            background-color: #4CAF50;
-            color: white;
-            text-decoration: none;
-            font-size: 18px;
-            border-radius: 6px;
-        }
-        .btn:hover {
-            background-color: #45a049;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <title>Bench Press – Pixel Perfect</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    /* Базовые стили */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      margin: 0;
+      background: #000000;
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text",
+        system-ui, sans-serif;
+      color: #ffffff;
+      display: flex;
+      justify-content: center;
+    }
+
+    /* Ограничиваем по ширине как экран телефона */
+    .app {
+      width: 393px; /* ширина iPhone 12/13/14 */
+      min-height: 100vh;
+      background: #000000;
+      color: #ffffff;
+      overflow: hidden;
+    }
+
+    .screen {
+      padding: 16px 16px 32px;
+    }
+
+    /* ---------- Первая часть (экран упражнения) ---------- */
+
+    .exercise-image-wrapper {
+      background: #101010;
+      border-radius: 24px;
+      padding: 16px;
+      margin-bottom: 16px;
+      position: relative;
+    }
+
+    .exercise-image {
+      width: 100%;
+      height: auto;
+      border-radius: 20px;
+      display: block;
+    }
+
+    .exercise-image-wrapper::after {
+      /* Иконка паузы справа сверху */
+      content: "❚❚";
+      position: absolute;
+      top: 26px;
+      right: 26px;
+      font-size: 12px;
+      opacity: 0.8;
+    }
+
+    .btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 999px;
+      padding: 14px 18px;
+      font-size: 16px;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+      margin-bottom: 12px;
+      width: 100%;
+    }
+
+    .btn-primary-light {
+      background: #ffffff;
+      color: #000000;
+    }
+
+    .btn-secondary-dark {
+      background: #1b1b1b;
+      color: #ffffff;
+    }
+
+    .btn-icon {
+      margin-right: 8px;
+      font-size: 18px;
+    }
+
+    .section-title {
+      margin: 24px 0 12px;
+      text-align: center;
+      font-size: 17px;
+      font-weight: 600;
+    }
+
+    .muscle-images {
+      display: flex;
+      justify-content: center;
+      gap: 18px;
+    }
+
+    .muscle-image {
+      width: 130px;
+      height: 260px;
+      border-radius: 12px;
+      background: #151515;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      color: #888888;
+      text-align: center;
+      padding: 8px;
+    }
+
+    .divider {
+      height: 1px;
+      background: #101010;
+      margin: 12px 0 4px;
+    }
+
+    /* ---------- Вторая часть (экран Bench Press) ---------- */
+
+    .top-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 0 4px;
+    }
+
+    .top-bar-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .top-bar-back {
+      width: 28px;
+      height: 28px;
+      border-radius: 999px;
+      background: #181818;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+    }
+
+    .top-bar-title {
+      font-size: 20px;
+      font-weight: 600;
+    }
+
+    .top-bar-menu {
+      font-size: 20px;
+      letter-spacing: 2px;
+    }
+
+    .tabs {
+      display: flex;
+      overflow-x: auto;
+      padding: 12px 0;
+      gap: 16px;
+      font-size: 14px;
+      white-space: nowrap;
+    }
+
+    .tab {
+      opacity: 0.5;
+    }
+
+    .tab-active {
+      opacity: 1;
+      font-weight: 600;
+      position: relative;
+    }
+
+    .tab-active::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      bottom: -6px;
+      width: 100%;
+      height: 2px;
+      border-radius: 999px;
+      background: #ffffff;
+    }
+
+    .legs-strip {
+      display: flex;
+      justify-content: space-between;
+      padding: 12px 0 20px;
+    }
+
+    .legs-placeholder {
+      width: calc(25% - 6px);
+      height: 80px;
+      background: #161616;
+      border-radius: 12px;
+    }
+
+    .muscle-section {
+      margin-bottom: 18px;
+    }
+
+    .muscle-label {
+      font-size: 14px;
+      margin-bottom: 4px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .dot-red,
+    .dot-blue {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+    }
+
+    .dot-red {
+      background: #ff3154;
+    }
+
+    .dot-blue {
+      background: #3f7dff;
+    }
+
+    .muscle-text {
+      font-size: 14px;
+      line-height: 1.4;
+      color: #d0d0d0;
+    }
+
+    .muscle-text + .muscle-text {
+      margin-top: 2px;
+    }
+
+    .card {
+      margin-top: 16px;
+      background: #151515;
+      border-radius: 16px;
+      padding: 16px;
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 8px;
+    }
+
+    .avatars {
+      display: flex;
+      gap: 6px;
+    }
+
+    .avatar {
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      background: #202020;
+    }
+
+    .card-title {
+      font-size: 16px;
+      font-weight: 600;
+    }
+
+    .card-subtitle {
+      font-size: 13px;
+      color: #b0b0b0;
+    }
+
+    .card-chart {
+      margin-top: 10px;
+      width: 100%;
+      height: 70px;
+      border-radius: 12px;
+      background: #101010;
+    }
+
+    .card-small-title {
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+
+    .card-text {
+      font-size: 13px;
+      color: #b0b0b0;
+      line-height: 1.4;
+    }
+  </style>
 </head>
+
 <body>
+  <div class="app">
+    <div class="screen">
 
-    <img src="task_01kb0hva3he3krx564exwdt1pk_1764176661_img_1.webp" alt="Task Image">
+      <!-- ---------- ЭКРАН 1: упражнение ---------- -->
+      <div class="exercise-image-wrapper">
+        <img
+          src="task_01kb0hva3he3krx564exwdt1pk_1764176661_img_1.webp"
+          alt="Bench Press Exercise"
+          class="exercise-image"
+        />
+      </div>
 
-    <br>
+      <button class="btn btn-primary-light">
+        <span class="btn-icon">↪</span>
+        Поделиться упражнением
+      </button>
 
-    <a href="index.html" class="btn">Дальше</a>
+      <button class="btn btn-secondary-dark">
+        <span class="btn-icon">🔖</span>
+        Сохранить в избранное
+      </button>
 
+      <div class="section-title">Как записать это упражнение?</div>
+
+      <div class="muscle-images">
+        <div class="muscle-image">
+          Фронтальное изображение<br>мышц
+        </div>
+        <div class="muscle-image">
+          Вид сзади<br>мышц
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <!-- ---------- ЭКРАН 2: Bench Press ---------- -->
+
+      <div class="top-bar">
+        <div class="top-bar-left">
+          <div class="top-bar-back">‹</div>
+          <div class="top-bar-title">Bench Press</div>
+        </div>
+        <div class="top-bar-menu">⋮</div>
+      </div>
+
+      <div class="tabs">
+        <div class="tab tab-active">О нас</div>
+        <div class="tab">История</div>
+        <div class="tab">Прогресс</div>
+        <div class="tab">Записи</div>
+        <div class="tab">Таблица</div>
+      </div>
+
+      <div class="legs-strip">
+        <div class="legs-placeholder"></div>
+        <div class="legs-placeholder"></div>
+        <div class="legs-placeholder"></div>
+        <div class="legs-placeholder"></div>
+      </div>
+
+      <div class="muscle-section">
+        <div class="muscle-label">
+          <span class="dot-red"></span>
+          <span>Основные</span>
+        </div>
+        <div class="muscle-text">
+          Большая грудная мышца, грудная часть
+        </div>
+      </div>
+
+      <div class="muscle-section">
+        <div class="muscle-label">
+          <span class="dot-blue"></span>
+          <span>Вторичные</span>
+        </div>
+        <div class="muscle-text">Плечевая мышца передней части</div>
+        <div class="muscle-text">
+          Большая грудная мышца, ключичная часть
+        </div>
+        <div class="muscle-text">Трехглавая мышца плеча</div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div class="avatars">
+            <div class="avatar"></div>
+            <div class="avatar"></div>
+            <div class="avatar"></div>
+          </div>
+          <div>
+            <div class="card-title">Таблица лидеров</div>
+            <div class="card-subtitle">Рейтинг – 1-е</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-small-title">На сколько вы сильны?</div>
+        <div class="card-text">
+          Сравните вашу физическую силу с людьми того же возраста и веса.
+        </div>
+        <div class="card-chart"></div>
+      </div>
+
+    </div>
+  </div>
 </body>
 </html>
