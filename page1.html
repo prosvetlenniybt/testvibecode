@@ -5,29 +5,21 @@
   <title>Bench Press – Pixel Perfect</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <style>
-    /* Базовые стили */
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
       margin: 0;
-      background: #000000;
-      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text",
-        system-ui, sans-serif;
-      color: #ffffff;
+      background: #000;
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", system-ui, sans-serif;
+      color: #fff;
       display: flex;
       justify-content: center;
     }
 
-    /* Ограничиваем по ширине как экран телефона */
     .app {
-      width: 393px; /* ширина iPhone 12/13/14 */
+      width: 393px;
       min-height: 100vh;
-      background: #000000;
-      color: #ffffff;
+      background: #000;
       overflow: hidden;
     }
 
@@ -35,8 +27,7 @@
       padding: 16px 16px 32px;
     }
 
-    /* ---------- Первая часть (экран упражнения) ---------- */
-
+    /* ---------- Упражнение ---------- */
     .exercise-image-wrapper {
       background: #101010;
       border-radius: 24px;
@@ -53,7 +44,6 @@
     }
 
     .exercise-image-wrapper::after {
-      /* Иконка паузы справа сверху */
       content: "❚❚";
       position: absolute;
       top: 26px;
@@ -76,20 +66,9 @@
       width: 100%;
     }
 
-    .btn-primary-light {
-      background: #ffffff;
-      color: #000000;
-    }
-
-    .btn-secondary-dark {
-      background: #1b1b1b;
-      color: #ffffff;
-    }
-
-    .btn-icon {
-      margin-right: 8px;
-      font-size: 18px;
-    }
+    .btn-primary-light { background: #fff; color: #000; }
+    .btn-secondary-dark { background: #1b1b1b; color: #fff; }
+    .btn-icon { margin-right: 8px; font-size: 18px; }
 
     .section-title {
       margin: 24px 0 12px;
@@ -104,18 +83,12 @@
       gap: 18px;
     }
 
-    .muscle-image {
+    .muscle-img {
       width: 130px;
-      height: 260px;
+      height: auto;
       border-radius: 12px;
       background: #151515;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 13px;
-      color: #888888;
-      text-align: center;
-      padding: 8px;
+      display: block;
     }
 
     .divider {
@@ -124,8 +97,7 @@
       margin: 12px 0 4px;
     }
 
-    /* ---------- Вторая часть (экран Bench Press) ---------- */
-
+    /* ---------- Bench Press (экран 2) ---------- */
     .top-bar {
       display: flex;
       align-items: center;
@@ -145,20 +117,12 @@
       border-radius: 999px;
       background: #181818;
       display: flex;
-      align-items: center;
       justify-content: center;
-      font-size: 16px;
+      align-items: center;
     }
 
-    .top-bar-title {
-      font-size: 20px;
-      font-weight: 600;
-    }
-
-    .top-bar-menu {
-      font-size: 20px;
-      letter-spacing: 2px;
-    }
+    .top-bar-title { font-size: 20px; font-weight: 600; }
+    .top-bar-menu { font-size: 20px; letter-spacing: 2px; }
 
     .tabs {
       display: flex;
@@ -169,15 +133,8 @@
       white-space: nowrap;
     }
 
-    .tab {
-      opacity: 0.5;
-    }
-
-    .tab-active {
-      opacity: 1;
-      font-weight: 600;
-      position: relative;
-    }
+    .tab { opacity: 0.5; }
+    .tab-active { opacity: 1; font-weight: 600; position: relative; }
 
     .tab-active::after {
       content: "";
@@ -186,8 +143,8 @@
       bottom: -6px;
       width: 100%;
       height: 2px;
+      background: #fff;
       border-radius: 999px;
-      background: #ffffff;
     }
 
     .legs-strip {
@@ -203,42 +160,23 @@
       border-radius: 12px;
     }
 
-    .muscle-section {
-      margin-bottom: 18px;
+    .muscle-section { margin-bottom: 18px; }
+    .muscle-label { font-size: 14px; margin-bottom: 4px; display: flex; gap: 6px; }
+
+    .dot-red, .dot-blue {
+      width: 8px; height: 8px; border-radius: 50%;
     }
 
-    .muscle-label {
-      font-size: 14px;
-      margin-bottom: 4px;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .dot-red,
-    .dot-blue {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-    }
-
-    .dot-red {
-      background: #ff3154;
-    }
-
-    .dot-blue {
-      background: #3f7dff;
-    }
+    .dot-red { background: #ff3154; }
+    .dot-blue { background: #3f7dff; }
 
     .muscle-text {
       font-size: 14px;
-      line-height: 1.4;
       color: #d0d0d0;
+      line-height: 1.4;
     }
 
-    .muscle-text + .muscle-text {
-      margin-top: 2px;
-    }
+    .muscle-text + .muscle-text { margin-top: 2px; }
 
     .card {
       margin-top: 16px;
@@ -249,16 +187,12 @@
 
     .card-header {
       display: flex;
-      align-items: center;
       gap: 12px;
       margin-bottom: 8px;
+      align-items: center;
     }
 
-    .avatars {
-      display: flex;
-      gap: 6px;
-    }
-
+    .avatars { display: flex; gap: 6px; }
     .avatar {
       width: 26px;
       height: 26px;
@@ -266,34 +200,17 @@
       background: #202020;
     }
 
-    .card-title {
-      font-size: 16px;
-      font-weight: 600;
-    }
+    .card-title { font-size: 16px; font-weight: 600; }
+    .card-subtitle { font-size: 13px; color: #b0b0b0; }
 
-    .card-subtitle {
-      font-size: 13px;
-      color: #b0b0b0;
-    }
-
+    .card-small-title { font-size: 16px; font-weight: 600; margin-bottom: 6px; }
+    .card-text { font-size: 13px; color: #b0b0b0; line-height: 1.4; }
     .card-chart {
-      margin-top: 10px;
       width: 100%;
       height: 70px;
-      border-radius: 12px;
       background: #101010;
-    }
-
-    .card-small-title {
-      font-size: 16px;
-      font-weight: 600;
-      margin-bottom: 6px;
-    }
-
-    .card-text {
-      font-size: 13px;
-      color: #b0b0b0;
-      line-height: 1.4;
+      border-radius: 12px;
+      margin-top: 10px;
     }
   </style>
 </head>
@@ -302,7 +219,7 @@
   <div class="app">
     <div class="screen">
 
-      <!-- ---------- ЭКРАН 1: упражнение ---------- -->
+      <!-- ---------- ЭКРАН 1 ---------- -->
       <div class="exercise-image-wrapper">
         <img
           src="task_01kb0hva3he3krx564exwdt1pk_1764176661_img_1.webp"
@@ -324,18 +241,21 @@
       <div class="section-title">Как записать это упражнение?</div>
 
       <div class="muscle-images">
-        <div class="muscle-image">
-          Фронтальное изображение<br>мышц
-        </div>
-        <div class="muscle-image">
-          Вид сзади<br>мышц
-        </div>
+        <img
+          src="task_01kb0k01ykeska3daea0h07tme_1764177837_img_1.webp"
+          alt="Muscle Front & Back"
+          class="muscle-img"
+        />
+        <img
+          src="task_01kb0k01ykeska3daea0h07tme_1764177837_img_1.webp"
+          alt="Muscle Back"
+          class="muscle-img"
+        />
       </div>
 
       <div class="divider"></div>
 
-      <!-- ---------- ЭКРАН 2: Bench Press ---------- -->
-
+      <!-- ---------- ЭКРАН 2 ---------- -->
       <div class="top-bar">
         <div class="top-bar-left">
           <div class="top-bar-back">‹</div>
@@ -361,23 +281,17 @@
 
       <div class="muscle-section">
         <div class="muscle-label">
-          <span class="dot-red"></span>
-          <span>Основные</span>
+          <span class="dot-red"></span> Основные
         </div>
-        <div class="muscle-text">
-          Большая грудная мышца, грудная часть
-        </div>
+        <div class="muscle-text">Большая грудная мышца, грудная часть</div>
       </div>
 
       <div class="muscle-section">
         <div class="muscle-label">
-          <span class="dot-blue"></span>
-          <span>Вторичные</span>
+          <span class="dot-blue"></span> Вторичные
         </div>
         <div class="muscle-text">Плечевая мышца передней части</div>
-        <div class="muscle-text">
-          Большая грудная мышца, ключичная часть
-        </div>
+        <div class="muscle-text">Большая грудная мышца, ключичная часть</div>
         <div class="muscle-text">Трехглавая мышца плеча</div>
       </div>
 
@@ -390,16 +304,14 @@
           </div>
           <div>
             <div class="card-title">Таблица лидеров</div>
-            <div class="card-subtitle">Рейтинг – 1-е</div>
+            <div class="card-subtitle">Рейтинг — 1-е</div>
           </div>
         </div>
       </div>
 
       <div class="card">
         <div class="card-small-title">На сколько вы сильны?</div>
-        <div class="card-text">
-          Сравните вашу физическую силу с людьми того же возраста и веса.
-        </div>
+        <div class="card-text">Сравните вашу физическую силу с людьми того же возраста и веса.</div>
         <div class="card-chart"></div>
       </div>
 
