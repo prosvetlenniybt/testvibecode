@@ -137,6 +137,8 @@
       background: var(--bg-chip);
       font-size: 13px;
       color: var(--text-secondary);
+      cursor: pointer;
+      user-select: none;
     }
 
     .chip--active {
@@ -152,6 +154,10 @@
       margin-bottom: 16px;
     }
 
+    .graph-wrapper.hidden {
+      display: none;
+    }
+
     .graph {
       width: 100%;
       height: 190px;
@@ -164,33 +170,21 @@
       display: block;
     }
 
-    .graph-flag {
+    .graph-marker {
       position: absolute;
-      left: 50%;
-      top: 45%;
-      transform: translateX(-60%);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 4px;
-      font-size: 11px;
+      bottom: 55px; /* над линией */
+      transform: translateX(-50%);
+      font-size: 18px;
+      pointer-events: none;
+      display: none;
     }
 
-    .graph-flag span {
-      width: 18px;
-      height: 18px;
-      border-radius: 6px;
-      border: 1px solid rgba(255, 255, 255, 0.5);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 11px;
-      background: rgba(3, 7, 18, 0.9);
+    .graph-marker--person {
+      font-size: 19px;
     }
 
-    .graph-flag i {
-      font-style: normal;
-      font-size: 16px;
+    .graph-marker--flag {
+      font-size: 20px;
     }
 
     .graph-axis {
@@ -241,6 +235,7 @@
 
     .goal-value {
       font-size: 14px;
+      cursor: pointer;
     }
 
     .goal-value span {
@@ -257,10 +252,11 @@
       border: 1px solid #1f2937;
       padding: 2px;
       overflow: hidden;
+      cursor: pointer;
     }
 
     .goal-bar-inner {
-      width: 90%;
+      width: 0%;
       height: 100%;
       border-radius: 999px;
       background: linear-gradient(90deg, #0071ff, #00a7ff);
@@ -269,12 +265,14 @@
       justify-content: flex-end;
       padding-right: 8px;
       position: relative;
+      transition: width 0.25s ease-out;
     }
 
     .goal-bar-label {
       font-size: 12px;
       font-weight: 600;
       margin-right: 4px;
+      display: none;
     }
 
     .goal-bar-flag {
@@ -287,6 +285,7 @@
       justify-content: center;
       font-size: 11px;
       background: rgba(15, 23, 42, 0.6);
+      display: none;
     }
 
     /* Lower section */
@@ -385,14 +384,14 @@
 
       <!-- Chips -->
       <div class="chip-row">
-        <div class="chip chip--active">Мужск</div>
-        <div class="chip">24</div>
-        <div class="chip">85</div>
+        <div class="chip" id="chip-sex">Пол</div>
+        <div class="chip" id="chip-age">Возраст</div>
+        <div class="chip" id="chip-weight">Вес тела</div>
       </div>
 
       <!-- Graph -->
-      <div class="graph-wrapper">
-        <div class="graph">
+      <div class="graph-wrapper hidden" id="graph-wrapper">
+        <div class="graph" id="graph">
           <svg viewBox="0 0 360 190" preserveAspectRatio="none">
             <defs>
               <linearGradient id="graphFill" x1="0" x2="0" y1="0" y2="1">
@@ -423,10 +422,9 @@
             />
           </svg>
 
-          <div class="graph-flag">
-            <span>👤</span>
-            <i>🏁</i>
-          </div>
+          <!-- Маркеры на графике -->
+          <div class="graph-marker graph-marker--person" id="marker-person">👤</div>
+          <div class="graph-marker graph-marker--flag" id="marker-flag">🏁</div>
         </div>
 
         <div class="graph-axis">
@@ -455,13 +453,13 @@
       <!-- Goal -->
       <div class="goal-row">
         <div class="goal-label">Цель (Макс. вес)</div>
-        <div class="goal-value">100.0<span>kg</span></div>
+        <div class="goal-value" id="goal-value">--<span>kg</span></div>
       </div>
 
-      <div class="goal-bar">
-        <div class="goal-bar-inner">
-          <div class="goal-bar-label">90kg</div>
-          <div class="goal-bar-flag">🏁</div>
+      <div class="goal-bar" id="goal-bar">
+        <div class="goal-bar-inner" id="goal-bar-inner">
+          <div class="goal-bar-label" id="goal-bar-label">--kg</div>
+          <div class="goal-bar-flag" id="goal-bar-flag">🏁</div>
         </div>
       </div>
 
@@ -490,5 +488,195 @@
       </div>
     </div>
   </div>
+
+  <script>
+    // Модель состояния
+    let state = {
+      sex: null,         // "Муж." / "Жен."
+      age: null,         // число
+      bodyWeight: null,  // число
+      goalWeight: null,  // цель (макс)
+      currentWeight: null // рабочий вес (значение прогресс-бара)
+    };
+
+    const chipSex = document.getElementById('chip-sex');
+    const chipAge = document.getElementById('chip-age');
+    const chipWeight = document.getElementById('chip-weight');
+
+    const graphWrapper = document.getElementById('graph-wrapper');
+    const markerPerson = document.getElementById('marker-person');
+    const markerFlag = document.getElementById('marker-flag');
+
+    const goalValue = document.getElementById('goal-value');
+    const goalBar = document.getElementById('goal-bar');
+    const goalBarInner = document.getElementById('goal-bar-inner');
+    const goalBarLabel = document.getElementById('goal-bar-label');
+    const goalBarFlag = document.getElementById('goal-bar-flag');
+
+    // Диапазон графика по оси X (kg)
+    const GRAPH_MIN = 30;
+    const GRAPH_MAX = 180;
+
+    function clamp(val, min, max) {
+      return Math.min(Math.max(val, min), max);
+    }
+
+    function mapWeightToX(weight) {
+      // 5% отступ слева и справа, чтобы не прилипало к краям
+      const clamped = clamp(weight, GRAPH_MIN, GRAPH_MAX);
+      const rel = (clamped - GRAPH_MIN) / (GRAPH_MAX - GRAPH_MIN); // 0..1
+      return 5 + rel * 90; // 5%..95%
+    }
+
+    function updateGraphVisibility() {
+      const ready = !!(state.sex && state.age && state.bodyWeight);
+      graphWrapper.classList.toggle('hidden', !ready);
+    }
+
+    function updateChips() {
+      // sex
+      if (state.sex) {
+        chipSex.textContent = state.sex === 'male' ? 'Муж.' : 'Жен.';
+        chipSex.classList.add('chip--active');
+      } else {
+        chipSex.textContent = 'Пол';
+        chipSex.classList.remove('chip--active');
+      }
+
+      // age
+      if (state.age) {
+        chipAge.textContent = state.age + ' лет';
+        chipAge.classList.add('chip--active');
+      } else {
+        chipAge.textContent = 'Возраст';
+        chipAge.classList.remove('chip--active');
+      }
+
+      // body weight
+      if (state.bodyWeight) {
+        chipWeight.textContent = state.bodyWeight + ' кг';
+        chipWeight.classList.add('chip--active');
+      } else {
+        chipWeight.textContent = 'Вес тела';
+        chipWeight.classList.remove('chip--active');
+      }
+    }
+
+    function updateGoalArea() {
+      // текст цели
+      if (state.goalWeight) {
+        goalValue.innerHTML =
+          state.goalWeight.toFixed(1) + '<span>kg</span>';
+      } else {
+        goalValue.innerHTML = '--<span>kg</span>';
+      }
+
+      // прогресс-бар
+      if (state.currentWeight && state.goalWeight) {
+        const percent = clamp(
+          (state.currentWeight / state.goalWeight) * 100,
+          0,
+          100
+        );
+        goalBarInner.style.width = percent + '%';
+        goalBarLabel.textContent = state.currentWeight.toFixed(1) + 'kg';
+        goalBarLabel.style.display = 'block';
+        goalBarFlag.style.display = 'flex';
+      } else {
+        goalBarInner.style.width = '0%';
+        goalBarLabel.textContent = '--kg';
+        goalBarLabel.style.display = 'none';
+        goalBarFlag.style.display = 'none';
+      }
+    }
+
+    function updateGraphMarkers() {
+      const graphVisible = !graphWrapper.classList.contains('hidden');
+
+      // маркер человека (текущий вес)
+      if (graphVisible && state.currentWeight) {
+        const x = mapWeightToX(state.currentWeight);
+        markerPerson.style.left = x + '%';
+        markerPerson.style.display = 'block';
+      } else {
+        markerPerson.style.display = 'none';
+      }
+
+      // маркер флага (цель)
+      if (graphVisible && state.goalWeight) {
+        const x = mapWeightToX(state.goalWeight);
+        markerFlag.style.left = x + '%';
+        markerFlag.style.display = 'block';
+      } else {
+        markerFlag.style.display = 'none';
+      }
+    }
+
+    function redraw() {
+      updateChips();
+      updateGraphVisibility();
+      updateGoalArea();
+      updateGraphMarkers();
+    }
+
+    // Обработчики ввода
+    chipSex.addEventListener('click', () => {
+      const choice = prompt('Введите пол (м/ж):', state.sex === 'female' ? 'ж' : 'м');
+      if (!choice) return;
+      const val = choice.trim().toLowerCase();
+      if (val.startsWith('м')) state.sex = 'male';
+      else if (val.startsWith('ж')) state.sex = 'female';
+      redraw();
+    });
+
+    chipAge.addEventListener('click', () => {
+      const input = prompt('Введите возраст (полных лет):', state.age || '');
+      if (!input) return;
+      const n = parseInt(input.replace(',', '.').trim(), 10);
+      if (!isNaN(n) && n > 0 && n < 120) {
+        state.age = n;
+        redraw();
+      }
+    });
+
+    chipWeight.addEventListener('click', () => {
+      const input = prompt('Введите вес тела (кг):', state.bodyWeight || '');
+      if (!input) return;
+      const n = parseFloat(input.replace(',', '.').trim());
+      if (!isNaN(n) && n > 0 && n < 400) {
+        state.bodyWeight = n;
+        redraw();
+      }
+    });
+
+    goalValue.addEventListener('click', () => {
+      const input = prompt(
+        'Введите целевой вес (кг) — максимальное значение:',
+        state.goalWeight || ''
+      );
+      if (!input) return;
+      const n = parseFloat(input.replace(',', '.').trim());
+      if (!isNaN(n) && n > 0 && n < 400) {
+        state.goalWeight = n;
+        redraw();
+      }
+    });
+
+    goalBar.addEventListener('click', () => {
+      const input = prompt(
+        'Введите текущий рабочий вес (кг):',
+        state.currentWeight || ''
+      );
+      if (!input) return;
+      const n = parseFloat(input.replace(',', '.').trim());
+      if (!isNaN(n) && n > 0 && n < 400) {
+        state.currentWeight = n;
+        redraw();
+      }
+    });
+
+    // начальная отрисовка
+    redraw();
+  </script>
 </body>
 </html>
