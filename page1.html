@@ -26,6 +26,7 @@
       padding: 16px 16px 32px;
     }
 
+    /* Верхнее изображение */
     .exercise-image-wrapper {
       background: #101010;
       border-radius: 24px;
@@ -50,6 +51,7 @@
       opacity: 0.8;
     }
 
+    /* Кнопки */
     .btn {
       display: flex;
       align-items: center;
@@ -67,6 +69,7 @@
     .btn-primary-light { background: #fff; color: #000; }
     .btn-icon { margin-right: 8px; font-size: 18px; }
 
+    /* Заголовок */
     .section-title {
       margin: 24px 0 12px;
       text-align: center;
@@ -74,6 +77,7 @@
       font-weight: 600;
     }
 
+    /* Картинка мышц */
     .muscle-img-single {
       width: 100%;
       height: auto;
@@ -82,21 +86,31 @@
       margin-top: 12px;
     }
 
+    /* Мышцы текст */
     .muscle-section { margin-top: 22px; }
     .muscle-label { display: flex; gap: 6px; align-items: center; margin-bottom: 4px; }
     .dot-red, .dot-blue { width: 8px; height: 8px; border-radius: 50%; }
     .dot-red { background: #ff3154; }
     .dot-blue { background: #3f7dff; }
 
-    .muscle-text { font-size: 14px; color: #d0d0d0; line-height: 1.4; }
-    .muscle-text + .muscle-text { margin-top: 2px; }
+    .muscle-text {
+      font-size: 14px;
+      color: #d0d0d0;
+      line-height: 1.4;
+    }
 
+    /* Карточка */
     .card {
       margin-top: 16px;
       background: #151515;
       border-radius: 16px;
       padding: 16px;
-      display: block;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      text-decoration: none;
+      color: inherit;
     }
 
     .card-small-title {
@@ -118,6 +132,7 @@
   <div class="app">
     <div class="screen">
 
+      <!-- Верхнее изображение -->
       <div class="exercise-image-wrapper">
         <img
           src="task_01kb0hva3he3krx564exwdt1pk_1764176661_img_1.webp"
@@ -126,19 +141,23 @@
         />
       </div>
 
+      <!-- Кнопка копирования -->
       <button class="btn btn-primary-light" onclick="copyExerciseLink()">
         <span class="btn-icon">↪</span>
         Поделиться упражнением
       </button>
 
+      <!-- Заголовок -->
       <div class="section-title">Основные мышцы</div>
 
+      <!-- Одна картинка мышц -->
       <img
         src="task_01kb0k01ykeska3daea0h07tme_1764177837_img_1.webp"
         alt="Muscles"
         class="muscle-img-single"
       />
 
+      <!-- Основные мышцы -->
       <div class="muscle-section">
         <div class="muscle-label">
           <span class="dot-red"></span> Основные
@@ -146,6 +165,7 @@
         <div class="muscle-text">Большая грудная мышца, грудная часть</div>
       </div>
 
+      <!-- Вторичные мышцы -->
       <div class="muscle-section">
         <div class="muscle-label">
           <span class="dot-blue"></span> Вторичные
@@ -155,27 +175,30 @@
         <div class="muscle-text">Трехглавая мышца плеча</div>
       </div>
 
-      <!-- КАРТОЧКА С КАРТИНКОЙ -->
-      <a href="https://prosvetlenniybt.github.io/testvibecode"
-         class="card"
-         style="text-decoration: none; color: inherit;">
-         
-        <div class="card-small-title">На сколько вы сильны?</div>
+      <!-- Карточка с картинкой справа -->
+      <a href="https://prosvetlenniybt.github.io/testvibecode" class="card">
 
-        <div class="card-text">
-          Сравните вашу физическую силу с людьми того же возраста и веса.
+        <!-- Текст слева -->
+        <div style="flex: 1;">
+          <div class="card-small-title">На сколько вы сильны?</div>
+          <div class="card-text">
+            Сравните вашу физическую силу с людьми того же возраста и веса.
+          </div>
         </div>
 
+        <!-- Картинка справа -->
         <img
           src="task_01kb0n5jytf4krgjkkemc3k2rt_1764180129_img_1.webp"
           alt="Strength chart"
-          style="width: 100%; border-radius: 12px; margin-top: 10px;"
+          style="width: 110px; height: auto; border-radius: 12px; flex-shrink: 0;"
         />
+
       </a>
 
     </div>
   </div>
 
+  <!-- Скрипт копирования -->
   <script>
     function copyExerciseLink() {
       const url = "https://prosvetlenniybt.github.io/testvibecode/page1.html";
