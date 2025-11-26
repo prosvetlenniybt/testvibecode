@@ -46,6 +46,7 @@
       padding: 14px 10px 24px;
       box-shadow: 0 18px 45px rgba(0, 0, 0, 0.9);
       overflow: hidden;
+      position: relative;
     }
 
     .screen {
@@ -53,9 +54,9 @@
       background: radial-gradient(circle at 50% -40%, #1a2a40 0, #020308 52%);
       padding: 10px 14px 24px;
       position: relative;
+      overflow: hidden;
     }
 
-    /* Status bar */
     .status-bar {
       display: flex;
       align-items: center;
@@ -98,7 +99,6 @@
       background: var(--text-secondary);
     }
 
-    /* Header */
     .header {
       display: flex;
       align-items: center;
@@ -117,7 +117,6 @@
       font-weight: 600;
     }
 
-    /* chips row */
     .chip-row {
       display: flex;
       justify-content: space-between;
@@ -139,6 +138,7 @@
       color: var(--text-secondary);
       cursor: pointer;
       user-select: none;
+      transition: background 0.15s, border-color 0.15s, color 0.15s;
     }
 
     .chip--active {
@@ -149,7 +149,6 @@
       font-weight: 500;
     }
 
-    /* Graph block */
     .graph-wrapper {
       margin-bottom: 16px;
     }
@@ -172,7 +171,7 @@
 
     .graph-marker {
       position: absolute;
-      bottom: 55px; /* над линией */
+      bottom: 55px;
       transform: translateX(-50%);
       font-size: 18px;
       pointer-events: none;
@@ -196,7 +195,6 @@
       padding: 0 8px;
     }
 
-    /* Text under graph */
     .strength-stat {
       margin-top: 14px;
       margin-bottom: 18px;
@@ -220,7 +218,6 @@
       margin: 10px 0 18px;
     }
 
-    /* Goal */
     .goal-row {
       display: flex;
       justify-content: space-between;
@@ -288,7 +285,6 @@
       display: none;
     }
 
-    /* Lower section */
     .section-lower {
       margin-top: 26px;
       margin-left: -14px;
@@ -345,7 +341,112 @@
       color: var(--text-secondary);
     }
 
-    /* Small tweaks for narrow screens */
+    /* Modal */
+
+    .modal-backdrop {
+      position: absolute;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.55);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 20;
+    }
+
+    .modal-backdrop.hidden {
+      display: none;
+    }
+
+    .modal {
+      width: 82%;
+      max-width: 320px;
+      background: #050810;
+      border-radius: 18px;
+      border: 1px solid #1e293b;
+      padding: 16px 16px 14px;
+      box-shadow: 0 20px 45px rgba(0, 0, 0, 0.8);
+    }
+
+    .modal-title {
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 10px;
+    }
+
+    .modal-description {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-bottom: 12px;
+    }
+
+    .modal-input-wrapper {
+      margin-bottom: 14px;
+    }
+
+    .modal-input {
+      width: 100%;
+      padding: 8px 10px;
+      border-radius: 12px;
+      border: 1px solid #1f2937;
+      background: #020617;
+      color: var(--text-primary);
+      font-size: 14px;
+      outline: none;
+    }
+
+    .modal-input:focus {
+      border-color: var(--accent);
+    }
+
+    .modal-sex-row {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+
+    .modal-sex-btn {
+      flex: 1;
+      padding: 8px 0;
+      border-radius: 999px;
+      border: 1px solid #1f2937;
+      background: #020617;
+      color: var(--text-secondary);
+      font-size: 14px;
+      cursor: pointer;
+    }
+
+    .modal-sex-btn--active {
+      border-color: var(--accent);
+      background: radial-gradient(circle at 50% -20%, #1a3e70, #020617);
+      color: var(--text-primary);
+      font-weight: 500;
+    }
+
+    .modal-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+      margin-top: 4px;
+    }
+
+    .btn {
+      border: none;
+      border-radius: 999px;
+      padding: 7px 14px;
+      font-size: 13px;
+      cursor: pointer;
+    }
+
+    .btn-secondary {
+      background: transparent;
+      color: var(--text-secondary);
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: #ffffff;
+    }
+
     @media (max-width: 420px) {
       .phone {
         width: 100%;
@@ -363,7 +464,6 @@
 <body>
   <div class="phone">
     <div class="screen">
-      <!-- Status bar -->
       <div class="status-bar">
         <div class="status-left">
           <span>17:10</span>
@@ -376,20 +476,17 @@
         </div>
       </div>
 
-      <!-- Header -->
       <div class="header">
         <div class="back-btn">←</div>
         <div class="header-title">Стандарт упражнения</div>
       </div>
 
-      <!-- Chips -->
       <div class="chip-row">
         <div class="chip" id="chip-sex">Пол</div>
         <div class="chip" id="chip-age">Возраст</div>
         <div class="chip" id="chip-weight">Вес тела</div>
       </div>
 
-      <!-- Graph -->
       <div class="graph-wrapper hidden" id="graph-wrapper">
         <div class="graph" id="graph">
           <svg viewBox="0 0 360 190" preserveAspectRatio="none">
@@ -400,7 +497,6 @@
                 <stop offset="100%" stop-color="#000000" stop-opacity="0" />
               </linearGradient>
             </defs>
-            <!-- Filled area -->
             <path
               d="M10 150
                  Q 60 70 120 80
@@ -410,7 +506,6 @@
                  L 10 180 Z"
               fill="url(#graphFill)"
             />
-            <!-- Stroke -->
             <path
               d="M10 150
                  Q 60 70 120 80
@@ -422,7 +517,6 @@
             />
           </svg>
 
-          <!-- Маркеры на графике -->
           <div class="graph-marker graph-marker--person" id="marker-person">👤</div>
           <div class="graph-marker graph-marker--flag" id="marker-flag">🏁</div>
         </div>
@@ -437,7 +531,6 @@
         </div>
       </div>
 
-      <!-- Text under graph -->
       <div class="strength-stat">
         <div class="strength-stat-title">
           Вы поднимаете больше, чем 41,2%<br />
@@ -450,7 +543,6 @@
 
       <div class="divider"></div>
 
-      <!-- Goal -->
       <div class="goal-row">
         <div class="goal-label">Цель (Макс. вес)</div>
         <div class="goal-value" id="goal-value">--<span>kg</span></div>
@@ -463,7 +555,6 @@
         </div>
       </div>
 
-      <!-- Lower section -->
       <div class="section-lower">
         <div class="section-title">
           Что означают<br />
@@ -487,17 +578,41 @@
         </div>
       </div>
     </div>
+
+    <!-- Modal -->
+    <div class="modal-backdrop hidden" id="modal-backdrop">
+      <div class="modal" id="modal">
+        <div class="modal-title" id="modal-title"></div>
+        <div class="modal-description" id="modal-description"></div>
+
+        <div class="modal-sex-row" id="modal-sex-row" style="display:none;">
+          <button class="modal-sex-btn" data-sex="male" id="btn-sex-male">Муж.</button>
+          <button class="modal-sex-btn" data-sex="female" id="btn-sex-female">Жен.</button>
+        </div>
+
+        <div class="modal-input-wrapper" id="modal-input-wrapper" style="display:none;">
+          <input class="modal-input" id="modal-input" />
+        </div>
+
+        <div class="modal-actions">
+          <button class="btn btn-secondary" id="modal-cancel">Отмена</button>
+          <button class="btn btn-primary" id="modal-ok">OK</button>
+        </div>
+      </div>
+    </div>
   </div>
 
   <script>
-    // Модель состояния
     let state = {
-      sex: null,         // "Муж." / "Жен."
-      age: null,         // число
-      bodyWeight: null,  // число
-      goalWeight: null,  // цель (макс)
-      currentWeight: null // рабочий вес (значение прогресс-бара)
+      sex: null,
+      age: null,
+      bodyWeight: null,
+      goalWeight: null,
+      currentWeight: null
     };
+
+    const GRAPH_MIN = 30;
+    const GRAPH_MAX = 180;
 
     const chipSex = document.getElementById('chip-sex');
     const chipAge = document.getElementById('chip-age');
@@ -513,19 +628,28 @@
     const goalBarLabel = document.getElementById('goal-bar-label');
     const goalBarFlag = document.getElementById('goal-bar-flag');
 
-    // Диапазон графика по оси X (kg)
-    const GRAPH_MIN = 30;
-    const GRAPH_MAX = 180;
+    const modalBackdrop = document.getElementById('modal-backdrop');
+    const modalTitle = document.getElementById('modal-title');
+    const modalDescription = document.getElementById('modal-description');
+    const modalInputWrapper = document.getElementById('modal-input-wrapper');
+    const modalInput = document.getElementById('modal-input');
+    const modalSexRow = document.getElementById('modal-sex-row');
+    const modalCancel = document.getElementById('modal-cancel');
+    const modalOk = document.getElementById('modal-ok');
+    const btnSexMale = document.getElementById('btn-sex-male');
+    const btnSexFemale = document.getElementById('btn-sex-female');
+
+    let currentModal = null; // 'sex' | 'age' | 'body' | 'goal' | 'current'
+    let selectedSex = null;
 
     function clamp(val, min, max) {
       return Math.min(Math.max(val, min), max);
     }
 
     function mapWeightToX(weight) {
-      // 5% отступ слева и справа, чтобы не прилипало к краям
       const clamped = clamp(weight, GRAPH_MIN, GRAPH_MAX);
-      const rel = (clamped - GRAPH_MIN) / (GRAPH_MAX - GRAPH_MIN); // 0..1
-      return 5 + rel * 90; // 5%..95%
+      const rel = (clamped - GRAPH_MIN) / (GRAPH_MAX - GRAPH_MIN);
+      return 5 + rel * 90;
     }
 
     function updateGraphVisibility() {
@@ -534,7 +658,6 @@
     }
 
     function updateChips() {
-      // sex
       if (state.sex) {
         chipSex.textContent = state.sex === 'male' ? 'Муж.' : 'Жен.';
         chipSex.classList.add('chip--active');
@@ -543,7 +666,6 @@
         chipSex.classList.remove('chip--active');
       }
 
-      // age
       if (state.age) {
         chipAge.textContent = state.age + ' лет';
         chipAge.classList.add('chip--active');
@@ -552,7 +674,6 @@
         chipAge.classList.remove('chip--active');
       }
 
-      // body weight
       if (state.bodyWeight) {
         chipWeight.textContent = state.bodyWeight + ' кг';
         chipWeight.classList.add('chip--active');
@@ -563,21 +684,14 @@
     }
 
     function updateGoalArea() {
-      // текст цели
       if (state.goalWeight) {
-        goalValue.innerHTML =
-          state.goalWeight.toFixed(1) + '<span>kg</span>';
+        goalValue.innerHTML = state.goalWeight.toFixed(1) + '<span>kg</span>';
       } else {
         goalValue.innerHTML = '--<span>kg</span>';
       }
 
-      // прогресс-бар
       if (state.currentWeight && state.goalWeight) {
-        const percent = clamp(
-          (state.currentWeight / state.goalWeight) * 100,
-          0,
-          100
-        );
+        const percent = clamp((state.currentWeight / state.goalWeight) * 100, 0, 100);
         goalBarInner.style.width = percent + '%';
         goalBarLabel.textContent = state.currentWeight.toFixed(1) + 'kg';
         goalBarLabel.style.display = 'block';
@@ -593,7 +707,6 @@
     function updateGraphMarkers() {
       const graphVisible = !graphWrapper.classList.contains('hidden');
 
-      // маркер человека (текущий вес)
       if (graphVisible && state.currentWeight) {
         const x = mapWeightToX(state.currentWeight);
         markerPerson.style.left = x + '%';
@@ -602,7 +715,6 @@
         markerPerson.style.display = 'none';
       }
 
-      // маркер флага (цель)
       if (graphVisible && state.goalWeight) {
         const x = mapWeightToX(state.goalWeight);
         markerFlag.style.left = x + '%';
@@ -619,63 +731,142 @@
       updateGraphMarkers();
     }
 
-    // Обработчики ввода
-    chipSex.addEventListener('click', () => {
-      const choice = prompt('Введите пол (м/ж):', state.sex === 'female' ? 'ж' : 'м');
-      if (!choice) return;
-      const val = choice.trim().toLowerCase();
-      if (val.startsWith('м')) state.sex = 'male';
-      else if (val.startsWith('ж')) state.sex = 'female';
+    /* ----- Modal helpers ----- */
+
+    function openModal(type) {
+      currentModal = type;
+      modalInput.value = '';
+      modalInputWrapper.style.display = 'none';
+      modalSexRow.style.display = 'none';
+      modalOk.style.display = 'inline-block';
+
+      if (type === 'sex') {
+        modalTitle.textContent = 'Выберите пол';
+        modalDescription.textContent = 'Это влияет на расчёт стандарта упражнения.';
+        modalSexRow.style.display = 'flex';
+        selectedSex = state.sex || 'male';
+        updateSexButtons();
+        modalOk.style.display = 'none'; // выбор только через кнопки
+      } else if (type === 'age') {
+        modalTitle.textContent = 'Возраст';
+        modalDescription.textContent = 'Введите ваш возраст в полных годах.';
+        modalInputWrapper.style.display = 'block';
+        modalInput.type = 'number';
+        modalInput.min = '1';
+        modalInput.max = '120';
+        modalInput.step = '1';
+        modalInput.placeholder = 'Например, 24';
+        if (state.age) modalInput.value = state.age;
+      } else if (type === 'body') {
+        modalTitle.textContent = 'Вес тела';
+        modalDescription.textContent = 'Введите ваш текущий вес тела в килограммах.';
+        modalInputWrapper.style.display = 'block';
+        modalInput.type = 'number';
+        modalInput.min = '1';
+        modalInput.max = '400';
+        modalInput.step = '0.5';
+        modalInput.placeholder = 'Например, 85';
+        if (state.bodyWeight) modalInput.value = state.bodyWeight;
+      } else if (type === 'goal') {
+        modalTitle.textContent = 'Цель (макс. вес)';
+        modalDescription.textContent = 'Введите целевой максимальный вес на упражнении.';
+        modalInputWrapper.style.display = 'block';
+        modalInput.type = 'number';
+        modalInput.min = '1';
+        modalInput.max = '400';
+        modalInput.step = '0.5';
+        modalInput.placeholder = 'Например, 100';
+        if (state.goalWeight) modalInput.value = state.goalWeight;
+      } else if (type === 'current') {
+        modalTitle.textContent = 'Рабочий вес';
+        modalDescription.textContent = 'Введите ваш текущий рабочий вес на этом упражнении.';
+        modalInputWrapper.style.display = 'block';
+        modalInput.type = 'number';
+        modalInput.min = '1';
+        modalInput.max = '400';
+        modalInput.step = '0.5';
+        modalInput.placeholder = 'Например, 90';
+        if (state.currentWeight) modalInput.value = state.currentWeight;
+      }
+
+      modalBackdrop.classList.remove('hidden');
+      if (modalInputWrapper.style.display !== 'none') {
+        setTimeout(() => modalInput.focus(), 10);
+      }
+    }
+
+    function closeModal() {
+      modalBackdrop.classList.add('hidden');
+      currentModal = null;
+    }
+
+    function updateSexButtons() {
+      btnSexMale.classList.toggle('modal-sex-btn--active', selectedSex === 'male');
+      btnSexFemale.classList.toggle('modal-sex-btn--active', selectedSex === 'female');
+    }
+
+    /* ----- Event bindings ----- */
+
+    chipSex.addEventListener('click', () => openModal('sex'));
+    chipAge.addEventListener('click', () => openModal('age'));
+    chipWeight.addEventListener('click', () => openModal('body'));
+    goalValue.addEventListener('click', () => openModal('goal'));
+    goalBar.addEventListener('click', () => openModal('current'));
+
+    btnSexMale.addEventListener('click', () => {
+      selectedSex = 'male';
+      state.sex = 'male';
       redraw();
+      closeModal();
     });
 
-    chipAge.addEventListener('click', () => {
-      const input = prompt('Введите возраст (полных лет):', state.age || '');
-      if (!input) return;
-      const n = parseInt(input.replace(',', '.').trim(), 10);
-      if (!isNaN(n) && n > 0 && n < 120) {
-        state.age = n;
-        redraw();
+    btnSexFemale.addEventListener('click', () => {
+      selectedSex = 'female';
+      state.sex = 'female';
+      redraw();
+      closeModal();
+    });
+
+    modalCancel.addEventListener('click', closeModal);
+
+    modalOk.addEventListener('click', () => {
+      if (!currentModal) return;
+      const raw = modalInput.value.trim();
+      if (!raw) {
+        closeModal();
+        return;
+      }
+      const value = parseFloat(raw.replace(',', '.'));
+      if (isNaN(value)) {
+        closeModal();
+        return;
+      }
+
+      if (currentModal === 'age') {
+        if (value > 0 && value < 120) state.age = Math.round(value);
+      } else if (currentModal === 'body') {
+        if (value > 0 && value < 400) state.bodyWeight = value;
+      } else if (currentModal === 'goal') {
+        if (value > 0 && value < 400) state.goalWeight = value;
+      } else if (currentModal === 'current') {
+        if (value > 0 && value < 400) state.currentWeight = value;
+      }
+
+      redraw();
+      closeModal();
+    });
+
+    modalBackdrop.addEventListener('click', e => {
+      if (e.target === modalBackdrop) closeModal();
+    });
+
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape') closeModal();
+      if (e.key === 'Enter' && !modalBackdrop.classList.contains('hidden')) {
+        if (currentModal && currentModal !== 'sex') modalOk.click();
       }
     });
 
-    chipWeight.addEventListener('click', () => {
-      const input = prompt('Введите вес тела (кг):', state.bodyWeight || '');
-      if (!input) return;
-      const n = parseFloat(input.replace(',', '.').trim());
-      if (!isNaN(n) && n > 0 && n < 400) {
-        state.bodyWeight = n;
-        redraw();
-      }
-    });
-
-    goalValue.addEventListener('click', () => {
-      const input = prompt(
-        'Введите целевой вес (кг) — максимальное значение:',
-        state.goalWeight || ''
-      );
-      if (!input) return;
-      const n = parseFloat(input.replace(',', '.').trim());
-      if (!isNaN(n) && n > 0 && n < 400) {
-        state.goalWeight = n;
-        redraw();
-      }
-    });
-
-    goalBar.addEventListener('click', () => {
-      const input = prompt(
-        'Введите текущий рабочий вес (кг):',
-        state.currentWeight || ''
-      );
-      if (!input) return;
-      const n = parseFloat(input.replace(',', '.').trim());
-      if (!isNaN(n) && n > 0 && n < 400) {
-        state.currentWeight = n;
-        redraw();
-      }
-    });
-
-    // начальная отрисовка
     redraw();
   </script>
 </body>
