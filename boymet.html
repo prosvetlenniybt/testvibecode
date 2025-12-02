@@ -1,0 +1,1078 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Методичка: HTML/JS/CSS с GPT</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    :root {
+      --bg: #f5f5f7;
+      --bg-elevated: #ffffff;
+      --border-subtle: #e2e4e8;
+      --text-main: #111827;
+      --text-muted: #6b7280;
+      --accent: #2563eb;
+      --accent-soft: #e0ebff;
+      --radius-lg: 16px;
+      --radius-xl: 24px;
+      --shadow-soft: 0 10px 30px rgba(15, 23, 42, 0.08);
+      --code-bg: #111827;
+      --code-text: #e5e7eb;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 56px 16px 64px; /* место под мобильный header */
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
+        "Segoe UI", sans-serif;
+      background: var(--bg);
+      color: var(--text-main);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* MOBILE TOP HEADER */
+
+    .mobile-header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 48px;
+      padding: 0 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: rgba(245, 245, 247, 0.96);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(226, 228, 232, 0.8);
+      z-index: 40;
+    }
+
+    .mobile-title {
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .burger-btn {
+      width: 32px;
+      height: 32px;
+      border-radius: 999px;
+      border: none;
+      background: #111827;
+      color: #f9fafb;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      padding: 0;
+    }
+
+    .burger-icon {
+      width: 16px;
+      height: 14px;
+      position: relative;
+    }
+
+    .burger-icon span {
+      position: absolute;
+      left: 0;
+      right: 0;
+      height: 2px;
+      border-radius: 999px;
+      background: #f9fafb;
+      transition: transform 0.2s ease, opacity 0.2s ease;
+    }
+
+    .burger-icon span:nth-child(1) { top: 1px; }
+    .burger-icon span:nth-child(2) { top: 6px; }
+    .burger-icon span:nth-child(3) { top: 11px; }
+
+    .burger-btn.open .burger-icon span:nth-child(1) {
+      transform: translateY(5px) rotate(45deg);
+    }
+
+    .burger-btn.open .burger-icon span:nth-child(2) {
+      opacity: 0;
+    }
+
+    .burger-btn.open .burger-icon span:nth-child(3) {
+      transform: translateY(-5px) rotate(-45deg);
+    }
+
+    /* MOBILE NAV */
+
+    .mobile-nav {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.4);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s ease;
+      z-index: 39;
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    .mobile-nav.open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .mobile-nav-panel {
+      width: 280px;
+      max-width: 80%;
+      height: 100%;
+      background: #ffffff;
+      border-left: 1px solid var(--border-subtle);
+      box-shadow: -10px 0 30px rgba(15, 23, 42, 0.16);
+      transform: translateX(100%);
+      transition: transform 0.25s ease-out;
+      display: flex;
+      flex-direction: column;
+      padding: 16px 16px 20px;
+    }
+
+    .mobile-nav.open .mobile-nav-panel {
+      transform: translateX(0);
+    }
+
+    .mobile-nav-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 8px;
+    }
+
+    .mobile-nav-title {
+      font-size: 13px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-muted);
+    }
+
+    .mobile-close {
+      border: none;
+      background: transparent;
+      font-size: 20px;
+      line-height: 1;
+      cursor: pointer;
+      padding: 4px;
+      color: #6b7280;
+    }
+
+    .mobile-nav-list {
+      list-style: none;
+      padding: 0;
+      margin: 4px 0 0;
+      font-size: 14px;
+      flex: 1;
+      overflow-y: auto;
+    }
+
+    .mobile-nav-list li {
+      margin: 4px 0;
+    }
+
+    .mobile-nav-list a {
+      display: block;
+      padding: 6px 6px;
+      border-radius: 999px;
+      text-decoration: none;
+      color: var(--text-main);
+    }
+
+    .mobile-nav-list a:hover {
+      background: #eef2ff;
+      color: var(--accent);
+    }
+
+    .mobile-nav-list a.active {
+      background: #eef2ff;
+      color: #2563eb;
+      font-weight: 600;
+    }
+
+    /* MAIN LAYOUT */
+
+    .page {
+      max-width: 900px;
+      width: 100%;
+      margin: 0 auto;
+    }
+
+    .page-main {
+      background: var(--bg-elevated);
+      border-radius: 28px;
+      padding: 24px 18px 32px;
+      box-shadow: var(--shadow-soft);
+      border: 1px solid var(--border-subtle);
+    }
+
+    @media (min-width: 961px) {
+      .page-main {
+        padding: 32px 32px 40px;
+      }
+    }
+
+    .label-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: var(--accent-soft);
+      color: var(--accent);
+      font-size: 11px;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 8px;
+    }
+
+    h1 {
+      font-size: 24px;
+      margin: 8px 0 10px;
+      letter-spacing: -0.02em;
+    }
+
+    @media (min-width: 961px) {
+      h1 {
+        font-size: 28px;
+      }
+    }
+
+    .subtitle {
+      margin: 0 0 20px;
+      color: var(--text-muted);
+      font-size: 13px;
+    }
+
+    .section-title {
+      font-size: 18px;
+      margin: 24px 0 4px;
+      letter-spacing: -0.01em;
+    }
+
+    @media (min-width: 961px) {
+      .section-title {
+        font-size: 20px;
+      }
+    }
+
+    .section-caption {
+      margin: 0 0 16px;
+      color: var(--text-muted);
+      font-size: 13px;
+    }
+
+    .section-card {
+      border-radius: var(--radius-lg);
+      padding: 16px 14px 18px;
+      border: 1px solid var(--border-subtle);
+      background: #fafafa;
+      margin-bottom: 14px;
+    }
+
+    @media (min-width: 961px) {
+      .section-card {
+        padding: 18px 18px 20px;
+      }
+    }
+
+    .section-card-header {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      align-items: center;
+      margin-bottom: 6px;
+    }
+
+    .section-card-title {
+      font-size: 15px;
+      font-weight: 600;
+    }
+
+    .section-card-tag {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      padding: 2px 8px;
+      border-radius: 999px;
+      background: #e5e7eb;
+      color: #4b5563;
+    }
+
+    p {
+      font-size: 14px;
+      line-height: 1.5;
+      margin: 4px 0 8px;
+      color: var(--text-main);
+    }
+
+    ul, ol {
+      margin: 4px 0 8px 18px;
+      padding: 0;
+      font-size: 14px;
+      color: var(--text-main);
+    }
+
+    li + li {
+      margin-top: 2px;
+    }
+
+    .muted {
+      color: var(--text-muted);
+      font-size: 13px;
+    }
+
+    /* PROMPT BLOCKS + BUTTONS */
+
+    .prompt-block {
+      background: var(--code-bg);
+      color: var(--code-text);
+      border-radius: 12px;
+      padding: 10px 10px 8px;
+      margin: 8px 0 4px;
+      font-size: 12px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, "Roboto Mono",
+        "Courier New", monospace;
+      white-space: pre-wrap;
+      overflow-x: auto;
+    }
+
+    .copy-row {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: 4px;
+    }
+
+    .copy-btn {
+      border: none;
+      border-radius: 999px;
+      padding: 4px 10px;
+      font-size: 11px;
+      cursor: pointer;
+      background: #e5e7eb;
+      color: #111827;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      transition: transform 0.1s ease, box-shadow 0.1s ease, background 0.15s ease;
+      white-space: nowrap;
+    }
+
+    .copy-btn::before {
+      content: "⧉";
+      font-size: 11px;
+    }
+
+    .copy-btn:hover {
+      background: #d1d5db;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 10px rgba(15, 23, 42, 0.12);
+    }
+
+    .copy-btn:active {
+      transform: translateY(0) scale(0.97);
+      box-shadow: 0 2px 6px rgba(15, 23, 42, 0.16);
+    }
+
+    .btn {
+      border: none;
+      border-radius: 999px;
+      padding: 6px 12px;
+      font-size: 12px;
+      cursor: pointer;
+      background: #111827;
+      color: #f9fafb;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      transition: transform 0.1s ease, box-shadow 0.1s ease, background 0.15s ease;
+      white-space: nowrap;
+      text-decoration: none;
+    }
+
+    .btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 5px 15px rgba(15, 23, 42, 0.25);
+      background: #020617;
+    }
+
+    .btn:active {
+      transform: translateY(0) scale(0.97);
+      box-shadow: 0 2px 8px rgba(15, 23, 42, 0.2);
+    }
+
+    .btn.secondary {
+      background: #e5e7eb;
+      color: #111827;
+      box-shadow: none;
+    }
+
+    .btn.secondary:hover {
+      background: #d1d5db;
+      box-shadow: none;
+    }
+
+    .status {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    .inline-tag {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-muted);
+    }
+
+    .demo-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+      margin-top: 6px;
+    }
+
+    .demo-input {
+      padding: 6px 9px;
+      font-size: 13px;
+      border-radius: 999px;
+      border: 1px solid #d1d5db;
+      min-width: 90px;
+      flex: 1 1 90px;
+    }
+
+    /* ADAPTIVE */
+
+    @media (max-width: 720px) {
+      .page-main {
+        padding: 20px 14px 26px;
+      }
+
+      .section-card {
+        padding: 14px 12px 16px;
+      }
+
+      p, ul, ol {
+        font-size: 13px;
+      }
+
+      .prompt-block {
+        font-size: 11.5px;
+      }
+
+      .copy-row {
+        justify-content: flex-start;
+      }
+
+      .copy-btn {
+        font-size: 10px;
+        padding: 4px 8px;
+      }
+
+      .demo-row {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .demo-input {
+        width: 100%;
+      }
+    }
+
+    @media (max-width: 480px) {
+      body {
+        padding: 52px 10px 48px;
+      }
+
+      .page-main {
+        border-radius: 22px;
+      }
+
+      h1 {
+        font-size: 20px;
+      }
+
+      .section-title {
+        font-size: 16px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<!-- MOBILE HEADER -->
+<header class="mobile-header">
+  <div class="mobile-title">HTML/JS/CSS с GPT — методичка</div>
+  <button class="burger-btn" id="burgerBtn" aria-label="Открыть навигацию">
+    <div class="burger-icon">
+      <span></span>
+      <span></span>
+      <span></span>
+    </div>
+  </button>
+</header>
+
+<!-- MOBILE NAV -->
+<div class="mobile-nav" id="mobileNav">
+  <div class="mobile-nav-panel">
+    <div class="mobile-nav-header">
+      <div class="mobile-nav-title">Навигация</div>
+      <button class="mobile-close" id="mobileClose" aria-label="Закрыть навигацию">&times;</button>
+    </div>
+    <ul class="mobile-nav-list" id="mobileNavList">
+      <li><a href="index.html" class="active">Методичка: HTML/JS/CSS</a></li>
+      <li><a href="animation.html">UI Motion Patterns</a></li>
+    </ul>
+  </div>
+</div>
+
+<div class="page">
+  <main class="page-main">
+    <div class="label-pill">HTML + GPT</div>
+    <h1>Как сделать HTML/JS/CSS-страницу с помощью GPT</h1>
+    <p class="subtitle">
+      Один файл, понятные промпты и минимальный JS: методичка для лендингов, прототипов и статичных сайтов.
+    </p>
+
+    <p style="margin-bottom:18px;">
+      <a href="animation.html" class="btn">Перейти к методичке по анимациям</a>
+    </p>
+
+    <!-- 1. БАЗОВЫЕ ПОНЯТИЯ -->
+    <section id="basics">
+      <h2 class="section-title">1. Что такое HTML, CSS и JavaScript</h2>
+      <p class="section-caption">Перед тем как просить модель писать код, важно понимать «кто за что отвечает».</p>
+
+      <article class="section-card">
+        <div class="section-card-header">
+          <div class="section-card-title">Роли технологий</div>
+          <div class="section-card-tag">Basics</div>
+        </div>
+        <p><strong>HTML</strong> — каркас страницы. Заголовки, абзацы, кнопки, формы, блоки.</p>
+        <p><strong>CSS</strong> — внешний вид. Цвета, шрифты, отступы, размеры, тени, закругления.</p>
+        <p><strong>JavaScript</strong> — логика и интерактивность. Клики, показ/скрытие элементов, таймеры, формы, LocalStorage и т.п.</p>
+        <p class="muted">
+          В промпте лучше явно просить: «HTML, CSS и JS — в одном файле». Тогда результат можно сразу сохранить как
+          <code>.html</code> и открыть в браузере.
+        </p>
+      </article>
+    </section>
+
+    <!-- 2. БАЗОВЫЙ ПРОМПТ -->
+    <section id="prompt-basic">
+      <h2 class="section-title">2. Базовый промпт для генерации страницы</h2>
+      <p class="section-caption">Универсальный шаблон, который можно адаптировать под любой лендинг или прототип.</p>
+
+      <article class="section-card">
+        <div class="section-card-header">
+          <div class="section-card-title">Стартовый запрос для GPT</div>
+          <div class="section-card-tag">Prompt</div>
+        </div>
+        <p>Подставьте своё описание страницы в квадратные скобки:</p>
+        <div class="prompt-block" id="p-basic">
+Создай код для страницы [описание страницы]. 
+HTML, CSS и JS — в одном файле. 
+Добавь адаптивность под мобильные устройства.
+        </div>
+        <div class="copy-row">
+          <button class="copy-btn" data-copy-target="p-basic">Скопировать промпт</button>
+        </div>
+        <p>Примеры описания:</p>
+        <ul>
+          <li>«лендинг онлайн-курса по английскому»;</li>
+          <li>«одностраничный сайт-портфолио UX-дизайнера»;</li>
+          <li>«страница с таймером обратного отсчёта до события».</li>
+        </ul>
+        <p class="status">
+          Чем конкретнее вы опишете структуру и цель страницы, тем меньше доработок понадобится после.
+        </p>
+      </article>
+    </section>
+
+    <!-- 3. ТЕСТИРОВАНИЕ КОДА -->
+    <section id="testing">
+      <h2 class="section-title">3. Как быстро протестировать полученный код</h2>
+      <p class="section-caption">Никаких IDE не нужно — достаточно блокнота и браузера.</p>
+
+      <article class="section-card">
+        <div class="section-card-header">
+          <div class="section-card-title">Пошаговый алгоритм</div>
+          <div class="section-card-tag">Practice</div>
+        </div>
+        <ol>
+          <li>Откройте блокнот или любой текстовый редактор (Блокнот, VS Code, Sublime Text и т.п.).</li>
+          <li>Вставьте сгенерированный GPT-код целиком.</li>
+          <li>Сохраните файл как <code>index.html</code> или <code>landing.html</code>.</li>
+          <li>Откройте файл двойным кликом — он запустится в браузере.</li>
+        </ol>
+
+        <p><strong>Если страница не работает:</strong></p>
+        <ol>
+          <li>Нажмите <strong>F12 → вкладка Console (Консоль)</strong>.</li>
+          <li>Посмотрите сообщения об ошибках (красный текст с номером строки).</li>
+          <li>Скопируйте текст ошибки и вернитесь к GPT.</li>
+        </ol>
+
+        <div class="inline-tag">Промпт для исправления</div>
+        <div class="prompt-block" id="p-fix">
+В коде ошибка в консоли: [вставить текст ошибки]. 
+Исправь HTML/JS-код так, чтобы страница работала. 
+Верни полный код страницы целиком.
+        </div>
+        <div class="copy-row">
+          <button class="copy-btn" data-copy-target="p-fix">Скопировать промпт</button>
+        </div>
+      </article>
+    </section>
+
+    <!-- 4. АПГРЕЙД ПРОМПТА -->
+    <section id="upgrade">
+      <h2 class="section-title">4. Как быстро проапгрейдить промпт</h2>
+      <p class="section-caption">Сначала ТЗ, потом код — так проще контролировать результат.</p>
+
+      <article class="section-card">
+        <div class="section-card-header">
+          <div class="section-card-title">Шаг 1. Попросить GPT написать ТЗ</div>
+          <div class="section-card-tag">Prompt → ТЗ</div>
+        </div>
+        <div class="prompt-block" id="p-tz">
+Напиши задание для разработки HTML/JS/CSS-страницы 
+[описание структуры страницы, поведение интерактивных элементов].
+        </div>
+        <div class="copy-row">
+          <button class="copy-btn" data-copy-target="p-tz">Скопировать промпт</button>
+        </div>
+      </article>
+
+      <article class="section-card">
+        <div class="section-card-header">
+          <div class="section-card-title">Шаг 2. Код по ТЗ</div>
+          <div class="section-card-tag">ТЗ → код</div>
+        </div>
+        <div class="prompt-block" id="p-from-tz">
+Сделай HTML/JS/CSS-код страницы на основе этого ТЗ. 
+Весь код — в одном файле. 
+Добавь адаптивность под мобильные устройства.
+        </div>
+        <div class="copy-row">
+          <button class="copy-btn" data-copy-target="p-from-tz">Скопировать промпт</button>
+        </div>
+      </article>
+
+      <article class="section-card">
+        <div class="section-card-header">
+          <div class="section-card-title">Шаг 3. Код по дизайну</div>
+          <div class="section-card-tag">Design → код</div>
+        </div>
+        <p class="muted">Если есть макет (Figma, скриншот), можно ссылаться на него или прикладывать картинку.</p>
+        <div class="prompt-block" id="p-design">
+Сделай HTML/JS/CSS-код страницы на основе этого дизайна. 
+Сохрани структуру, цвета, шрифты и элементы. 
+Сделай код адаптивным под мобильные устройства.
+        </div>
+        <div class="copy-row">
+          <button class="copy-btn" data-copy-target="p-design">Скопировать промпт</button>
+        </div>
+        <p class="status">
+          Важно: картинка даёт только статичное состояние. Весь интерактив лучше описывать словами (см. раздел ниже).
+        </p>
+      </article>
+    </section>
+
+    <!-- 5. ОПЦИОНАЛЬНЫЕ ДОПОЛНЕНИЯ -->
+    <section id="options">
+      <h2 class="section-title">5. Дополнения к промпту: структура, шрифты, цвета</h2>
+      <p class="section-caption">Чтобы дизайн получился ближе к ожиданиям, задайте рамки прямо в запросе.</p>
+
+      <article class="section-card">
+        <div class="section-card-header">
+          <div class="section-card-title">Структура страницы</div>
+          <div class="section-card-tag">Layout</div>
+        </div>
+        <div class="prompt-block" id="p-structure">
+Страница состоит из шапки, трёх буллетов, карусели и кнопки.
+        </div>
+        <div class="copy-row">
+          <button class="copy-btn" data-copy-target="p-structure">Скопировать фрагмент</button>
+        </div>
+      </article>
+
+      <article class="section-card">
+        <div class="section-card-header">
+          <div class="section-card-title">Типографика и отступы</div>
+          <div class="section-card-tag">Typography</div>
+        </div>
+        <div class="prompt-block" id="p-typography">
+Используй шрифт Roboto. 
+Заголовок — Bold 22px. 
+Остальной текст — 17px. 
+Округления у блоков — 24px. 
+Боковые отступы — 16px. 
+Расстояние между блоками — 16px.
+        </div>
+        <div class="copy-row">
+          <button class="copy-btn" data-copy-target="p-typography">Скопировать фрагмент</button>
+        </div>
+      </article>
+
+      <article class="section-card">
+        <div class="section-card-header">
+          <div class="section-card-title">Цветовая палитра</div>
+          <div class="section-card-tag">Colors</div>
+        </div>
+        <div class="prompt-block" id="p-colors">
+Палитра:
+#F3F4F5 — для фонов и теней
+#000000 — для текста и фонов
+#7F7F83 — для неактивного текста и обводки.
+        </div>
+        <div class="copy-row">
+          <button class="copy-btn" data-copy-target="p-colors">Скопировать фрагмент</button>
+        </div>
+      </article>
+    </section>
+
+    <!-- 6. ЛОГИКА ИНТЕРАКТИВНЫХ ЭЛЕМЕНТОВ -->
+    <section id="logic">
+      <h2 class="section-title">6. Как описывать логику интерактивных элементов</h2>
+      <p class="section-caption">Модели видят картинку как кадр. Поведение элементов нужно описывать текстом.</p>
+
+      <article class="section-card">
+        <div class="section-card-header">
+          <div class="section-card-title">Формула описания</div>
+          <div class="section-card-tag">Logic</div>
+        </div>
+        <p>Удобный шаблон:</p>
+        <ul>
+          <li><strong>Изначально</strong> пользователь видит <code>[X]</code>.</li>
+          <li><strong>Если</strong> пользователь делает <code>[Y]</code>, он получает <code>[Z]</code>.</li>
+        </ul>
+        <div class="prompt-block" id="p-logic">
+Изначально пользователь видит блок с приветствием и кнопкой «Начать». 
+Если пользователь нажимает «Начать», блок с приветствием скрывается, 
+а показывается форма с полями «Имя» и «Email».
+        </div>
+        <div class="copy-row">
+          <button class="copy-btn" data-copy-target="p-logic">Скопировать пример логики</button>
+        </div>
+        <p class="status">
+          Чем подробнее описана логика, тем меньше придётся «догонять» руками в коде.
+        </p>
+      </article>
+    </section>
+
+    <!-- 7. РАБОТА С КАРТИНКАМИ -->
+    <section id="images">
+      <h2 class="section-title">7. Работа с картинками</h2>
+      <p class="section-caption">От генерации иконок до подключения png в готовом коде.</p>
+
+      <article class="section-card">
+        <div class="section-card-header">
+          <div class="section-card-title">Генерация 3D-иконок</div>
+          <div class="section-card-tag">Image prompt</div>
+        </div>
+        <p>Пример промпта для 3D-иконок в «резиново-пластиковом» стиле:</p>
+        <div class="prompt-block" id="p-icons">
+A highly polished 3D illustration. 
+The environment is minimalistic, with soft shadows and ambient occlusion. 
+Materials are smooth and shiny, like rubber, metal or plastic. 
+Bright soft light from top-left. 
+Composition centered, with enough white space. 
+No Background.
+        </div>
+        <div class="copy-row">
+          <button class="copy-btn" data-copy-target="p-icons">Скопировать промпт</button>
+        </div>
+        <p class="muted">Для генерации можно использовать любую модель (в том числе Sora, если она доступна).</p>
+      </article>
+
+      <article class="section-card">
+        <div class="section-card-header">
+          <div class="section-card-title">Как подключить картинку в коде</div>
+          <div class="section-card-tag">Assets</div>
+        </div>
+        <ol>
+          <li>Загрузите картинку в репозиторий GitHub:
+            <ul>
+              <li><strong>Add file → Upload files</strong>;</li>
+              <li>выберите файл (например, <code>beznom.png</code>);</li>
+              <li>нажмите <strong>Commit changes</strong>.</li>
+            </ul>
+          </li>
+          <li>Опишите подключение в промпте:</li>
+        </ol>
+        <div class="prompt-block" id="p-img-use">
+Слева от текста «Подключить безопасный номер» должна быть картинка beznom.png 
+с разрешением 50x50 px.
+        </div>
+        <div class="copy-row">
+          <button class="copy-btn" data-copy-target="p-img-use">Скопировать промпт</button>
+        </div>
+        <p>GPT вернёт разметку вида:</p>
+        <div class="prompt-block">
+&lt;img src="beznom.png" alt="Безопасный номер" width="50" height="50"&gt;
+        </div>
+      </article>
+    </section>
+
+    <!-- 8. LOCALSTORAGE -->
+    <section id="localstorage">
+      <h2 class="section-title">8. Как и зачем сохранять данные пользователя (LocalStorage)</h2>
+      <p class="section-caption">LocalStorage — встроенное хранилище в браузере, доступное из JS.</p>
+
+      <article class="section-card">
+        <div class="section-card-header">
+          <div class="section-card-title">Когда это полезно</div>
+          <div class="section-card-tag">Concept</div>
+        </div>
+        <ul>
+          <li>Пользователь прошёл онбординг → при повторном заходе онбординг не показывается.</li>
+          <li>Пользователь ввёл возраст → он автоматически подставляется при следующем визите.</li>
+          <li>Прошло 30 минут с прошлой сессии → меняется состояние таймера или уведомления.</li>
+        </ul>
+
+        <div class="inline-tag">Промпт для GPT</div>
+        <div class="prompt-block" id="p-ls">
+Добавь всплывающее окно-онбординг, которое показывается только при первом заходе. 
+Сохрани результат в localStorage под ключом "onboarding_done".
+        </div>
+        <div class="copy-row">
+          <button class="copy-btn" data-copy-target="p-ls">Скопировать промпт</button>
+        </div>
+      </article>
+
+      <!-- демо только с возрастом -->
+      <article class="section-card">
+        <div class="section-card-header">
+          <div class="section-card-title">Демо. Сохранение возраста</div>
+          <div class="section-card-tag">LocalStorage demo</div>
+        </div>
+        <p class="muted">
+          Введите возраст и нажмите «Сохранить» — значение сохранится в <code>localStorage</code>. При обновлении страницы оно подставится автоматически.
+        </p>
+        <div class="demo-row">
+          <input type="number" id="ageInput" class="demo-input" placeholder="Возраст">
+          <button class="btn" id="saveAge">Сохранить</button>
+          <button class="btn secondary" id="clearAge">Очистить</button>
+        </div>
+        <div class="status" id="ageStatus"></div>
+      </article>
+    </section>
+
+    <!-- 9. GITHUB PAGES -->
+    <section id="github-pages">
+      <h2 class="section-title">9. Как опубликовать страницу через GitHub Pages</h2>
+      <p class="section-caption">Простой способ получить публичную ссылку на ваш HTML-файл.</p>
+
+      <article class="section-card">
+        <div class="section-card-header">
+          <div class="section-card-title">Шаги</div>
+          <div class="section-card-tag">Deploy</div>
+        </div>
+
+        <h3 style="margin:10px 0 4px;font-size:14px;">Шаг 1. Создать репозиторий</h3>
+        <ol>
+          <li>Зайдите на GitHub и нажмите <strong>New repository</strong>.</li>
+          <li>Введите название репозитория.</li>
+          <li>Выберите тип <strong>Public</strong>.</li>
+          <li>Нажмите <strong>Create</strong>.</li>
+        </ol>
+
+        <h3 style="margin:10px 0 4px;font-size:14px;">Шаг 2. Загрузить файлы</h3>
+        <ol>
+          <li>Внутри репозитория нажмите <strong>Add file → Upload files</strong>.</li>
+          <li>Загрузите файл <code>.html</code> (например, <code>index.html</code>).</li>
+          <li>Нажмите <strong>Commit changes</strong>.</li>
+        </ol>
+
+        <h3 style="margin:10px 0 4px;font-size:14px;">Шаг 3. Включить Pages</h3>
+        <ol>
+          <li>Перейдите в <strong>Settings → Pages</strong>.</li>
+          <li>В разделе <strong>Source</strong> выберите:
+            <ul>
+              <li><strong>Deploy from branch</strong>;</li>
+              <li><strong>Branch:</strong> <code>main</code>;</li>
+              <li><strong>Folder:</strong> <code>/root</code>.</li>
+            </ul>
+          </li>
+          <li>Сохраните настройки.</li>
+        </ol>
+
+        <h3 style="margin:10px 0 4px;font-size:14px;">Шаг 4. Получить ссылку</h3>
+        <p>Через некоторое время появится URL вида:</p>
+        <div class="prompt-block">
+https://[username].github.io/[название-репозитория]/[название-файла].html
+        </div>
+        <p class="status">
+          Эту ссылку можно отправлять заказчику, класть в портфолио или использовать как демо-среду для дальнейших экспериментов с GPT.
+        </p>
+      </article>
+    </section>
+  </main>
+</div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    // BURGER + MOBILE NAV
+    var burgerBtn = document.getElementById("burgerBtn");
+    var mobileNav = document.getElementById("mobileNav");
+    var mobileClose = document.getElementById("mobileClose");
+    var mobileNavList = document.getElementById("mobileNavList");
+
+    function openNav() {
+      if (!mobileNav || !burgerBtn) return;
+      mobileNav.classList.add("open");
+      burgerBtn.classList.add("open");
+    }
+
+    function closeNav() {
+      if (!mobileNav || !burgerBtn) return;
+      mobileNav.classList.remove("open");
+      burgerBtn.classList.remove("open");
+    }
+
+    if (burgerBtn) {
+      burgerBtn.addEventListener("click", function () {
+        if (mobileNav.classList.contains("open")) {
+          closeNav();
+        } else {
+          openNav();
+        }
+      });
+    }
+
+    if (mobileClose) {
+      mobileClose.addEventListener("click", closeNav);
+    }
+
+    if (mobileNav) {
+      mobileNav.addEventListener("click", function (e) {
+        if (e.target === mobileNav) {
+          closeNav();
+        }
+      });
+    }
+
+    if (mobileNavList) {
+      mobileNavList.querySelectorAll("a").forEach(function (link) {
+        link.addEventListener("click", function () {
+          closeNav();
+        });
+      });
+    }
+
+    // КОПИРОВАНИЕ ПРОМПТОВ
+    var copyButtons = document.querySelectorAll(".copy-btn");
+    copyButtons.forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        var targetId = btn.getAttribute("data-copy-target");
+        var block = document.getElementById(targetId);
+        if (!block) return;
+
+        var text = block.innerText.trim();
+        var originalText = btn.textContent;
+
+        function onSuccess() {
+          btn.textContent = "Скопировано!";
+          btn.style.backgroundColor = "#22c55e";
+          btn.style.color = "#ecfdf5";
+          setTimeout(function () {
+            btn.textContent = originalText;
+            btn.style.backgroundColor = "";
+            btn.style.color = "";
+          }, 1500);
+        }
+
+        function onError() {
+          btn.textContent = "Ошибка копирования";
+          btn.style.backgroundColor = "#b91c1c";
+          btn.style.color = "#fef2f2";
+          setTimeout(function () {
+            btn.textContent = originalText;
+            btn.style.backgroundColor = "";
+            btn.style.color = "";
+          }, 2000);
+        }
+
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(text).then(onSuccess).catch(function () {
+            onError();
+          });
+        } else {
+          try {
+            var ta = document.createElement("textarea");
+            ta.value = text;
+            ta.style.position = "fixed";
+            ta.style.opacity = "0";
+            document.body.appendChild(ta);
+            ta.select();
+            document.execCommand("copy");
+            document.body.removeChild(ta);
+            onSuccess();
+          } catch (e) {
+            onError();
+          }
+        }
+      });
+    });
+
+    // LOCALSTORAGE: ВОЗРАСТ
+    var ageInput = document.getElementById("ageInput");
+    var saveAge = document.getElementById("saveAge");
+    var clearAge = document.getElementById("clearAge");
+    var ageStatus = document.getElementById("ageStatus");
+    var AGE_KEY = "user_age";
+
+    function renderAge() {
+      var saved = localStorage.getItem(AGE_KEY);
+      if (saved) {
+        if (ageInput) ageInput.value = saved;
+        if (ageStatus) {
+          ageStatus.textContent = "Сохранённый возраст: " + saved +
+            " (значение берётся из localStorage).";
+        }
+      } else if (ageStatus) {
+        ageStatus.textContent = "Возраст пока не сохранён.";
+      }
+    }
+
+    if (saveAge) {
+      saveAge.addEventListener("click", function () {
+        if (!ageInput || !ageStatus) return;
+        var val = ageInput.value.trim();
+        if (!val) {
+          ageStatus.textContent = "Введите возраст, прежде чем сохранять.";
+          return;
+        }
+        localStorage.setItem(AGE_KEY, val);
+        renderAge();
+      });
+    }
+
+    if (clearAge) {
+      clearAge.addEventListener("click", function () {
+        localStorage.removeItem(AGE_KEY);
+        if (ageInput) ageInput.value = "";
+        renderAge();
+      });
+    }
+
+    renderAge();
+  });
+</script>
+
+</body>
+</html>
