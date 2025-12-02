@@ -14,10 +14,12 @@
       --accent: #2563eb;
       --accent-soft: #e0ebff;
       --radius-lg: 16px;
+      --radius-xl: 24px;
       --shadow-soft: 0 10px 30px rgba(15, 23, 42, 0.08);
       --code-bg: #020617;
-      --code-border: #111827;
       --code-text: #e5e7eb;
+      --chip-bg: #0f172a;
+      --chip-border: #1e293b;
     }
 
     * {
@@ -26,16 +28,15 @@
 
     body {
       margin: 0;
-      padding: 56px 16px 64px;
+      padding: 56px 16px 72px;
       font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
         "Segoe UI", sans-serif;
-      background: var(--bg);
+      background: radial-gradient(circle at top, #e5edff 0, #f5f5f7 38%, #f5f5f7 100%);
       color: var(--text-main);
       -webkit-font-smoothing: antialiased;
     }
 
-    /* MOBILE HEADER */
-
+    /* MOBILE TOP HEADER */
     .mobile-header {
       position: fixed;
       top: 0;
@@ -91,9 +92,17 @@
       transition: transform 0.2s ease, opacity 0.2s ease;
     }
 
-    .burger-icon span:nth-child(1) { top: 1px; }
-    .burger-icon span:nth-child(2) { top: 6px; }
-    .burger-icon span:nth-child(3) { top: 11px; }
+    .burger-icon span:nth-child(1) {
+      top: 1px;
+    }
+
+    .burger-icon span:nth-child(2) {
+      top: 6px;
+    }
+
+    .burger-icon span:nth-child(3) {
+      top: 11px;
+    }
 
     .burger-btn.open .burger-icon span:nth-child(1) {
       transform: translateY(5px) rotate(45deg);
@@ -107,7 +116,7 @@
       transform: translateY(-5px) rotate(-45deg);
     }
 
-    /* MOBILE NAV OVERLAY */
+    /* MOBILE NAV */
     .mobile-nav {
       position: fixed;
       inset: 0;
@@ -202,32 +211,51 @@
 
     /* MAIN LAYOUT */
     .page {
-      max-width: 900px;
+      max-width: 960px;
       width: 100%;
       margin: 0 auto;
     }
 
     .page-main {
-      background: var(--bg-elevated);
+      background: radial-gradient(circle at top left, #eff4ff 0, #ffffff 34%, #ffffff 100%);
       border-radius: 28px;
-      padding: 24px 18px 32px;
-      box-shadow: var(--shadow-soft);
-      border: 1px solid var(--border-subtle);
+      padding: 24px 16px 28px;
+      box-shadow: 0 18px 55px rgba(15, 23, 42, 0.16);
+      border: 1px solid rgba(226, 232, 240, 0.9);
     }
 
-    @media (min-width: 961px) {
+    @media (min-width: 960px) {
       .page-main {
-        padding: 32px 32px 40px;
+        padding: 28px 28px 32px;
       }
+    }
+
+    .label-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: rgba(15, 23, 42, 0.94);
+      color: rgba(226, 232, 240, 0.98);
+      font-size: 11px;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.09em;
+      margin-bottom: 8px;
+      border: 1px solid rgba(148, 163, 184, 0.5);
+      box-shadow:
+        0 0 0 1px rgba(15, 23, 42, 0.4),
+        0 10px 25px rgba(15, 23, 42, 0.7);
     }
 
     h1 {
       font-size: 24px;
-      margin: 8px 0 10px;
+      margin: 8px 0 6px;
       letter-spacing: -0.02em;
     }
 
-    @media (min-width: 961px) {
+    @media (min-width: 960px) {
       h1 {
         font-size: 28px;
       }
@@ -237,30 +265,16 @@
       margin: 0 0 20px;
       color: var(--text-muted);
       font-size: 13px;
-    }
-
-    .label-pill {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 4px 10px;
-      border-radius: 999px;
-      background: var(--accent-soft);
-      color: var(--accent);
-      font-size: 11px;
-      font-weight: 500;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      margin-bottom: 8px;
+      max-width: 630px;
     }
 
     .section-title {
       font-size: 18px;
-      margin: 24px 0 8px;
+      margin: 24px 0 4px;
       letter-spacing: -0.01em;
     }
 
-    @media (min-width: 961px) {
+    @media (min-width: 960px) {
       .section-title {
         font-size: 20px;
       }
@@ -272,18 +286,24 @@
       font-size: 13px;
     }
 
-    .section-card {
-      border-radius: var(--radius-lg);
-      padding: 16px 14px 18px;
-      border: 1px solid var(--border-subtle);
-      background: #fafafa;
-      margin-bottom: 14px;
+    .section-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.95fr);
+      gap: 14px;
+      align-items: flex-start;
     }
 
-    @media (min-width: 961px) {
-      .section-card {
-        padding: 18px 18px 20px;
+    @media (max-width: 800px) {
+      .section-grid {
+        grid-template-columns: minmax(0, 1fr);
       }
+    }
+
+    .section-card {
+      border-radius: 18px;
+      padding: 14px 14px 14px;
+      border: 1px solid var(--border-subtle);
+      background: #f9fafb;
     }
 
     .section-card-header {
@@ -316,10 +336,10 @@
       color: var(--text-main);
     }
 
-    ul, ol {
+    ul {
       margin: 4px 0 8px 18px;
       padding: 0;
-      font-size: 14px;
+      font-size: 13px;
       color: var(--text-main);
     }
 
@@ -332,149 +352,72 @@
       font-size: 13px;
     }
 
-    .badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-      border-radius: 999px;
-      padding: 2px 8px;
-      font-size: 11px;
-      background: #e5e7eb;
-      color: #374151;
-    }
-
-    /* GRID FOR PATTERNS */
-    .pattern-grid {
-      display: grid;
-      grid-template-columns: minmax(0, 1.4fr) minmax(0, 1.3fr);
-      gap: 16px;
-      align-items: flex-start;
-    }
-
-    @media (max-width: 840px) {
-      .pattern-grid {
-        grid-template-columns: minmax(0, 1fr);
-      }
-    }
-
-    .pattern-card {
-      border-radius: 16px;
-      padding: 14px 14px 14px;
-      border: 1px solid var(--border-subtle);
-      background: #f9fafb;
-    }
-
-    .pattern-meta {
-      font-size: 12px;
-      color: #6b7280;
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin: 2px 0 4px;
-    }
-
-    .pill {
-      border-radius: 999px;
-      padding: 2px 8px;
-      background: #e5e7eb;
-      font-size: 11px;
-      color: #374151;
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-    }
-
-    .pattern-demo {
-      border-radius: 14px;
-      border: 1px solid var(--border-subtle);
-      background: #020617;
-      color: #e5e7eb;
-      padding: 10px 10px 12px;
-      font-size: 13px;
-      box-shadow: 0 12px 30px rgba(15, 23, 42, 0.6);
+    /* DEMO PANEL */
+    .demo-panel {
+      border-radius: 18px;
+      padding: 14px 14px 16px;
+      background: radial-gradient(circle at top left, #020617 0, #020617 52%, #020617 100%);
+      color: var(--code-text);
+      border: 1px solid rgba(148, 163, 184, 0.6);
+      box-shadow:
+        0 0 0 1px rgba(15, 23, 42, 0.7),
+        0 26px 60px rgba(15, 23, 42, 0.9);
     }
 
     .demo-header {
       display: flex;
-      align-items: center;
       justify-content: space-between;
-      gap: 8px;
+      align-items: center;
       margin-bottom: 8px;
-      font-size: 11px;
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-      color: #9ca3af;
     }
 
-    .demo-controls {
-      display: inline-flex;
+    .demo-title {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      color: rgba(148, 163, 184, 0.9);
+    }
+
+    .chip-row {
+      display: flex;
       flex-wrap: wrap;
       gap: 6px;
     }
 
-    .btn {
-      border: none;
-      border-radius: 999px;
-      padding: 4px 10px;
+    .chip {
       font-size: 11px;
-      cursor: pointer;
-      background: #f9fafb;
-      color: #111827;
+      padding: 3px 8px;
+      border-radius: 999px;
+      border: 1px solid var(--chip-border);
+      background: var(--chip-bg);
+      color: #e5e7eb;
       display: inline-flex;
       align-items: center;
       gap: 4px;
-      transition: transform 0.1s ease, box-shadow 0.1s ease, background 0.15s ease;
-      white-space: nowrap;
     }
 
-    .btn:hover {
-      transform: translateY(-1px);
-      box-shadow: 0 5px 15px rgba(15, 23, 42, 0.3);
-      background: #e5e7eb;
+    .chip-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 999px;
+      background: #22c55e;
+      box-shadow: 0 0 0 4px rgba(34, 197, 94, 0.22);
     }
 
-    .btn:active {
-      transform: translateY(0) scale(0.97);
-      box-shadow: 0 2px 8px rgba(15, 23, 42, 0.25);
-    }
-
-    .btn-secondary {
-      background: #111827;
-      color: #f9fafb;
-    }
-
-    .btn-secondary:hover {
+    /* PROMPT BLOCK */
+    .prompt-block {
       background: #020617;
-    }
-
-    .demo-surface {
+      color: var(--code-text);
       border-radius: 12px;
-      border: 1px solid rgba(148, 163, 184, 0.5);
-      background: radial-gradient(circle at top, #020617, #020617 40%, #000 100%);
-      padding: 12px;
-      position: relative;
-      overflow: hidden;
-      min-height: 90px;
-    }
-
-    .demo-caption {
-      margin-top: 6px;
-      font-size: 12px;
-      color: #9ca3af;
-    }
-
-    .code-block {
-      margin-top: 10px;
-      border-radius: 12px;
-      border: 1px solid var(--code-border);
-      background: var(--code-bg);
       padding: 10px 10px 8px;
+      margin: 8px 0 4px;
+      font-size: 12px;
       font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, "Roboto Mono",
         "Courier New", monospace;
-      font-size: 11px;
-      color: var(--code-text);
       white-space: pre-wrap;
-      position: relative;
+      overflow-x: auto;
+      border: 1px solid rgba(51, 65, 85, 0.9);
+      box-shadow: inset 0 0 0 1px rgba(15, 23, 42, 0.9);
     }
 
     .copy-row {
@@ -486,32 +429,744 @@
     .copy-btn {
       border: none;
       border-radius: 999px;
-      padding: 3px 9px;
-      font-size: 10px;
+      padding: 4px 10px;
+      font-size: 11px;
       cursor: pointer;
-      background: #e5e7eb;
-      color: #111827;
+      background: rgba(15, 23, 42, 1);
+      color: #e5e7eb;
       display: inline-flex;
       align-items: center;
       gap: 4px;
       transition: transform 0.1s ease, box-shadow 0.1s ease, background 0.15s ease;
       white-space: nowrap;
+      border: 1px solid rgba(148, 163, 184, 0.6);
     }
 
     .copy-btn::before {
       content: "⧉";
-      font-size: 10px;
+      font-size: 11px;
     }
 
     .copy-btn:hover {
-      background: #d1d5db;
+      background: #020617;
       transform: translateY(-1px);
-      box-shadow: 0 4px 10px rgba(15, 23, 42, 0.2);
+      box-shadow: 0 5px 15px rgba(15, 23, 42, 0.65);
     }
 
     .copy-btn:active {
       transform: translateY(0) scale(0.97);
-      box-shadow: 0 2px 6px rgba(15, 23, 42, 0.2);
+      box-shadow: 0 2px 8px rgba(15, 23, 42, 0.85);
+    }
+
+    /* DEMO BOXES (интерактив) */
+
+    .demo-surface {
+      border-radius: 14px;
+      padding: 10px 10px 12px;
+      background: radial-gradient(circle at top left, #020617 0, #020617 45%, #020617 100%);
+      border: 1px solid rgba(51, 65, 85, 0.9);
+      min-height: 120px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .demo-surface-muted {
+      opacity: 0.7;
+      filter: grayscale(0.4);
+    }
+
+    .demo-hint {
+      font-size: 11px;
+      color: rgba(148, 163, 184, 0.9);
+      margin-top: 8px;
+    }
+
+    /* ENTER BLOCKS */
+    .card-base {
+      border-radius: 18px;
+      padding: 12px 14px;
+      background: radial-gradient(circle at top left, #111827 0, #020617 44%, #020617 100%);
+      color: #e5e7eb;
+      box-shadow:
+        0 18px 45px rgba(15, 23, 42, 0.9),
+        0 0 0 1px rgba(15, 23, 42, 0.85);
+      border: 1px solid rgba(148, 163, 184, 0.7);
+      width: 230px;
+      max-width: 100%;
+    }
+
+    .card-title {
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .card-subtitle {
+      font-size: 11px;
+      color: rgba(148, 163, 184, 0.95);
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 10px;
+      padding: 2px 7px;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.7);
+      margin-top: 8px;
+      color: rgba(226, 232, 240, 0.96);
+    }
+
+    .badge-dot {
+      width: 4px;
+      height: 4px;
+      border-radius: 999px;
+      background: #22c55e;
+    }
+
+    /* Fade-in card */
+    .fade-card {
+      opacity: 0;
+      transform: translateY(12px);
+      transition: opacity 0.35s ease-out, transform 0.35s ease-out;
+    }
+
+    .fade-card.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Slide-up card */
+    .slide-card {
+      opacity: 0;
+      transform: translateY(22px);
+      transition: opacity 0.4s cubic-bezier(0.18, 0.89, 0.32, 1.28),
+        transform 0.4s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+    }
+
+    .slide-card.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Scale-in card */
+    .scale-card {
+      opacity: 0;
+      transform: scale(0.85);
+      transform-origin: 50% 50%;
+      transition: opacity 0.42s cubic-bezier(0.16, 1, 0.3, 1),
+        transform 0.42s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .scale-card.visible {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    /* Exit ANIMATIONS */
+    .toast {
+      border-radius: 999px;
+      padding: 6px 10px;
+      background: radial-gradient(circle at top left, #022c22 0, #022c22 45%, #022c22 100%);
+      border: 1px solid #34d399;
+      color: #d1fae5;
+      font-size: 11px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow:
+        0 16px 30px rgba(6, 95, 70, 0.8),
+        0 0 0 1px rgba(5, 46, 22, 0.8);
+    }
+
+    .toast-icon {
+      width: 16px;
+      height: 16px;
+      border-radius: 999px;
+      background: radial-gradient(circle at 30% 20%, #bbf7d0, #059669);
+      box-shadow: 0 0 0 1px rgba(22, 101, 52, 0.9);
+    }
+
+    .toast-exit {
+      opacity: 1;
+      transform: translateX(0);
+      transition: opacity 0.26s ease-out, transform 0.26s ease-out;
+    }
+
+    .toast-exit.hidden {
+      opacity: 0;
+      transform: translateX(24px);
+    }
+
+    .toast-btn {
+      font-size: 10px;
+      padding: 2px 6px;
+      border-radius: 999px;
+      border: 1px solid rgba(52, 211, 153, 0.7);
+      background: transparent;
+      color: #bef264;
+      cursor: pointer;
+    }
+
+    /* Screen swipe */
+    .phone-frame {
+      width: 230px;
+      height: 430px;
+      border-radius: 26px;
+      border: 1px solid rgba(148, 163, 184, 0.8);
+      box-shadow:
+        0 24px 55px rgba(15, 23, 42, 0.95),
+        0 0 0 1px rgba(15, 23, 42, 1);
+      padding: 10px;
+      background: radial-gradient(circle at top left, #020617 0, #020617 55%, #020617 100%);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .phone-notch {
+      position: absolute;
+      top: 8px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 86px;
+      height: 14px;
+      border-radius: 999px;
+      background: rgba(15, 23, 42, 0.96);
+      box-shadow: 0 0 0 1px rgba(148, 163, 184, 0.7);
+    }
+
+    .phone-screen {
+      position: absolute;
+      inset: 28px 10px 12px;
+      border-radius: 16px;
+      overflow: hidden;
+      background: radial-gradient(circle at top, #0f172a 0, #020617 58%, #020617 100%);
+      border: 1px solid rgba(148, 163, 184, 0.8);
+    }
+
+    .screen-track {
+      display: flex;
+      width: 300%;
+      height: 100%;
+      transform: translateX(0);
+      transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .screen {
+      width: 100%;
+      padding: 10px 12px;
+      color: #e5e7eb;
+    }
+
+    .screen-title {
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .screen-subtitle {
+      font-size: 11px;
+      color: rgba(148, 163, 184, 0.95);
+      margin-bottom: 10px;
+    }
+
+    .screen-pill-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+      margin-bottom: 8px;
+    }
+
+    .screen-pill {
+      font-size: 10px;
+      padding: 2px 7px;
+      border-radius: 999px;
+      background: rgba(15, 23, 42, 0.8);
+      border: 1px solid rgba(148, 163, 184, 0.9);
+    }
+
+    .screen-cta {
+      margin-top: 10px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+      color: #bfdbfe;
+    }
+
+    .screen-dot-row {
+      position: absolute;
+      bottom: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 6px;
+    }
+
+    .screen-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 999px;
+      background: rgba(148, 163, 184, 0.7);
+    }
+
+    .screen-dot.active {
+      background: #60a5fa;
+      box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.5);
+    }
+
+    /* Screen controls */
+    .screen-controls {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 11px;
+      color: rgba(148, 163, 184, 0.9);
+      margin-top: 8px;
+    }
+
+    .screen-btn-row {
+      display: flex;
+      gap: 6px;
+    }
+
+    .screen-btn {
+      font-size: 10px;
+      padding: 2px 7px;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.7);
+      background: rgba(15, 23, 42, 1);
+      color: #e5e7eb;
+      cursor: pointer;
+    }
+
+    /* Button press */
+    .press-demo-btn {
+      border-radius: 999px;
+      padding: 7px 16px;
+      font-size: 12px;
+      border: 1px solid rgba(148, 163, 184, 0.9);
+      background: radial-gradient(circle at top left, #38bdf8 0, #0ea5e9 28%, #0369a1 100%);
+      color: #ecfeff;
+      cursor: pointer;
+      box-shadow:
+        0 12px 26px rgba(56, 189, 248, 0.8),
+        0 0 0 1px rgba(8, 47, 73, 0.95);
+      transform: translateY(0);
+      transition: transform 0.12s ease-out, box-shadow 0.12s ease-out;
+    }
+
+    .press-demo-btn:hover {
+      transform: translateY(-1px);
+      box-shadow:
+        0 14px 30px rgba(56, 189, 248, 0.9),
+        0 0 0 1px rgba(8, 47, 73, 1);
+    }
+
+    .press-demo-btn:active {
+      transform: scale(0.94) translateY(1px);
+      box-shadow: 0 3px 12px rgba(15, 23, 42, 0.35);
+    }
+
+    /* Hover Lift */
+    .lift-card {
+      border-radius: 14px;
+      padding: 10px 14px;
+      background: #f9fafb;
+      border: 1px solid #e5e7eb;
+      font-size: 12px;
+      transition: transform 0.18s ease-out, box-shadow 0.18s ease-out,
+        border-color 0.18s ease-out, background 0.18s ease-out;
+      box-shadow: 0 0 0 rgba(15, 23, 42, 0);
+    }
+
+    .lift-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 16px 30px rgba(15, 23, 42, 0.16);
+      border-color: #c4d0ff;
+      background: #f3f4ff;
+    }
+
+    /* Shake */
+    .shake-target {
+      border-radius: 999px;
+      padding: 6px 12px;
+      font-size: 12px;
+      border: 1px solid rgba(248, 113, 113, 0.9);
+      background: rgba(254, 242, 242, 1);
+      color: #991b1b;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      position: relative;
+    }
+
+    .shake-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 999px;
+      background: #ef4444;
+      box-shadow: 0 0 0 4px rgba(248, 113, 113, 0.35);
+    }
+
+    .shake-target.shaking {
+      animation: shake 0.36s cubic-bezier(0.36, 0.07, 0.19, 0.97);
+    }
+
+    @keyframes shake {
+      10%,
+      90% {
+        transform: translateX(-1px);
+      }
+      20%,
+      80% {
+        transform: translateX(2px);
+      }
+      30%,
+      50%,
+      70% {
+        transform: translateX(-4px);
+      }
+      40%,
+      60% {
+        transform: translateX(4px);
+      }
+    }
+
+    /* Reveal on scroll */
+    .reveal-item {
+      opacity: 0;
+      transform: translateY(16px);
+      transition: opacity 0.45s ease-out, transform 0.45s ease-out;
+    }
+
+    .reveal-item.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .reveal-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    /* Ripple */
+    .ripple-container {
+      position: relative;
+      overflow: hidden;
+      border-radius: 999px;
+      display: inline-flex;
+    }
+
+    .ripple-btn {
+      border-radius: 999px;
+      padding: 7px 16px;
+      font-size: 12px;
+      border: 1px solid rgba(56, 189, 248, 0.9);
+      background: #0f172a;
+      color: #e0f2fe;
+      cursor: pointer;
+      position: relative;
+      z-index: 1;
+    }
+
+    .ripple-circle {
+      position: absolute;
+      border-radius: 9999px;
+      transform: scale(0);
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .ripple-circle.animating {
+      animation: ripple 0.5s ease-out forwards;
+    }
+
+    @keyframes ripple {
+      0% {
+        transform: scale(0);
+        opacity: 0.5;
+        box-shadow: 0 0 0 0 rgba(56, 189, 248, 0.5);
+      }
+      100% {
+        transform: scale(3);
+        opacity: 0;
+        box-shadow: 0 0 0 20px rgba(56, 189, 248, 0);
+      }
+    }
+
+    /* Success pop */
+    .success-pop {
+      width: 72px;
+      height: 72px;
+      border-radius: 999px;
+      background: radial-gradient(circle at 30% 20%, #bbf7d0, #16a34a);
+      position: relative;
+      box-shadow:
+        0 18px 40px rgba(22, 163, 74, 0.9),
+        0 0 0 1px rgba(4, 46, 23, 0.9);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #ecfdf5;
+      font-size: 26px;
+      transform: scale(0.9);
+    }
+
+    .success-pop.pop {
+      animation: success-pop 0.6s cubic-bezier(0.14, 0.94, 0.37, 1.35);
+    }
+
+    @keyframes success-pop {
+      0% {
+        transform: scale(0.3);
+        opacity: 0;
+      }
+      50% {
+        transform: scale(1.18);
+        opacity: 1;
+      }
+      70% {
+        transform: scale(0.9);
+      }
+      100% {
+        transform: scale(1);
+      }
+    }
+
+    /* XP / progress */
+    .xp-track {
+      width: 100%;
+      height: 10px;
+      border-radius: 999px;
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid rgba(148, 163, 184, 0.9);
+      overflow: hidden;
+      position: relative;
+    }
+
+    .xp-bar {
+      position: absolute;
+      inset: 0;
+      transform-origin: left;
+      transform: scaleX(0.35);
+      background: linear-gradient(90deg, #22c55e, #4ade80, #a3e635);
+      box-shadow: 0 0 15px rgba(74, 222, 128, 0.8);
+    }
+
+    .xp-value {
+      margin-top: 6px;
+      font-size: 11px;
+      color: rgba(190, 242, 100, 0.98);
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    /* Floating reward */
+    .floating-reward {
+      position: absolute;
+      bottom: 14px;
+      right: 14px;
+      font-size: 11px;
+      padding: 4px 8px;
+      border-radius: 999px;
+      background: rgba(15, 23, 42, 0.95);
+      border: 1px solid rgba(148, 163, 184, 0.9);
+      color: rgba(190, 242, 100, 0.98);
+      opacity: 0;
+      transform: translateY(8px);
+    }
+
+    .floating-reward.visible {
+      animation: float-up 0.75s ease-out forwards;
+    }
+
+    @keyframes float-up {
+      0% {
+        opacity: 0;
+        transform: translateY(6px);
+      }
+      40% {
+        opacity: 1;
+        transform: translateY(-4px);
+      }
+      100% {
+        opacity: 0;
+        transform: translateY(-14px);
+      }
+    }
+
+    /* Level up avatar */
+    .avatar-shell {
+      width: 70px;
+      height: 70px;
+      border-radius: 24px;
+      background: radial-gradient(circle at 30% 20%, #dbeafe, #1d4ed8);
+      box-shadow:
+        0 18px 40px rgba(30, 64, 175, 0.95),
+        0 0 0 1px rgba(15, 23, 42, 1);
+      padding: 8px;
+      position: relative;
+    }
+
+    .avatar-inner {
+      width: 100%;
+      height: 100%;
+      border-radius: 18px;
+      background: radial-gradient(circle at 30% 20%, #0ea5e9, #0f172a);
+      border: 1px solid rgba(191, 219, 254, 0.9);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #eff6ff;
+      font-size: 24px;
+    }
+
+    .avatar-level {
+      position: absolute;
+      bottom: -2px;
+      right: -2px;
+      border-radius: 999px;
+      padding: 2px 7px;
+      font-size: 10px;
+      background: rgba(15, 23, 42, 0.98);
+      border: 1px solid rgba(191, 219, 254, 0.9);
+      color: #bfdbfe;
+      transform-origin: center;
+    }
+
+    .avatar-level.level-up {
+      animation: level-pop 0.5s ease-out;
+    }
+
+    @keyframes level-pop {
+      0% {
+        transform: scale(0.4) translateY(4px);
+        opacity: 0;
+      }
+      50% {
+        transform: scale(1.15) translateY(-2px);
+        opacity: 1;
+      }
+      100% {
+        transform: scale(1) translateY(0);
+      }
+    }
+
+    /* Coin reward */
+    .coin-stack {
+      display: flex;
+      align-items: flex-end;
+      gap: 6px;
+    }
+
+    .coin {
+      width: 30px;
+      height: 30px;
+      border-radius: 999px;
+      background: radial-gradient(circle at 30% 20%, #fef9c3, #facc15);
+      box-shadow:
+        0 10px 20px rgba(202, 138, 4, 0.9),
+        0 0 0 1px rgba(133, 77, 14, 0.9);
+      position: relative;
+    }
+
+    .coin::after {
+      content: "★";
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      color: #fefce8;
+      text-shadow: 0 1px 2px rgba(133, 77, 14, 0.9);
+    }
+
+    .coin.falling {
+      animation: coin-drop 0.55s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    @keyframes coin-drop {
+      0% {
+        transform: translateY(-22px) scale(0.85) rotate(-20deg);
+        opacity: 0;
+      }
+      60% {
+        transform: translateY(4px) scale(1) rotate(6deg);
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(0) scale(1) rotate(0);
+      }
+    }
+
+    .coin-shadow {
+      width: 30px;
+      height: 6px;
+      border-radius: 999px;
+      background: radial-gradient(circle, rgba(15, 23, 42, 0.7), transparent);
+      filter: blur(2px);
+      transform-origin: center;
+    }
+
+    /* Buttons row */
+    .btn-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 8px;
+      justify-content: flex-end;
+    }
+
+    .btn {
+      border: none;
+      border-radius: 999px;
+      padding: 4px 10px;
+      font-size: 11px;
+      cursor: pointer;
+      background: #111827;
+      color: #f9fafb;
+      display: inline-flex;
+      text-decoration: none;
+      align-items: center;
+      gap: 4px;
+      transition: transform 0.1s ease, box-shadow 0.1s ease, background 0.15s ease;
+      box-shadow: 0 5px 15px rgba(15, 23, 42, 0.25);
+      white-space: nowrap;
+    }
+
+    .btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 7px 18px rgba(15, 23, 42, 0.28);
+      background: #020617;
+    }
+
+    .btn:active {
+      transform: translateY(0) scale(0.97);
+      box-shadow: 0 2px 8px rgba(15, 23, 42, 0.2);
+    }
+
+    .btn.secondary {
+      background: rgba(15, 23, 42, 1);
+      color: #e5e7eb;
+      box-shadow: none;
+      border: 1px solid rgba(148, 163, 184, 0.85);
+    }
+
+    .btn.secondary:hover {
+      background: #020617;
+      box-shadow: 0 7px 16px rgba(15, 23, 42, 0.7);
+    }
+
+    .btn-icon {
+      font-size: 12px;
     }
 
     .status {
@@ -520,275 +1175,35 @@
       margin-top: 4px;
     }
 
-    .badge-dot {
-      width: 6px;
-      height: 6px;
-      border-radius: 999px;
-      background: #22c55e;
-    }
-
-    .xp-bar-wrapper {
-      margin-top: 8px;
-      border-radius: 999px;
-      border: 1px solid rgba(148, 163, 184, 0.7);
-      padding: 3px;
-      background: radial-gradient(circle at top, #0b1220, #020617);
-    }
-
-    .xp-bar-track {
-      position: relative;
-      width: 100%;
-      height: 10px;
-      border-radius: 999px;
-      overflow: hidden;
-      background: linear-gradient(to right, #020617, #020617);
-    }
-
-    .xp-bar-fill {
-      position: absolute;
-      inset: 0;
-      width: 40%;
-      background: linear-gradient(90deg, #22c55e, #a3e635);
-      box-shadow: 0 0 12px rgba(132, 204, 22, 0.7);
-      transform-origin: left center;
-      transform: scaleX(0.4);
-      transition: transform 0.6s cubic-bezier(.19,1,.22,1);
-    }
-
-    .xp-bar-glow {
-      position: absolute;
-      inset: 0;
-      background: radial-gradient(circle at 30% 50%, rgba(190, 242, 100, 0.5), transparent);
-      opacity: 0.6;
-      pointer-events: none;
-    }
-
-    .xp-label-row {
-      margin-top: 8px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
+    .inline-tag {
       font-size: 11px;
-      color: #9ca3af;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-muted);
     }
 
-    .xp-label-row span strong {
-      color: #e5e7eb;
-    }
-
-    .xp-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      border-radius: 999px;
-      padding: 3px 8px;
-      font-size: 11px;
-      background: rgba(22, 163, 74, 0.16);
-      border: 1px solid rgba(34, 197, 94, 0.7);
-      color: #bbf7d0;
-    }
-
-    .xp-badge-dot {
-      width: 6px;
-      height: 6px;
-      border-radius: 999px;
-      background: #22c55e;
-      box-shadow: 0 0 8px rgba(34, 197, 94, 0.9);
-    }
-
-    .xp-badge-animate {
-      animation: xp-badge-pop 0.6s cubic-bezier(.16,1,.3,1);
-    }
-
-    @keyframes xp-badge-pop {
-      0% { transform: translateY(6px) scale(0.9); opacity: 0; }
-      40% { transform: translateY(0) scale(1.05); opacity: 1; }
-      100% { transform: translateY(0) scale(1); opacity: 1; }
-    }
-
-    .pill-level {
-      border-radius: 999px;
-      padding: 2px 8px;
-      border: 1px solid rgba(148, 163, 184, 0.7);
-      font-size: 11px;
-      color: #e5e7eb;
-      background: radial-gradient(circle at top, #020617, #020617 60%, #000 100%);
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      box-shadow: 0 8px 18px rgba(15, 23, 42, 0.8);
-    }
-
-    .pill-level span {
-      color: #a5b4fc;
-    }
-
-    .avatar-wrapper {
-      position: relative;
-      width: 56px;
-      height: 56px;
-      border-radius: 999px;
-      background: radial-gradient(circle at 30% 20%, #f97316, #c2410c);
-      box-shadow:
-        0 0 0 2px rgba(15, 23, 42, 1),
-        0 0 0 5px rgba(248, 250, 252, 0.12),
-        0 14px 30px rgba(15, 23, 42, 0.9);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #fef9c3;
-      font-weight: 700;
-      font-size: 20px;
-    }
-
-    .avatar-glow {
-      position: absolute;
-      inset: -6px;
-      border-radius: inherit;
-      background: conic-gradient(from 210deg, rgba(250, 204, 21, 0.35), transparent, rgba(251, 191, 36, 0.5), transparent, rgba(251, 146, 60, 0.35));
-      opacity: 0;
-      pointer-events: none;
-    }
-
-    .avatar-level-up .avatar-glow {
-      animation: avatar-glow-pulse 1s ease-out;
-    }
-
-    @keyframes avatar-glow-pulse {
-      0% { opacity: 0; transform: scale(0.9); }
-      40% { opacity: 1; transform: scale(1.02); }
-      100% { opacity: 0; transform: scale(1.04); }
-    }
-
-    .avatar-level-label {
-      font-size: 11px;
-      color: #e5e7eb;
-      margin-top: 6px;
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-    }
-
-    .avatar-level-label strong {
-      color: #fbbf24;
-    }
-
-    .coin-wallet {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 4px 8px;
-      border-radius: 999px;
-      border: 1px solid rgba(148, 163, 184, 0.7);
-      background: radial-gradient(circle at top, #020617, #020617 60%, #000 100%);
-      color: #e5e7eb;
-      font-size: 12px;
-      box-shadow: 0 8px 20px rgba(15, 23, 42, 0.85);
-    }
-
-    .coin-wallet-pill {
-      border-radius: 999px;
-      padding: 2px 8px;
-      background: rgba(253, 224, 71, 0.16);
-      border: 1px solid rgba(234, 179, 8, 0.8);
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-      font-size: 11px;
-      color: #facc15;
-    }
-
-    .coin-wallet-pill strong {
-      font-weight: 600;
-    }
-
-    .coin-badge {
-      width: 18px;
-      height: 18px;
-      border-radius: 999px;
-      background: radial-gradient(circle at 30% 20%, #fef3c7, #facc15);
-      box-shadow:
-        0 0 0 1px rgba(161, 98, 7, 0.7),
-        0 4px 10px rgba(15, 23, 42, 1);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 11px;
-      color: #92400e;
-      font-weight: 700;
-    }
-
-    .coin-wallet-note {
-      font-size: 11px;
-      color: #9ca3af;
-      margin-top: 6px;
-    }
-
-    .wallet-pulse {
-      animation: wallet-pulse 0.6s cubic-bezier(.19,1,.22,1);
-    }
-
-    @keyframes wallet-pulse {
-      0% { transform: scale(1); }
-      40% { transform: scale(1.05); }
-      100% { transform: scale(1); }
-    }
-
-    .coin-fly {
-      position: absolute;
-      width: 18px;
-      height: 18px;
-      border-radius: 999px;
-      background: radial-gradient(circle at 30% 20%, #fef3c7, #facc15);
-      box-shadow:
-        0 0 0 1px rgba(161, 98, 7, 0.7),
-        0 4px 10px rgba(15, 23, 42, 1);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 11px;
-      color: #92400e;
-      font-weight: 700;
-      pointer-events: none;
-      opacity: 0;
-      transform: translate(0, 0);
-    }
-
-    .coin-fly.visible {
-      animation: coin-fly-up 0.8s cubic-bezier(.19,1,.22,1);
-    }
-
-    @keyframes coin-fly-up {
-      0% {
-        transform: translate(0, 0);
-        opacity: 0;
-      }
-      15% {
-        opacity: 1;
-      }
-      100% {
-        transform: translate(60px, -50px);
-        opacity: 0;
-      }
-    }
-
-    /* ADAPTIVE */
-
+    /* LAYOUT ADAPTIVE */
     @media (max-width: 720px) {
       .page-main {
         padding: 20px 14px 26px;
       }
 
-      .section-card {
-        padding: 14px 12px 16px;
+      .section-title {
+        font-size: 16px;
       }
 
-      p, ul, ol {
+      .section-card,
+      .demo-panel {
+        padding: 12px 12px 14px;
+      }
+
+      p,
+      ul {
         font-size: 13px;
       }
 
-      .pattern-grid {
-        gap: 12px;
+      .demo-panel {
+        margin-top: 4px;
       }
     }
 
@@ -798,45 +1213,112 @@
       }
 
       .page-main {
-        border-radius: 22px;
+        border-radius: 24px;
       }
 
       h1 {
         font-size: 20px;
       }
+    }
 
-      .section-title {
-        font-size: 16px;
+    /* CONFETTI */
+    .confetti-piece {
+      position: absolute;
+      width: 6px;
+      height: 10px;
+      border-radius: 2px;
+      opacity: 0;
+    }
+
+    @keyframes confetti-fall {
+      0% {
+        transform: translateY(-10px) rotate(0deg);
+        opacity: 1;
       }
+      100% {
+        transform: translateY(80px) rotate(260deg);
+        opacity: 0;
+      }
+    }
+
+    .reward-zone {
+      position: relative;
+      width: 200px;
+      height: 120px;
+      border-radius: 16px;
+      background: radial-gradient(circle at top, #0f172a 0, #020617 55%, #020617 100%);
+      border: 1px solid rgba(148, 163, 184, 0.9);
+      box-shadow:
+        0 18px 40px rgba(15, 23, 42, 0.9),
+        0 0 0 1px rgba(15, 23, 42, 1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    .reward-label {
+      font-size: 12px;
+      color: #e5e7eb;
+    }
+
+    .reward-btn-row {
+      margin-top: 10px;
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    /* SCROLL DEMO WRAPPER */
+    .scroll-demo {
+      max-height: 160px;
+      overflow-y: auto;
+      padding-right: 4px;
+    }
+
+    .scroll-demo::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    .scroll-demo::-webkit-scrollbar-thumb {
+      background: rgba(148, 163, 184, 0.7);
+      border-radius: 999px;
+    }
+
+    /* SECTION DIVIDER */
+    .divider {
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(148, 163, 184, 0.7), transparent);
+      margin: 22px 0 12px;
     }
   </style>
 </head>
 <body>
   <!-- MOBILE HEADER -->
   <header class="mobile-header">
-    <div class="mobile-title">UI Motion Patterns</div>
-    <button class="burger-btn" id="burgerBtn" aria-label="Открыть навигацию">
-      <div class="burger-icon">
-        <span></span>
-        <span></span>
-        <span></span>
-      </div>
-    </button>
-  </header>
-
-  <!-- MOBILE NAV -->
-  <div class="mobile-nav" id="mobileNav">
-    <div class="mobile-nav-panel">
-      <div class="mobile-nav-header">
-        <div class="mobile-nav-title">Навигация</div>
-        <button class="mobile-close" id="mobileClose" aria-label="Закрыть навигацию">&times;</button>
-      </div>
-      <ul class="mobile-nav-list" id="mobileNavList">
-        <li><a href="index.html">Методичка: HTML/JS/CSS</a></li>
-        <li><a href="animation.html" class="active">UI Motion Patterns</a></li>
-      </ul>
+  <div class="mobile-title">Методички — UI Motion Patterns</div>
+  <button class="burger-btn" id="burgerBtn" aria-label="Открыть навигацию">
+    <div class="burger-icon">
+      <span></span>
+      <span></span>
+      <span></span>
     </div>
+  </button>
+</header>
+
+<!-- MOBILE NAV -->
+<div class="mobile-nav" id="mobileNav">
+  <div class="mobile-nav-panel">
+    <div class="mobile-nav-header">
+      <div class="mobile-nav-title">Навигация</div>
+      <button class="mobile-close" id="mobileClose" aria-label="Закрыть навигацию">&times;</button>
+    </div>
+    <ul class="mobile-nav-list" id="mobileNavList">
+      <li><a href="index.html">Методичка: HTML/JS/CSS</a></li>
+      <li><a href="animation.html" class="active">UI Motion Patterns</a></li>
+    </ul>
   </div>
+</div>
 
   <div class="page">
     <main class="page-main">
@@ -846,317 +1328,843 @@
         Методичка по анимациям: название · описание · живой пример.
         Все примеры сделаны на чистых HTML/CSS/JS и подходят для статических сайтов и GitHub Pages.
       </p>
+
       <p style="margin-bottom:18px;">
-        <a href="index.html" class="btn">Перейти к методичке по HTML/JS/CSS</a>
+        <a href="index.html" class="btn">
+          <span class="btn-icon">←</span>
+          Перейти к методичке по HTML/JS/CSS
+        </a>
       </p>
 
       <!-- SECTION 1 -->
       <section id="enter">
-        <h2 class="section-title">1. Появление (Enter)</h2>
-        <p class="section-caption">Как мягко показать новый блок на экране: модалка, тултип, карточка.</p>
+        <h2 class="section-title">1. Появление элементов (Enter)</h2>
+        <p class="section-caption">
+          Как мягко вводить новые блоки в интерфейс: карточки, уведомления, модальные окна.
+        </p>
 
-        <!-- Fade In -->
-        <article class="section-card" id="fade-in">
-          <div class="section-card-header">
-            <div class="section-card-title">Fade In</div>
-            <div class="section-card-tag">Opacity + slight motion</div>
-          </div>
-          <div class="pattern-grid">
-            <div class="pattern-card">
-              <div class="pattern-header">
-                <span class="badge">
-                  <span class="badge-dot"></span>
-                  Использовать для появления модалок, подсказок и небольших карточек.
-                </span>
-              </div>
-              <div class="pattern-meta">
-                <span class="pill">duration: 220–280ms</span>
-                <span class="pill">easing: cubic-bezier(.16,1,.3,1)</span>
-              </div>
-              <p>
-                Блок появляется с лёгкого увеличения прозрачности и минимального смещения.
-                Главное — без резких скачков: сначала прозрачность, потом финальное положение.
-              </p>
+        <!-- Fade in -->
+        <article id="fade-in" class="section-grid">
+          <div class="section-card">
+            <div class="section-card-header">
+              <div class="section-card-title">Fade In — простое появление</div>
+              <div class="section-card-tag">opacity</div>
             </div>
-            <div class="pattern-demo">
-              <div class="demo-header">
-                <span>Пример</span>
-                <div class="demo-controls">
-                  <button class="btn btn-secondary" data-demo="fade-in-replay">Replay</button>
-                </div>
-              </div>
-              <div class="demo-surface">
-                <div id="fadeDemo" style="
-                  width: 100%;
-                  max-width: 260px;
-                  border-radius: 16px;
-                  background: radial-gradient(circle at top, #0f172a, #020617 60%, #000 100%);
-                  border: 1px solid rgba(148, 163, 184, 0.7);
-                  padding: 12px;
-                  color: #e5e7eb;
-                  opacity: 0;
-                  transform: translateY(8px);
-                ">
-                  <div style="font-size:12px; text-transform:uppercase; letter-spacing:0.08em; color:#9ca3af; margin-bottom:6px;">
-                    Tooltip · Fade In
-                  </div>
-                  <div style="font-size:14px; font-weight:500; margin-bottom:4px;">
-                    Новый бонус доступен
-                  </div>
-                  <p style="font-size:12px; margin:0;">
-                    Пользователь видит подсказку после наведения или первого входа в раздел.
-                  </p>
-                </div>
-              </div>
-              <p class="demo-caption">
-                Хорошо работает, когда нужно не отвлекать, а мягко подсветить новый элемент.
-              </p>
-              <div class="code-block" id="code-fade">
-.fade-in {
-  opacity: 0;
-  transform: translateY(8px);
-  transition:
-    opacity 220ms cubic-bezier(.16,1,.3,1),
-    transform 220ms cubic-bezier(.16,1,.3,1);
-}
+            <p><strong>Кейс:</strong> список карточек, которые появляются по мере загрузки данных.</p>
+            <ul>
+              <li>Хорошо подходит для второстепенных элементов.</li>
+              <li>Не отвлекает пользователя от основного фокуса.</li>
+            </ul>
+            <div class="inline-tag">Промпт для GPT</div>
+            <div class="prompt-block" id="p-fade-in">
+Сделай карточку, которая плавно появляется (fade in) при нажатии на кнопку.
+Используй CSS transition по opacity и transform, без сторонних библиотек.
+HTML/CSS/JS в одном файле.
+            </div>
+            <div class="copy-row">
+              <button class="copy-btn" data-copy-target="p-fade-in">Скопировать промпт</button>
+            </div>
+          </div>
 
-.fade-in.visible {
-  opacity: 1;
-  transform: translateY(0);
-}
+          <div class="demo-panel">
+            <div class="demo-header">
+              <div class="demo-title">DEMO · FADE IN CARD</div>
+              <div class="chip-row">
+                <div class="chip">
+                  <span class="chip-dot"></span>
+                  CSS Transition
+                </div>
               </div>
-              <div class="copy-row">
-                <button class="copy-btn" data-copy-target="code-fade">
-                  Скопировать CSS
-                </button>
+            </div>
+            <div class="demo-surface">
+              <div class="card-base fade-card" id="fadeCard">
+                <div class="card-title">Новая карточка</div>
+                <div class="card-subtitle">Появляется плавно при нажатии на кнопку.</div>
+                <div class="badge">
+                  <span class="badge-dot"></span>
+                  Fade In · 280ms
+                </div>
+              </div>
+            </div>
+            <div class="btn-row">
+              <button class="btn secondary" id="fadeToggleBtn">
+                <span class="btn-icon">▶</span>
+                Показать / скрыть
+              </button>
+            </div>
+          </div>
+        </article>
+
+        <div class="divider"></div>
+
+        <!-- Slide up -->
+        <article id="slide-up" class="section-grid">
+          <div class="section-card">
+            <div class="section-card-header">
+              <div class="section-card-title">Fade + Slide Up</div>
+              <div class="section-card-tag">opacity + translateY</div>
+            </div>
+            <p><strong>Кейс:</strong> элементы, которые как бы «поднимаются» из интерфейса.</p>
+            <ul>
+              <li>Хорошо подходит для тултипов, подсказок, всплывающих карточек.</li>
+              <li>Сочетает изменение прозрачности и положения по оси Y.</li>
+            </ul>
+            <div class="inline-tag">Промпт для GPT</div>
+            <div class="prompt-block" id="p-slide-up">
+Сделай блок с подсказкой, который появляется из-под интерфейса (fade + slide up)
+при нажатии на кнопку. 
+Сделай анимацию через CSS transition по opacity и transform.
+            </div>
+            <div class="copy-row">
+              <button class="copy-btn" data-copy-target="p-slide-up">Скопировать промпт</button>
+            </div>
+          </div>
+
+          <div class="demo-panel">
+            <div class="demo-header">
+              <div class="demo-title">DEMO · SLIDE UP PANEL</div>
+              <div class="chip-row">
+                <div class="chip">
+                  <span class="chip-dot"></span>
+                  Slide + Fade
+                </div>
+              </div>
+            </div>
+            <div class="demo-surface">
+              <div class="card-base slide-card" id="slideCard">
+                <div class="card-title">Подсказка</div>
+                <div class="card-subtitle">Появляется снизу вверх и растворяется.</div>
+                <div class="badge">
+                  <span class="badge-dot"></span>
+                  Slide Up · 320ms
+                </div>
+              </div>
+            </div>
+            <div class="btn-row">
+              <button class="btn secondary" id="slideToggleBtn">
+                <span class="btn-icon">↕</span>
+                Показать / скрыть
+              </button>
+            </div>
+          </div>
+        </article>
+
+        <div class="divider"></div>
+
+        <!-- Scale in -->
+        <article id="scale-in" class="section-grid">
+          <div class="section-card">
+            <div class="section-card-header">
+              <div class="section-card-title">Scale In — лёгкий zoom</div>
+              <div class="section-card-tag">scale</div>
+            </div>
+            <p><strong>Кейс:</strong> модальные окна, приветственные попапы, важные карточки.</p>
+            <ul>
+              <li>Даёт ощущение «появления» объекта в пространстве.</li>
+              <li>Хорошо работает с небольшим overshoot.</li>
+            </ul>
+            <div class="inline-tag">Промпт для GPT</div>
+            <div class="prompt-block" id="p-scale-in">
+Сделай модальное окно, которое появляется с лёгким масштабированием (scale in)
+через CSS transition. 
+HTML/CSS/JS — в одном файле, без фреймворков.
+            </div>
+            <div class="copy-row">
+              <button class="copy-btn" data-copy-target="p-scale-in">Скопировать промпт</button>
+            </div>
+          </div>
+
+          <div class="demo-panel">
+            <div class="demo-header">
+              <div class="demo-title">DEMO · SCALE IN MODAL</div>
+              <div class="chip-row">
+                <div class="chip">
+                  <span class="chip-dot"></span>
+                  Scale + Fade
+                </div>
+              </div>
+            </div>
+            <div class="demo-surface demo-surface-muted">
+              <div class="card-base scale-card" id="scaleCard">
+                <div class="card-title">Модальное окно</div>
+                <div class="card-subtitle">Появляется с лёгким увеличением.</div>
+                <div class="badge">
+                  <span class="badge-dot"></span>
+                  Scale In · 280ms
+                </div>
+              </div>
+            </div>
+            <div class="btn-row">
+              <button class="btn secondary" id="scaleToggleBtn">
+                <span class="btn-icon">⬒</span>
+                Показать / скрыть
+              </button>
+            </div>
+          </div>
+        </article>
+      </section>
+
+      <div class="divider"></div>
+
+      <!-- SECTION 2: EXIT -->
+      <section id="exit">
+        <h2 class="section-title">2. Исчезновение элементов (Exit)</h2>
+        <p class="section-caption">
+          Как аккуратно убирать элементы из интерфейса, не ломая контекст пользователя.
+        </p>
+
+        <!-- Fade out toast -->
+        <article id="fade-out" class="section-grid">
+          <div class="section-card">
+            <div class="section-card-header">
+              <div class="section-card-title">Fade Out — плавное исчезновение</div>
+              <div class="section-card-tag">opacity</div>
+            </div>
+            <p><strong>Кейс:</strong> уведомление, которое исчезает через несколько секунд.</p>
+            <ul>
+              <li>Можно скрывать по таймеру или по клику.</li>
+              <li>Хорошо подходит для success/error сообщений.</li>
+            </ul>
+            <div class="inline-tag">Промпт для GPT</div>
+            <div class="prompt-block" id="p-fade-out">
+Сделай toast-уведомление, которое исчезает (fade out) при нажатии на кнопку «Скрыть».
+Используй CSS transition по opacity и лёгкий сдвиг по X/Y.
+            </div>
+            <div class="copy-row">
+              <button class="copy-btn" data-copy-target="p-fade-out">Скопировать промпт</button>
+            </div>
+          </div>
+
+          <div class="demo-panel">
+            <div class="demo-header">
+              <div class="demo-title">DEMO · TOAST EXIT</div>
+              <div class="chip-row">
+                <div class="chip">
+                  <span class="chip-dot"></span>
+                  Exit Pattern
+                </div>
+              </div>
+            </div>
+            <div class="demo-surface">
+              <div class="toast toast-exit" id="toast">
+                <div class="toast-icon"></div>
+                <span>Настройки успешно сохранены</span>
+                <button class="toast-btn" id="toastHideBtn">Скрыть</button>
+              </div>
+            </div>
+            <div class="btn-row">
+              <button class="btn secondary" id="toastResetBtn">
+                <span class="btn-icon">↺</span>
+                Показать уведомление
+              </button>
+            </div>
+          </div>
+        </article>
+      </section>
+
+      <div class="divider"></div>
+
+      <!-- SECTION 3: SCREENS -->
+      <section id="screens">
+        <h2 class="section-title">3. Анимация экранов</h2>
+        <p class="section-caption">
+          Как анимировать переходы между экранами без сложных роутеров и фреймворков.
+        </p>
+
+        <!-- Screen swipe -->
+        <article id="screen-swipe" class="section-grid">
+          <div class="section-card">
+            <div class="section-card-header">
+              <div class="section-card-title">Swipe между экранами</div>
+              <div class="section-card-tag">translateX</div>
+            </div>
+            <p><strong>Кейс:</strong> мобильное приложение или мобильная версия сайта.</p>
+            <ul>
+              <li>Горизонтальный свайп с индикатором текущего экрана.</li>
+              <li>Управление «Назад/Вперёд» или точками-индикаторами.</li>
+            </ul>
+            <div class="inline-tag">Промпт для GPT</div>
+            <div class="prompt-block" id="p-screen-swipe">
+Сделай макет смартфона с тремя экранами, которые перелистываются по кнопкам.
+Используй translateX для смены экранов, без сторонних библиотек.
+            </div>
+            <div class="copy-row">
+              <button class="copy-btn" data-copy-target="p-screen-swipe">Скопировать промпт</button>
+            </div>
+          </div>
+
+          <div class="demo-panel">
+            <div class="demo-header">
+              <div class="demo-title">DEMO · SCREEN SWIPE</div>
+              <div class="chip-row">
+                <div class="chip">
+                  <span class="chip-dot"></span>
+                  Mobile Flow
+                </div>
+              </div>
+            </div>
+            <div class="demo-surface">
+              <div class="phone-frame">
+                <div class="phone-notch"></div>
+                <div class="phone-screen">
+                  <div class="screen-track" id="screenTrack">
+                    <div class="screen">
+                      <div class="screen-title">Онбординг · Шаг 1</div>
+                      <div class="screen-subtitle">Короткий текст про пользу продукта.</div>
+                      <div class="screen-pill-row">
+                        <div class="screen-pill">Без кода</div>
+                        <div class="screen-pill">Быстрый старт</div>
+                        <div class="screen-pill">GitHub Pages</div>
+                      </div>
+                      <div class="screen-cta">Свайпните вправо или нажмите «Далее» →</div>
+                    </div>
+                    <div class="screen">
+                      <div class="screen-title">Онбординг · Шаг 2</div>
+                      <div class="screen-subtitle">Покажи 2–3 сценария использования.</div>
+                      <div class="screen-pill-row">
+                        <div class="screen-pill">Лендинги</div>
+                        <div class="screen-pill">Демо</div>
+                        <div class="screen-pill">Тесты UX</div>
+                      </div>
+                      <div class="screen-cta">← Назад · Вперёд →</div>
+                    </div>
+                    <div class="screen">
+                      <div class="screen-title">Онбординг · Шаг 3</div>
+                      <div class="screen-subtitle">Призыв к действию и кнопка.</div>
+                      <div class="screen-pill-row">
+                        <div class="screen-pill">Создать страницу</div>
+                        <div class="screen-pill">Импортировать код</div>
+                      </div>
+                      <div class="screen-cta">Нажмите «Создать» для старта.</div>
+                    </div>
+                  </div>
+
+                  <div class="screen-dot-row">
+                    <div class="screen-dot active" data-index="0"></div>
+                    <div class="screen-dot" data-index="1"></div>
+                    <div class="screen-dot" data-index="2"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="screen-controls">
+              <div class="screen-btn-row">
+                <button class="screen-btn" id="screenPrev">← Назад</button>
+                <button class="screen-btn" id="screenNext">Далее →</button>
+              </div>
+              <span>Шаг <span id="screenIndexLabel">1</span> / 3</span>
+            </div>
+          </div>
+        </article>
+      </section>
+
+      <div class="divider"></div>
+
+      <!-- SECTION 4: INTERACTIONS -->
+      <section id="interactions">
+        <h2 class="section-title">4. Взаимодействия</h2>
+        <p class="section-caption">Как сделать клики, hover и ошибки более «живыми».</p>
+
+        <!-- Button press -->
+        <article id="button-press" class="section-grid">
+          <div class="section-card">
+            <div class="section-card-header">
+              <div class="section-card-title">Button Press — отзывчивая кнопка</div>
+              <div class="section-card-tag">scale + shadow</div>
+            </div>
+            <p><strong>Кейс:</strong> primary-кнопка, которая должна чувствоваться «живой».</p>
+            <ul>
+              <li>Лёгкое нажатие вниз по клику.</li>
+              <li>Сильнее подсвеченный hover-состояние.</li>
+            </ul>
+            <div class="inline-tag">Промпт для GPT</div>
+            <div class="prompt-block" id="p-button-press">
+Сделай кнопку с эффектом «нажатия»:
+— при наведении поднимается и усиливает тень,
+— при клике слегка уменьшается и опускается.
+Используй transform и box-shadow.
+            </div>
+            <div class="copy-row">
+              <button class="copy-btn" data-copy-target="p-button-press">Скопировать промпт</button>
+            </div>
+          </div>
+
+          <div class="demo-panel">
+            <div class="demo-header">
+              <div class="demo-title">DEMO · BUTTON PRESS</div>
+              <div class="chip-row">
+                <div class="chip">
+                  <span class="chip-dot"></span>
+                  Press State
+                </div>
+              </div>
+            </div>
+            <div class="demo-surface">
+              <button class="press-demo-btn" id="pressDemoBtn">
+                Нажми меня
+              </button>
+            </div>
+            <div class="demo-hint" id="pressHint">
+              Попробуйте навести и нажать на кнопку.
+            </div>
+          </div>
+        </article>
+
+        <div class="divider"></div>
+
+        <!-- Hover lift -->
+        <article id="hover-lift" class="section-grid">
+          <div class="section-card">
+            <div class="section-card-header">
+              <div class="section-card-title">Hover Lift — поднятие карточки</div>
+              <div class="section-card-tag">hover</div>
+            </div>
+            <p><strong>Кейс:</strong> сетка карточек, где hover подчёркивает доступность клика.</p>
+            <ul>
+              <li>Небольшой подъём и усиление тени.</li>
+              <li>Лёгкое изменение фона и рамки.</li>
+            </ul>
+            <div class="inline-tag">Промпт для GPT</div>
+            <div class="prompt-block" id="p-hover-lift">
+Сделай сетку карточек, которые при наведении слегка приподнимаются, усиливают тень
+и меняют цвет рамки. Без JS, только через :hover.
+            </div>
+            <div class="copy-row">
+              <button class="copy-btn" data-copy-target="p-hover-lift">Скопировать промпт</button>
+            </div>
+          </div>
+
+          <div class="demo-panel">
+            <div class="demo-header">
+              <div class="demo-title">DEMO · HOVER LIFT</div>
+              <div class="chip-row">
+                <div class="chip">
+                  <span class="chip-dot"></span>
+                  Hover State
+                </div>
+              </div>
+            </div>
+            <div class="demo-surface">
+              <div class="lift-card">
+                <strong>Card · Hover me</strong>
+                <p class="muted" style="margin-top:4px;">
+                  При наведении карточка чуть приподнимается и подсвечивается.
+                </p>
               </div>
             </div>
           </div>
         </article>
 
-        <!-- Fade + Slide Up -->
-        <article class="section-card" id="slide-up">
-          <div class="section-card-header">
-            <div class="section-card-title">Fade + Slide Up</div>
-            <div class="section-card-tag">Toasts, bottom-sheets</div>
+        <div class="divider"></div>
+
+        <!-- Shake -->
+        <article id="shake" class="section-grid">
+          <div class="section-card">
+            <div class="section-card-header">
+              <div class="section-card-title">Shake — ошибка ввода</div>
+              <div class="section-card-tag">keyframes</div>
+            </div>
+            <p><strong>Кейс:</strong> неправильный пароль, пустое обязательное поле.</p>
+            <ul>
+              <li>Краткая тряска по оси X.</li>
+              <li>Хорошо работает в паре с красным цветом и подсказкой.</li>
+            </ul>
+            <div class="inline-tag">Промпт для GPT</div>
+            <div class="prompt-block" id="p-shake">
+Сделай поле ввода с кнопкой «Войти». 
+Если пользователь ввёл пустое поле и нажал кнопку — блок с ошибкой трясётся.
+Анимация через @keyframes.
+            </div>
+            <div class="copy-row">
+              <button class="copy-btn" data-copy-target="p-shake">Скопировать промпт</button>
+            </div>
           </div>
-          <div class="pattern-grid">
-            <div class="pattern-card">
-              <p>
-                Контент появляется снизу с небольшим сдвигом вверх и увеличением прозрачности.
-                Подходит для уведомлений, тостов или панелей, которые выезжают от нижней границы экрана.
-              </p>
-              <div class="pattern-meta">
-                <span class="pill">duration: 260–320ms</span>
-                <span class="pill">easing: cubic-bezier(.25, .8, .25, 1)</span>
+
+          <div class="demo-panel">
+            <div class="demo-header">
+              <div class="demo-title">DEMO · SHAKE ERROR</div>
+              <div class="chip-row">
+                <div class="chip">
+                  <span class="chip-dot"></span>
+                  Error Pattern
+                </div>
               </div>
             </div>
-            <div class="pattern-demo">
-              <div class="demo-header">
-                <span>Пример</span>
-                <div class="demo-controls">
-                  <button class="btn btn-secondary" data-demo="toast-replay">Показать тост</button>
-                </div>
+            <div class="demo-surface">
+              <div class="shake-target" id="shakeTarget">
+                <span class="shake-dot"></span>
+                Неверный код подтверждения
               </div>
-              <div class="demo-surface" style="min-height:120px;">
-                <div id="toastDemo" style="
-                  position: absolute;
-                  left: 50%;
-                  bottom: 16px;
-                  transform: translate(-50%, 16px);
-                  opacity: 0;
-                  border-radius: 999px;
-                  background: rgba(15,23,42,0.96);
-                  border: 1px solid rgba(148, 163, 184, 0.8);
-                  padding: 8px 14px;
-                  font-size: 12px;
-                  color: #e5e7eb;
-                  display: inline-flex;
-                  align-items: center;
-                  gap: 8px;
-                ">
-                  <span class="badge-dot"></span>
-                  <span>Изменения сохранены</span>
-                </div>
-              </div>
-              <p class="demo-caption">
-                Toast хорошо работает, когда нужно коротко подтвердить действие (сохранение, отправка).
-              </p>
-              <div class="code-block" id="code-toast">
-.toast {
-  opacity: 0;
-  transform: translateY(16px);
-  transition:
-    opacity 260ms cubic-bezier(.25,.8,.25,1),
-    transform 260ms cubic-bezier(.25,.8,.25,1);
-}
+            </div>
+            <div class="btn-row">
+              <button class="btn secondary" id="shakeTrigger">
+                <span class="btn-icon">⚠</span>
+                Запустить ошибку
+              </button>
+            </div>
+          </div>
+        </article>
+      </section>
 
-.toast.visible {
-  opacity: 1;
-  transform: translateY(0);
-}
+      <div class="divider"></div>
+
+      <!-- SECTION 5: SCROLL -->
+      <section id="scroll">
+        <h2 class="section-title">5. Анимация при скролле</h2>
+        <p class="section-caption">
+          Как появляться элементам по мере того, как пользователь скроллит страницу.
+        </p>
+
+        <article id="reveal-on-scroll" class="section-grid">
+          <div class="section-card">
+            <div class="section-card-header">
+              <div class="section-card-title">Reveal on Scroll</div>
+              <div class="section-card-tag">IntersectionObserver</div>
+            </div>
+            <p><strong>Кейс:</strong> лендинги с блоками, появляющимися один за другим.</p>
+            <ul>
+              <li>Карточки появляются мягко, когда попадают в зону видимости.</li>
+              <li>Можно сделать «лесенку» — небольшие задержки между карточками.</li>
+            </ul>
+            <div class="inline-tag">Промпт для GPT</div>
+            <div class="prompt-block" id="p-reveal-scroll">
+Сделай список из 5 карточек, которые постепенно появляются при скролле страницы
+(через IntersectionObserver и CSS-класс .visible).
+            </div>
+            <div class="copy-row">
+              <button class="copy-btn" data-copy-target="p-reveal-scroll">Скопировать промпт</button>
+            </div>
+          </div>
+
+          <div class="demo-panel">
+            <div class="demo-header">
+              <div class="demo-title">DEMO · REVEAL ON SCROLL</div>
+              <div class="chip-row">
+                <div class="chip">
+                  <span class="chip-dot"></span>
+                  Scroll Trigger
+                </div>
               </div>
-              <div class="copy-row">
-                <button class="copy-btn" data-copy-target="code-toast">
-                  Скопировать CSS
-                </button>
+            </div>
+            <div class="demo-surface scroll-demo" id="scrollDemo">
+              <div class="reveal-list">
+                <div class="reveal-item">Блок 1 · Первый шаг сценария</div>
+                <div class="reveal-item">Блок 2 · Пользователь взаимодействует</div>
+                <div class="reveal-item">Блок 3 · Состояние после действия</div>
+                <div class="reveal-item">Блок 4 · Вторичный CTA</div>
+                <div class="reveal-item">Блок 5 · Финальное состояние</div>
               </div>
             </div>
           </div>
         </article>
       </section>
 
-      <!-- SECTION 7 (фрагмент геймификации, XP + coin) -->
-      <section id="gamification">
-        <h2 class="section-title">7. Геймификация: XP и награды</h2>
+      <div class="divider"></div>
+
+      <!-- SECTION 6: MICRO ANIMATIONS -->
+      <section id="micro">
+        <h2 class="section-title">6. Микро-анимации и геймификация</h2>
         <p class="section-caption">
-          Как визуально показывать прогресс, уровни и награды, чтобы пользователю хотелось «сделать ещё одно действие».
+          Маленькие эффекты, которые добавляют удовольствия и «сочности» в UI.
         </p>
 
+        <!-- Ripple -->
+        <article id="ripple" class="section-grid">
+          <div class="section-card">
+            <div class="section-card-header">
+              <div class="section-card-title">Ripple — волна по нажатию</div>
+              <div class="section-card-tag">ripple</div>
+            </div>
+            <p><strong>Кейс:</strong> кнопки в стиле Material Design.</p>
+            <ul>
+              <li>Волна расходится от точки клика.</li>
+              <li>Хорошо работает на контрастных кнопках.</li>
+            </ul>
+            <div class="inline-tag">Промпт для GPT</div>
+            <div class="prompt-block" id="p-ripple">
+Сделай кнопку с ripple-эффектом: при клике из точки нажатия расходится волна.
+Без библиотек, через JS и CSS.
+            </div>
+            <div class="copy-row">
+              <button class="copy-btn" data-copy-target="p-ripple">Скопировать промпт</button>
+            </div>
+          </div>
+
+          <div class="demo-panel">
+            <div class="demo-header">
+              <div class="demo-title">DEMO · RIPPLE BUTTON</div>
+              <div class="chip-row">
+                <div class="chip">
+                  <span class="chip-dot"></span>
+                  Micro-interaction
+                </div>
+              </div>
+            </div>
+            <div class="demo-surface">
+              <div class="ripple-container" id="rippleContainer">
+                <button class="ripple-btn">Оплатить · 199₽</button>
+                <div class="ripple-circle" id="rippleCircle"></div>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <div class="divider"></div>
+
+        <!-- Success pop -->
+        <article id="success-pop" class="section-grid">
+          <div class="section-card">
+            <div class="section-card-header">
+              <div class="section-card-title">Success Pop — всплывающий успех</div>
+              <div class="section-card-tag">scale pop</div>
+            </div>
+            <p><strong>Кейс:</strong> подтверждение успешного действия.</p>
+            <ul>
+              <li>Небольшой pop-in эффект с bounce.</li>
+              <li>Можно использовать для галочек, трофеев, бейджей.</li>
+            </ul>
+            <div class="inline-tag">Промпт для GPT</div>
+            <div class="prompt-block" id="p-success-pop">
+Сделай круглую иконку с галочкой, которая появляется с эффектом pop-in (scale + bounce)
+при нажатии на кнопку «Готово».
+            </div>
+            <div class="copy-row">
+              <button class="copy-btn" data-copy-target="p-success-pop">Скопировать промпт</button>
+            </div>
+          </div>
+
+          <div class="demo-panel">
+            <div class="demo-header">
+              <div class="demo-title">DEMO · SUCCESS POP</div>
+              <div class="chip-row">
+                <div class="chip">
+                  <span class="chip-dot"></span>
+                  Reward
+                </div>
+              </div>
+            </div>
+            <div class="demo-surface">
+              <div class="success-pop" id="successPop">✓</div>
+            </div>
+            <div class="btn-row">
+              <button class="btn secondary" id="successTrigger">
+                <span class="btn-icon">✔</span>
+                Показать успех
+              </button>
+            </div>
+          </div>
+        </article>
+
+        <div class="divider"></div>
+
         <!-- XP Progress -->
-        <article class="section-card" id="xp-progress">
-          <div class="section-card-header">
-            <div class="section-card-title">XP Progress Bar</div>
-            <div class="section-card-tag">Persistent Progress</div>
-          </div>
-          <div class="pattern-grid">
-            <div class="pattern-card">
-              <p>
-                Горизонтальный прогресс с подсветкой текущего уровня и расстояния до следующего.
-              </p>
-              <div class="pattern-meta">
-                <div class="pill">duration: 600ms</div>
-                <div class="pill">easing: cubic-bezier(.19,1,.22,1)</div>
-              </div>
-              <p class="muted">
-                Хорошая идея — обновлять XP после каждого значимого действия пользователя
-                и визуально показывать приближение к следующему уровню.
-              </p>
+        <article id="xp-progress" class="section-grid">
+          <div class="section-card">
+            <div class="section-card-header">
+              <div class="section-card-title">XP Progress — прогресс с подсветкой</div>
+              <div class="section-card-tag">progress</div>
             </div>
-            <div class="pattern-demo">
-              <div class="demo-header">
-                <span>Пример</span>
-                <div class="demo-controls">
-                  <button class="btn btn-secondary" data-demo="xp-add">+10 XP</button>
-                  <button class="btn btn-secondary" data-demo="xp-reset">Сбросить</button>
+            <p><strong>Кейс:</strong> геймификация обучения, задачи, streak.</p>
+            <ul>
+              <li>Плавный рост прогресса.</li>
+              <li>Цветовая подсветка и glow.</li>
+            </ul>
+            <div class="inline-tag">Промпт для GPT</div>
+            <div class="prompt-block" id="p-xp-progress">
+Сделай прогресс-бар опыта (XP), который плавно увеличивается по нажатию на кнопку,
+с подсветкой и подписью уровня.
+            </div>
+            <div class="copy-row">
+              <button class="copy-btn" data-copy-target="p-xp-progress">Скопировать промпт</button>
+            </div>
+          </div>
+
+          <div class="demo-panel">
+            <div class="demo-header">
+              <div class="demo-title">DEMO · XP TRACK</div>
+              <div class="chip-row">
+                <div class="chip">
+                  <span class="chip-dot"></span>
+                  Gamification
                 </div>
               </div>
-              <div class="demo-surface" id="xpDemoSurface">
-                <div class="xp-bar-wrapper">
-                  <div class="xp-bar-track">
-                    <div class="xp-bar-fill" id="xpFill"></div>
-                    <div class="xp-bar-glow"></div>
-                  </div>
-                  <div class="xp-label-row">
-                    <span>Уровень <strong id="xpLevelLabel">3</strong></span>
-                    <span>Осталось <strong id="xpRemainingLabel">40 XP</strong></span>
-                  </div>
+            </div>
+            <div class="demo-surface">
+              <div>
+                <div class="xp-track">
+                  <div class="xp-bar" id="xpBar"></div>
                 </div>
-                <div style="margin-top:10px; display:flex; justify-content:space-between; align-items:center; gap:8px;">
-                  <div class="xp-badge" id="xpBadge">
-                    <span class="xp-badge-dot"></span>
-                    <span id="xpBadgeText">+10 XP за действие</span>
-                  </div>
-                  <span style="font-size:11px; color:#9ca3af;">
-                    Всего XP: <span id="xpTotalLabel">60</span>/100
-                  </span>
+                <div class="xp-value" id="xpValue">
+                  Уровень 3 · 35/100 XP
                 </div>
               </div>
-              <p class="demo-caption">
-                Такой бар можно показывать в профиле, в хедере или в онбординге, привязав XP к ключевым действиям.
-              </p>
-              <div class="code-block" id="code-xp">
-/* HTML: контейнер */
-
-&lt;div class="xp-bar-wrapper"&gt;
-  &lt;div class="xp-bar-track"&gt;
-    &lt;div class="xp-bar-fill"&gt;&lt;/div&gt;
-    &lt;div class="xp-bar-glow"&gt;&lt;/div&gt;
-  &lt;/div&gt;
-&lt;/div&gt;
-
-/* JS-логика (упрощённая) */
-
-const fill = document.querySelector(".xp-bar-fill");
-let progress = 0.4;
-
-function setXP(value) {
-  progress = Math.max(0, Math.min(1, value));
-  fill.style.transform = `scaleX(${progress})`;
-}
-              </div>
-              <div class="copy-row">
-                <button class="copy-btn" data-copy-target="code-xp">
-                  Скопировать код
-                </button>
-              </div>
+              <div class="floating-reward" id="floatingReward">+15 XP</div>
+            </div>
+            <div class="btn-row">
+              <button class="btn secondary" id="xpAddBtn">
+                <span class="btn-icon">＋</span>
+                Добавить XP
+              </button>
             </div>
           </div>
         </article>
 
-        <!-- Coin Reward -->
-        <article class="section-card" id="coin-reward">
-          <div class="section-card-header">
-            <div class="section-card-title">Coin Reward + Wallet</div>
-            <div class="section-card-tag">Micro-reward</div>
-          </div>
-          <div class="pattern-grid">
-            <div class="pattern-card">
-              <p>
-                Мини-наградой может быть монетка, полёт которой связывает действие и кошелёк.
-              </p>
-              <div class="pattern-meta">
-                <span class="pill">duration: 700–900ms</span>
-                <span class="pill">easing: cubic-bezier(.19,1,.22,1)</span>
-              </div>
-              <p class="muted">
-                Такой паттерн хорошо работает в обучении, задачах, чек-листах и квестах.
-              </p>
+        <div class="divider"></div>
+
+        <!-- Level up avatar -->
+        <article id="level-up-avatar" class="section-grid">
+          <div class="section-card">
+            <div class="section-card-header">
+              <div class="section-card-title">Level Up — аватар с уровнем</div>
+              <div class="section-card-tag">badge</div>
             </div>
-            <div class="pattern-demo">
-              <div class="demo-header">
-                <span>Пример</span>
-                <div class="demo-controls">
-                  <button class="btn btn-secondary" data-demo="coin-reward-btn">Получить +5</button>
+            <p><strong>Кейс:</strong> профили, системы уровней, награды.</p>
+            <ul>
+              <li>Бейдж уровня, который анимируется при повышении.</li>
+              <li>Можно использовать цифры, иконки или эмодзи.</li>
+            </ul>
+            <div class="inline-tag">Промпт для GPT</div>
+            <div class="prompt-block" id="p-level-up-avatar">
+Сделай аватар с бейджем уровня. 
+При нажатии на кнопку уровень увеличивается, бейдж анимируется (scale + translate).
+            </div>
+            <div class="copy-row">
+              <button class="copy-btn" data-copy-target="p-level-up-avatar">Скопировать промпт</button>
+            </div>
+          </div>
+
+          <div class="demo-panel">
+            <div class="demo-header">
+              <div class="demo-title">DEMO · LEVEL UP AVATAR</div>
+              <div class="chip-row">
+                <div class="chip">
+                  <span class="chip-dot"></span>
+                  Profile
                 </div>
               </div>
-              <div class="demo-surface" id="coinDemoSurface" style="min-height:110px;">
-                <div class="coin-wallet" id="wallet">
-                  <div class="coin-badge">₵</div>
-                  <div>
-                    <div class="coin-wallet-pill" id="walletPill">
-                      Баланс: <strong id="walletAmount">120</strong>
-                    </div>
-                    <div class="coin-wallet-note">
-                      Ещё 30 до следующего бонуса
-                    </div>
-                  </div>
+            </div>
+            <div class="demo-surface">
+              <div class="avatar-shell">
+                <div class="avatar-inner">
+                  🧠
                 </div>
-                <div class="coin-fly" id="coinFly">+5</div>
+                <div class="avatar-level" id="avatarLevel">Lv. 3</div>
               </div>
-              <p class="demo-caption">
-                Монетка вылетает из кнопки и «падает» в кошелёк, усиливая связь между действием и наградой.
-              </p>
-              <div class="code-block" id="code-coin">
-/* HTML: кнопку и кошелёк можно расположить в одном контейнере */
-
-&lt;div class="coin-wallet"&gt;...&lt;/div&gt;
-&lt;div class="coin-fly"&gt;+5&lt;/div&gt;
-
-/* JS-идея:
-  1. При клике на кнопку — позиционировать .coin-fly возле кнопки.
-  2. Через CSS-анимацию смещать её по диагонали к кошельку.
-  3. По окончании анимации обновить баланс.
-*/
-              </div>
-              <div class="copy-row">
-                <button class="copy-btn" data-copy-target="code-coin">
-                  Скопировать код
-                </button>
-              </div>
+            </div>
+            <div class="btn-row">
+              <button class="btn secondary" id="levelUpBtn">
+                <span class="btn-icon">▲</span>
+                Повысить уровень
+              </button>
             </div>
           </div>
         </article>
+
+        <div class="divider"></div>
+
+        <!-- Coin reward -->
+        <article id="coin-reward" class="section-grid">
+          <div class="section-card">
+            <div class="section-card-header">
+              <div class="section-card-title">Coin Reward — монетки за действие</div>
+              <div class="section-card-tag">reward</div>
+            </div>
+            <p><strong>Кейс:</strong> награда за выполнение задания, чек-ин, streak.</p>
+            <ul>
+              <li>Монетка падает и отскакивает.</li>
+              <li>Можно комбинировать с числом и текстом «+N».</li>
+            </ul>
+            <div class="inline-tag">Промпт для GPT</div>
+            <div class="prompt-block" id="p-coin-reward">
+Сделай анимацию «падающей монетки» при клике по кнопке «Получить награду».
+Монетка появляется сверху и опускается вниз с небольшим поворотом.
+            </div>
+            <div class="copy-row">
+              <button class="copy-btn" data-copy-target="p-coin-reward">Скопировать промпт</button>
+            </div>
+          </div>
+
+          <div class="demo-panel">
+            <div class="demo-header">
+              <div class="demo-title">DEMO · COIN REWARD</div>
+              <div class="chip-row">
+                <div class="chip">
+                  <span class="chip-dot"></span>
+                  Reward FX
+                </div>
+              </div>
+            </div>
+            <div class="demo-surface">
+              <div class="coin-stack">
+                <div>
+                  <div class="coin" id="coin"></div>
+                  <div class="coin-shadow" id="coinShadow"></div>
+                </div>
+              </div>
+            </div>
+            <div class="btn-row">
+              <button class="btn secondary" id="coinBtn">
+                <span class="btn-icon">★</span>
+                Запустить монетку
+              </button>
+            </div>
+          </div>
+        </article>
+
+        <div class="divider"></div>
+
+        <!-- CONFETTI / REWARD -->
+        <section id="gamification">
+          <h2 class="section-title">7. Reward & Confetti</h2>
+          <p class="section-caption">
+            Как дополнительно «подсветить» достижение: анимации награды и конфетти.
+          </p>
+
+          <article id="reward-confetti" class="section-grid">
+            <div class="section-card">
+              <div class="section-card-header">
+                <div class="section-card-title">Reward Confetti</div>
+                <div class="section-card-tag">confetti</div>
+              </div>
+              <p><strong>Кейс:</strong> достижение уровня, завершение курса, закрытие сложного задания.</p>
+              <ul>
+                <li>Конфетти падают сверху в зоне награды.</li>
+                <li>Можно комбинировать с текстом «Поздравляем!» и попапом.</li>
+              </ul>
+              <div class="inline-tag">Промпт для GPT</div>
+              <div class="prompt-block" id="p-reward-confetti">
+Сделай зону награды с кнопкой «Получить награду». 
+При клике по кнопке запускается эффект конфетти и появляется надпись «Награда получена».
+              </div>
+              <div class="copy-row">
+                <button class="copy-btn" data-copy-target="p-reward-confetti">Скопировать промпт</button>
+              </div>
+            </div>
+
+            <div class="demo-panel">
+              <div class="demo-header">
+                <div class="demo-title">DEMO · REWARD + CONFETTI</div>
+                <div class="chip-row">
+                  <div class="chip">
+                    <span class="chip-dot"></span>
+                    Celebration
+                  </div>
+                </div>
+              </div>
+              <div class="demo-surface">
+                <div class="reward-zone" id="rewardZone">
+                  <div class="reward-label" id="rewardLabel">Нажмите, чтобы получить награду</div>
+                </div>
+              </div>
+              <div class="reward-btn-row">
+                <button class="btn secondary" id="rewardBtn">
+                  <span class="btn-icon">🎉</span>
+                  Запустить конфетти
+                </button>
+              </div>
+            </div>
+          </article>
+        </section>
       </section>
     </main>
   </div>
@@ -1211,7 +2219,7 @@ function setXP(value) {
         });
       }
 
-      // COPY BUTTONS
+      // КОПИРОВАНИЕ ПРОМПТОВ
       var copyButtons = document.querySelectorAll(".copy-btn");
       copyButtons.forEach(function (btn) {
         btn.addEventListener("click", function () {
@@ -1266,154 +2274,259 @@ function setXP(value) {
         });
       });
 
-      // ENTER ANIMATIONS
-      var fadeDemo = document.getElementById("fadeDemo");
-      var fadeReplayBtn = document.querySelector('[data-demo="fade-in-replay"]');
-
-      if (fadeDemo && fadeReplayBtn) {
-        function playFade() {
-          fadeDemo.style.opacity = "0";
-          fadeDemo.style.transform = "translateY(8px)";
-          void fadeDemo.offsetWidth;
-          fadeDemo.style.transition =
-            "opacity 220ms cubic-bezier(.16,1,.3,1), transform 220ms cubic-bezier(.16,1,.3,1)";
-          requestAnimationFrame(function () {
-            fadeDemo.style.opacity = "1";
-            fadeDemo.style.transform = "translateY(0)";
-          });
-        }
-        fadeReplayBtn.addEventListener("click", playFade);
-        playFade();
+      // FADE IN
+      var fadeCard = document.getElementById("fadeCard");
+      var fadeToggleBtn = document.getElementById("fadeToggleBtn");
+      if (fadeCard && fadeToggleBtn) {
+        fadeToggleBtn.addEventListener("click", function () {
+          fadeCard.classList.toggle("visible");
+        });
       }
 
-      var toastDemo = document.getElementById("toastDemo");
-      var toastBtn = document.querySelector('[data-demo="toast-replay"]');
-      var toastTimeout;
-
-      if (toastDemo && toastBtn) {
-        function showToast() {
-          clearTimeout(toastTimeout);
-          toastDemo.style.opacity = "0";
-          toastDemo.style.transform = "translate(-50%, 16px)";
-          toastDemo.style.transition =
-            "opacity 260ms cubic-bezier(.25,.8,.25,1), transform 260ms cubic-bezier(.25,.8,.25,1)";
-          requestAnimationFrame(function () {
-            toastDemo.style.opacity = "1";
-            toastDemo.style.transform = "translate(-50%, 0)";
-          });
-          toastTimeout = setTimeout(function () {
-            toastDemo.style.opacity = "0";
-            toastDemo.style.transform = "translate(-50%, 16px)";
-          }, 2000);
-        }
-
-        toastBtn.addEventListener("click", showToast);
-        showToast();
+      // SLIDE CARD
+      var slideCard = document.getElementById("slideCard");
+      var slideToggleBtn = document.getElementById("slideToggleBtn");
+      if (slideCard && slideToggleBtn) {
+        slideToggleBtn.addEventListener("click", function () {
+          slideCard.classList.toggle("visible");
+        });
       }
 
-      // XP DEMO
-      var xpFill = document.getElementById("xpFill");
-      var xpLevelLabel = document.getElementById("xpLevelLabel");
-      var xpRemainingLabel = document.getElementById("xpRemainingLabel");
-      var xpTotalLabel = document.getElementById("xpTotalLabel");
-      var xpAddBtn = document.querySelector('[data-demo="xp-add"]');
-      var xpResetBtn = document.querySelector('[data-demo="xp-reset"]');
-      var xpBadge = document.getElementById("xpBadge");
-      var xpBadgeText = document.getElementById("xpBadgeText");
+      // SCALE CARD
+      var scaleCard = document.getElementById("scaleCard");
+      var scaleToggleBtn = document.getElementById("scaleToggleBtn");
+      if (scaleCard && scaleToggleBtn) {
+        scaleToggleBtn.addEventListener("click", function () {
+          scaleCard.classList.toggle("visible");
+        });
+      }
 
-      var xpTotal = 60;
-      var xpMax = 100;
-      var xpLevel = 3;
+      // TOAST EXIT
+      var toast = document.getElementById("toast");
+      var toastHideBtn = document.getElementById("toastHideBtn");
+      var toastResetBtn = document.getElementById("toastResetBtn");
+      if (toast && toastHideBtn && toastResetBtn) {
+        toastHideBtn.addEventListener("click", function () {
+          toast.classList.add("hidden");
+        });
+        toastResetBtn.addEventListener("click", function () {
+          toast.classList.remove("hidden");
+        });
+      }
+
+      // SCREEN SWIPE
+      var screenTrack = document.getElementById("screenTrack");
+      var screenPrev = document.getElementById("screenPrev");
+      var screenNext = document.getElementById("screenNext");
+      var screenDots = document.querySelectorAll(".screen-dot");
+      var screenIndexLabel = document.getElementById("screenIndexLabel");
+      var currentScreen = 0;
+
+      function updateScreen() {
+        if (!screenTrack) return;
+        screenTrack.style.transform = "translateX(" + currentScreen * -100 + "%)";
+        if (screenIndexLabel) {
+          screenIndexLabel.textContent = currentScreen + 1;
+        }
+        screenDots.forEach(function (dot, index) {
+          if (index === currentScreen) {
+            dot.classList.add("active");
+          } else {
+            dot.classList.remove("active");
+          }
+        });
+      }
+
+      if (screenPrev && screenNext) {
+        screenPrev.addEventListener("click", function () {
+          currentScreen = Math.max(0, currentScreen - 1);
+          updateScreen();
+        });
+        screenNext.addEventListener("click", function () {
+          currentScreen = Math.min(2, currentScreen + 1);
+          updateScreen();
+        });
+      }
+
+      screenDots.forEach(function (dot, index) {
+        dot.addEventListener("click", function () {
+          currentScreen = index;
+          updateScreen();
+        });
+      });
+
+      updateScreen();
+
+      // SHAKE
+      var shakeTarget = document.getElementById("shakeTarget");
+      var shakeTrigger = document.getElementById("shakeTrigger");
+      if (shakeTarget && shakeTrigger) {
+        shakeTrigger.addEventListener("click", function () {
+          shakeTarget.classList.remove("shaking");
+          // force reflow
+          void shakeTarget.offsetWidth;
+          shakeTarget.classList.add("shaking");
+        });
+      }
+
+      // RIPPLE
+      var rippleContainer = document.getElementById("rippleContainer");
+      var rippleCircle = document.getElementById("rippleCircle");
+      if (rippleContainer && rippleCircle) {
+        rippleContainer.addEventListener("click", function (e) {
+          var rect = rippleContainer.getBoundingClientRect();
+          var x = e.clientX - rect.left;
+          var y = e.clientY - rect.top;
+
+          rippleCircle.style.left = x + "px";
+          rippleCircle.style.top = y + "px";
+          rippleCircle.classList.remove("animating");
+          void rippleCircle.offsetWidth;
+          rippleCircle.classList.add("animating");
+        });
+      }
+
+      // SUCCESS POP
+      var successPop = document.getElementById("successPop");
+      var successTrigger = document.getElementById("successTrigger");
+      if (successPop && successTrigger) {
+        successTrigger.addEventListener("click", function () {
+          successPop.classList.remove("pop");
+          void successPop.offsetWidth;
+          successPop.classList.add("pop");
+        });
+      }
+
+      // XP BAR
+      var xpBar = document.getElementById("xpBar");
+      var xpValue = document.getElementById("xpValue");
+      var xpAddBtn = document.getElementById("xpAddBtn");
+      var floatingReward = document.getElementById("floatingReward");
+      var currentXP = 35;
+      var level = 3;
 
       function renderXP() {
-        var progress = Math.max(0, Math.min(1, xpTotal / xpMax));
-        if (xpFill) {
-          xpFill.style.transform = "scaleX(" + progress + ")";
+        if (xpBar) {
+          var progress = Math.min(currentXP / 100, 1);
+          xpBar.style.transform = "scaleX(" + progress + ")";
         }
-        if (xpLevelLabel) {
-          xpLevelLabel.textContent = xpLevel;
-        }
-        var remaining = Math.max(0, xpMax - xpTotal);
-        if (xpRemainingLabel) {
-          xpRemainingLabel.textContent = remaining + " XP";
-        }
-        if (xpTotalLabel) {
-          xpTotalLabel.textContent = xpTotal;
+        if (xpValue) {
+          xpValue.textContent = "Уровень " + level + " · " + currentXP + "/100 XP";
         }
       }
 
-      function addXP(amount) {
-        xpTotal += amount;
-        if (xpTotal >= xpMax) {
-          xpTotal = xpTotal - xpMax;
-          xpLevel += 1;
-        }
-        renderXP();
-        if (xpBadge && xpBadgeText) {
-          xpBadgeText.textContent = "+" + amount + " XP";
-          xpBadge.classList.remove("xp-badge-animate");
-          void xpBadge.offsetWidth;
-          xpBadge.classList.add("xp-badge-animate");
-        }
+      function showFloatingReward() {
+        if (!floatingReward) return;
+        floatingReward.classList.remove("visible");
+        void floatingReward.offsetWidth;
+        floatingReward.classList.add("visible");
       }
 
       if (xpAddBtn) {
         xpAddBtn.addEventListener("click", function () {
-          addXP(10);
-        });
-      }
-
-      if (xpResetBtn) {
-        xpResetBtn.addEventListener("click", function () {
-          xpTotal = 60;
-          xpLevel = 3;
+          currentXP += 15;
+          if (currentXP >= 100) {
+            currentXP = currentXP - 100;
+            level += 1;
+          }
           renderXP();
+          showFloatingReward();
         });
       }
 
       renderXP();
 
-      // COIN REWARD
-      var coinDemoSurface = document.getElementById("coinDemoSurface");
-      var wallet = document.getElementById("wallet");
-      var coinFly = document.getElementById("coinFly");
-      var walletAmountEl = document.getElementById("walletAmount");
-      var walletPill = document.getElementById("walletPill");
-      var coinBtn = document.querySelector('[data-demo="coin-reward-btn"]');
+      // LEVEL UP AVATAR
+      var avatarLevel = document.getElementById("avatarLevel");
+      var levelUpBtn = document.getElementById("levelUpBtn");
+      var avatarLevelValue = 3;
 
-      var walletAmount = 120;
-
-      function updateWallet() {
-        if (walletAmountEl) {
-          walletAmountEl.textContent = walletAmount;
+      function renderLevel() {
+        if (avatarLevel) {
+          avatarLevel.textContent = "Lv. " + avatarLevelValue;
         }
       }
 
-      if (coinBtn && coinFly && wallet && walletPill) {
-        coinBtn.addEventListener("click", function () {
-          var btnRect = coinBtn.getBoundingClientRect();
-          var walletRect = wallet.getBoundingClientRect();
-          var surfaceRect = coinDemoSurface.getBoundingClientRect();
-
-          var startX = btnRect.left + btnRect.width / 2 - surfaceRect.left - 9;
-          var startY = btnRect.top + btnRect.height / 2 - surfaceRect.top - 9;
-
-          coinFly.style.left = startX + "px";
-          coinFly.style.top = startY + "px";
-
-          coinFly.classList.remove("visible");
-          void coinFly.offsetWidth;
-          coinFly.classList.add("visible");
-
-          walletAmount += 5;
-          updateWallet();
-          walletPill.classList.remove("wallet-pulse");
-          void walletPill.offsetWidth;
-          walletPill.classList.add("wallet-pulse");
+      if (levelUpBtn && avatarLevel) {
+        levelUpBtn.addEventListener("click", function () {
+          avatarLevelValue += 1;
+          avatarLevel.classList.remove("level-up");
+          void avatarLevel.offsetWidth;
+          avatarLevel.classList.add("level-up");
+          renderLevel();
         });
       }
 
-      updateWallet();
+      renderLevel();
+
+      // COIN
+      var coin = document.getElementById("coin");
+      var coinShadow = document.getElementById("coinShadow");
+      var coinBtn = document.getElementById("coinBtn");
+      if (coin && coinShadow && coinBtn) {
+        coinBtn.addEventListener("click", function () {
+          coin.classList.remove("falling");
+          coinShadow.style.transform = "scaleX(0.6)";
+          void coin.offsetWidth;
+          coin.classList.add("falling");
+          setTimeout(function () {
+            coinShadow.style.transform = "scaleX(1)";
+          }, 260);
+        });
+      }
+
+      // REVEAL ON SCROLL (внутри блока)
+      var revealItems = document.querySelectorAll(".reveal-item");
+      var scrollDemo = document.getElementById("scrollDemo");
+      if (revealItems.length && scrollDemo) {
+        scrollDemo.addEventListener("scroll", function () {
+          var containerRect = scrollDemo.getBoundingClientRect();
+          revealItems.forEach(function (item) {
+            var rect = item.getBoundingClientRect();
+            if (rect.top < containerRect.bottom - 20) {
+              item.classList.add("visible");
+            }
+          });
+        });
+      }
+
+      // REWARD CONFETTI
+      var rewardBtn = document.getElementById("rewardBtn");
+      var rewardZone = document.getElementById("rewardZone");
+      var rewardLabel = document.getElementById("rewardLabel");
+
+      function launchConfetti() {
+        if (!rewardZone) return;
+        var colors = ["#fde68a", "#fb7185", "#a5b4fc", "#34d399", "#f97316"];
+
+        for (var i = 0; i < 18; i++) {
+          var piece = document.createElement("div");
+          piece.className = "confetti-piece";
+          var color = colors[i % colors.length];
+          piece.style.background = color;
+          piece.style.left = Math.random() * 100 + "%";
+          piece.style.top = "-10px";
+          piece.style.animation = "confetti-fall 0.8s linear forwards";
+          piece.style.animationDelay = (Math.random() * 0.2).toFixed(2) + "s";
+
+          rewardZone.appendChild(piece);
+
+          (function (el) {
+            setTimeout(function () {
+              if (el.parentNode) {
+                el.parentNode.removeChild(el);
+              }
+            }, 1200);
+          })(piece);
+        }
+      }
+
+      if (rewardBtn && rewardLabel && rewardZone) {
+        rewardBtn.addEventListener("click", function () {
+          launchConfetti();
+          rewardLabel.textContent = "Награда получена!";
+        });
+      }
     });
   </script>
 </body>
