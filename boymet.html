@@ -543,9 +543,6 @@
   <main class="page-main">
     <div class="label-pill">HTML + GPT</div>
     <h1>Как сделать HTML/JS/CSS-страницу с помощью GPT</h1>
-    <p class="subtitle">
-      Один файл, понятные промпты и минимальный JS: методичка для лендингов, прототипов и статичных сайтов.
-    </p>
 
     <!-- 1. БАЗОВЫЕ ПОНЯТИЯ -->
     <section id="basics">
@@ -559,7 +556,7 @@
         </div>
         <p><strong>HTML</strong> — каркас страницы. Заголовки, абзацы, кнопки, формы, блоки.</p>
         <p><strong>CSS</strong> — внешний вид. Цвета, шрифты, отступы, размеры, тени, закругления.</p>
-        <p><strong>JavaScript</strong> — логика и интерактивность. Клики, показ/скрытие элементов, таймеры, формы, LocalStorage и т.п.</p>
+        <p><strong>JavaScript</strong> — логика и интерактивность. Алгоритмы, калькуляторы, показ/скрытие элементов, таймеры, формы, LocalStorage и т.п.</p>
         <p class="muted">
           В промпте лучше явно просить: «HTML, CSS и JS — в одном файле». Тогда результат можно сразу сохранить как
           <code>.html</code> и открыть в браузере.
@@ -670,7 +667,7 @@ HTML, CSS и JS — в одном файле.
 
       <article class="section-card">
         <div class="section-card-header">
-          <div class="section-card-title">Шаг 3. Код по дизайну</div>
+          <div class="section-card-title">Код по дизайну</div>
           <div class="section-card-tag">Design → код</div>
         </div>
         <p class="muted">Если есть макет (Figma, скриншот), можно ссылаться на него или прикладывать картинку.</p>
@@ -773,14 +770,14 @@ HTML, CSS и JS — в одном файле.
     <!-- 7. РАБОТА С КАРТИНКАМИ -->
     <section id="images">
       <h2 class="section-title">7. Работа с картинками</h2>
-      <p class="section-caption">От генерации иконок до подключения png в готовом коде.</p>
+      <p class="section-caption">От генерации иконок до использования в коде.</p>
 
       <article class="section-card">
         <div class="section-card-header">
           <div class="section-card-title">Генерация 3D-иконок</div>
           <div class="section-card-tag">Image prompt</div>
         </div>
-        <p>Пример промпта для 3D-иконок в «резиново-пластиковом» стиле:</p>
+        <p>Пример промпта для 3D-иконок в стиле Альфы:</p>
         <div class="prompt-block" id="p-icons">
 A highly polished 3D illustration. 
 The environment is minimalistic, with soft shadows and ambient occlusion. 
@@ -797,7 +794,7 @@ No Background.
 
       <article class="section-card">
         <div class="section-card-header">
-          <div class="section-card-title">Как подключить картинку в коде</div>
+          <div class="section-card-title">Как добавить картинку в код</div>
           <div class="section-card-tag">Assets</div>
         </div>
         <ol>
@@ -808,7 +805,7 @@ No Background.
               <li>нажмите <strong>Commit changes</strong>.</li>
             </ul>
           </li>
-          <li>Опишите подключение в промпте:</li>
+          <li>Опишите использование в промпте:</li>
         </ol>
         <div class="prompt-block" id="p-img-use">
 Слева от текста «Подключить безопасный номер» должна быть картинка beznom.png 
@@ -1072,4 +1069,5 @@ https://[username].github.io/[название-репозитория]/[назв
 
 </body>
 </html>
+
 
