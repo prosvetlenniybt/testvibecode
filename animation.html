@@ -14,9 +14,9 @@
       --accent: #2563eb;
       --accent-soft: #e0ebff;
       --radius-lg: 16px;
-      --radius-xl: 24px;
       --shadow-soft: 0 10px 30px rgba(15, 23, 42, 0.08);
-      --code-bg: #111827;
+      --code-bg: #020617;
+      --code-border: #111827;
       --code-text: #e5e7eb;
     }
 
@@ -26,14 +26,16 @@
 
     body {
       margin: 0;
-      padding: 56px 16px 64px; /* сверху место под мобильный header */
+      padding: 56px 16px 64px;
       font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
         "Segoe UI", sans-serif;
       background: var(--bg);
       color: var(--text-main);
+      -webkit-font-smoothing: antialiased;
     }
 
-    /* MOBILE TOP HEADER (BURGER) */
+    /* MOBILE HEADER */
+
     .mobile-header {
       position: fixed;
       top: 0;
@@ -192,6 +194,12 @@
       color: var(--accent);
     }
 
+    .mobile-nav-list a.active {
+      background: #eef2ff;
+      color: #2563eb;
+      font-weight: 600;
+    }
+
     /* MAIN LAYOUT */
     .page {
       max-width: 900px;
@@ -264,34 +272,34 @@
       font-size: 13px;
     }
 
-    .pattern {
+    .section-card {
       border-radius: var(--radius-lg);
-      padding: 14px 14px 18px;
+      padding: 16px 14px 18px;
       border: 1px solid var(--border-subtle);
       background: #fafafa;
       margin-bottom: 14px;
     }
 
     @media (min-width: 961px) {
-      .pattern {
+      .section-card {
         padding: 18px 18px 20px;
       }
     }
 
-    .pattern-header {
+    .section-card-header {
       display: flex;
       flex-wrap: wrap;
+      gap: 6px;
       align-items: center;
-      gap: 8px;
-      margin-bottom: 8px;
+      margin-bottom: 6px;
     }
 
-    .pattern-name {
+    .section-card-title {
       font-size: 15px;
       font-weight: 600;
     }
 
-    .pattern-type {
+    .section-card-tag {
       font-size: 11px;
       text-transform: uppercase;
       letter-spacing: 0.08em;
@@ -301,70 +309,107 @@
       color: #4b5563;
     }
 
-    .pattern-description {
-      font-size: 13px;
+    p {
+      font-size: 14px;
+      line-height: 1.5;
+      margin: 4px 0 8px;
+      color: var(--text-main);
+    }
+
+    ul, ol {
+      margin: 4px 0 8px 18px;
+      padding: 0;
+      font-size: 14px;
+      color: var(--text-main);
+    }
+
+    li + li {
+      margin-top: 2px;
+    }
+
+    .muted {
       color: var(--text-muted);
-      margin: 0 0 12px;
+      font-size: 13px;
     }
 
-    .pattern-body {
-      display: grid;
-      grid-template-columns: minmax(0, 1.2fr) minmax(0, 1.4fr);
-      gap: 16px;
+    .badge {
+      display: inline-flex;
       align-items: center;
+      gap: 4px;
+      border-radius: 999px;
+      padding: 2px 8px;
+      font-size: 11px;
+      background: #e5e7eb;
+      color: #374151;
     }
 
-    @media (max-width: 720px) {
-      .pattern-body {
+    /* GRID FOR PATTERNS */
+    .pattern-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.4fr) minmax(0, 1.3fr);
+      gap: 16px;
+      align-items: flex-start;
+    }
+
+    @media (max-width: 840px) {
+      .pattern-grid {
         grid-template-columns: minmax(0, 1fr);
       }
     }
 
-    .pattern-info {
-      font-size: 12px;
-      color: var(--text-muted);
+    .pattern-card {
+      border-radius: 16px;
+      padding: 14px 14px 14px;
+      border: 1px solid var(--border-subtle);
+      background: #f9fafb;
     }
 
-    .pattern-info-row {
+    .pattern-meta {
+      font-size: 12px;
+      color: #6b7280;
       display: flex;
       flex-wrap: wrap;
       gap: 8px;
-      margin-top: 4px;
+      margin: 2px 0 4px;
     }
 
     .pill {
-      padding: 3px 8px;
       border-radius: 999px;
+      padding: 2px 8px;
       background: #e5e7eb;
       font-size: 11px;
-      color: #4b5563;
+      color: #374151;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
     }
 
     .pattern-demo {
-      background: #ffffff;
       border-radius: 14px;
-      border: 1px dashed #d1d5db;
-      padding: 12px;
-      min-height: 80px;
-      position: relative;
-      overflow: hidden;
+      border: 1px solid var(--border-subtle);
+      background: #020617;
+      color: #e5e7eb;
+      padding: 10px 10px 12px;
+      font-size: 13px;
+      box-shadow: 0 12px 30px rgba(15, 23, 42, 0.6);
     }
 
     .demo-header {
       display: flex;
-      justify-content: space-between;
       align-items: center;
+      justify-content: space-between;
+      gap: 8px;
       margin-bottom: 8px;
       font-size: 11px;
-      color: #6b7280;
-      gap: 8px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: #9ca3af;
     }
 
     .demo-controls {
-      display: flex;
+      display: inline-flex;
       flex-wrap: wrap;
       gap: 6px;
-      justify-content: flex-end;
     }
 
     .btn {
@@ -373,547 +418,395 @@
       padding: 4px 10px;
       font-size: 11px;
       cursor: pointer;
-      background: #111827;
-      color: #f9fafb;
+      background: #f9fafb;
+      color: #111827;
       display: inline-flex;
       align-items: center;
       gap: 4px;
       transition: transform 0.1s ease, box-shadow 0.1s ease, background 0.15s ease;
-      box-shadow: 0 5px 15px rgba(15, 23, 42, 0.25);
       white-space: nowrap;
     }
 
     .btn:hover {
       transform: translateY(-1px);
-      box-shadow: 0 7px 18px rgba(15, 23, 42, 0.28);
-      background: #020617;
+      box-shadow: 0 5px 15px rgba(15, 23, 42, 0.3);
+      background: #e5e7eb;
     }
 
     .btn:active {
       transform: translateY(0) scale(0.97);
-      box-shadow: 0 2px 8px rgba(15, 23, 42, 0.2);
+      box-shadow: 0 2px 8px rgba(15, 23, 42, 0.25);
     }
 
     .btn-secondary {
-      background: #e5e7eb;
-      color: #111827;
-      box-shadow: none;
+      background: #111827;
+      color: #f9fafb;
     }
 
     .btn-secondary:hover {
-      background: #d1d5db;
-      box-shadow: none;
+      background: #020617;
     }
 
-    .demo-area {
-      min-height: 48px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+    .demo-surface {
+      border-radius: 12px;
+      border: 1px solid rgba(148, 163, 184, 0.5);
+      background: radial-gradient(circle at top, #020617, #020617 40%, #000 100%);
+      padding: 12px;
       position: relative;
-      padding: 4px;
+      overflow: hidden;
+      min-height: 90px;
     }
 
-    .demo-box {
-      border-radius: 999px;
-      padding: 6px 16px;
+    .demo-caption {
+      margin-top: 6px;
       font-size: 12px;
-      background: #111827;
-      color: #f9fafb;
+      color: #9ca3af;
+    }
+
+    .code-block {
+      margin-top: 10px;
+      border-radius: 12px;
+      border: 1px solid var(--code-border);
+      background: var(--code-bg);
+      padding: 10px 10px 8px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, "Roboto Mono",
+        "Courier New", monospace;
+      font-size: 11px;
+      color: var(--code-text);
+      white-space: pre-wrap;
+      position: relative;
+    }
+
+    .copy-row {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: 4px;
+    }
+
+    .copy-btn {
+      border: none;
+      border-radius: 999px;
+      padding: 3px 9px;
+      font-size: 10px;
+      cursor: pointer;
+      background: #e5e7eb;
+      color: #111827;
       display: inline-flex;
       align-items: center;
-      justify-content: center;
+      gap: 4px;
+      transition: transform 0.1s ease, box-shadow 0.1s ease, background 0.15s ease;
       white-space: nowrap;
     }
 
-    .demo-box-light {
-      background: #e5e7eb;
-      color: #111827;
-    }
-
-    .demo-tag {
+    .copy-btn::before {
+      content: "⧉";
       font-size: 10px;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      color: #9ca3af;
     }
 
-    /* ------------ БАЗОВЫЕ АНИМАЦИИ ------------- */
-
-    .fade-demo {
-      opacity: 0;
-      transition: opacity 0.3s ease-out;
-    }
-    .fade-demo.visible {
-      opacity: 1;
+    .copy-btn:hover {
+      background: #d1d5db;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 10px rgba(15, 23, 42, 0.2);
     }
 
-    .slide-up-demo {
-      opacity: 0;
-      transform: translateY(20px);
-      transition: all 0.35s cubic-bezier(.19,1,.22,1);
-    }
-    .slide-up-demo.visible {
-      opacity: 1;
-      transform: translateY(0);
+    .copy-btn:active {
+      transform: translateY(0) scale(0.97);
+      box-shadow: 0 2px 6px rgba(15, 23, 42, 0.2);
     }
 
-    .scale-demo {
-      opacity: 0;
-      transform: scale(0.9);
-      transition: all 0.25s ease-out;
-    }
-    .scale-demo.visible {
-      opacity: 1;
-      transform: scale(1);
+    .status {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 4px;
     }
 
-    .fade-out-demo {
-      opacity: 1;
-      transition: opacity 0.26s ease-in;
-    }
-    .fade-out-demo.hidden {
-      opacity: 0;
-    }
-
-    .slide-exit-demo {
-      opacity: 1;
-      transform: translateY(0);
-      transition: all 0.28s ease-in;
-    }
-    .slide-exit-demo.hidden {
-      opacity: 0;
-      transform: translateY(-18px);
+    .badge-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 999px;
+      background: #22c55e;
     }
 
-    /* Screen Swipe: окно с двумя экранами */
-    .screen-frame {
+    .xp-bar-wrapper {
+      margin-top: 8px;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.7);
+      padding: 3px;
+      background: radial-gradient(circle at top, #0b1220, #020617);
+    }
+
+    .xp-bar-track {
+      position: relative;
       width: 100%;
-      border-radius: 16px;
-      background: #0f172a;
-      padding: 8px;
+      height: 10px;
+      border-radius: 999px;
       overflow: hidden;
+      background: linear-gradient(to right, #020617, #020617);
     }
 
-    .screen-window-header {
+    .xp-bar-fill {
+      position: absolute;
+      inset: 0;
+      width: 40%;
+      background: linear-gradient(90deg, #22c55e, #a3e635);
+      box-shadow: 0 0 12px rgba(132, 204, 22, 0.7);
+      transform-origin: left center;
+      transform: scaleX(0.4);
+      transition: transform 0.6s cubic-bezier(.19,1,.22,1);
+    }
+
+    .xp-bar-glow {
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 30% 50%, rgba(190, 242, 100, 0.5), transparent);
+      opacity: 0.6;
+      pointer-events: none;
+    }
+
+    .xp-label-row {
+      margin-top: 8px;
       display: flex;
       align-items: center;
-      gap: 4px;
-      margin-bottom: 8px;
-    }
-
-    .screen-dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 999px;
-      background: #4b5563;
-    }
-
-    .screen-dot:nth-child(1) { background: #f97373; }
-    .screen-dot:nth-child(2) { background: #facc15; }
-    .screen-dot:nth-child(3) { background: #22c55e; }
-
-    .screen-window-title {
-      margin-left: 8px;
+      justify-content: space-between;
       font-size: 11px;
       color: #9ca3af;
     }
 
-    .screen-track {
-      display: flex;
-      width: 200%;
-      transition: transform 0.4s ease-in-out;
-    }
-
-    .screen-window {
-      width: 50%;
-      padding: 10px 12px 12px;
-      border-radius: 12px;
-      background: #111827;
+    .xp-label-row span strong {
       color: #e5e7eb;
-      font-size: 12px;
     }
 
-    .screen-window h3 {
-      margin: 0 0 4px;
-      font-size: 13px;
-    }
-
-    .screen-window p {
-      margin: 0;
-      font-size: 11px;
-      color: #9ca3af;
-    }
-
-    /* Button Press */
-    .press-demo-btn {
-      border-radius: 999px;
-      padding: 8px 18px;
-      font-size: 12px;
-      border: none;
-      background: #111827;
-      color: #f9fafb;
-      cursor: pointer;
-      transition: transform 0.1s ease, box-shadow 0.1s ease;
-      box-shadow: 0 6px 18px rgba(15, 23, 42, 0.25);
-    }
-    .press-demo-btn:active {
-      transform: scale(0.94) translateY(1px);
-      box-shadow: 0 3px 12px rgba(15, 23, 42, 0.35);
-    }
-
-    /* Hover Lift */
-    .lift-card {
-      border-radius: 14px;
-      padding: 10px 14px;
-      background: #f9fafb;
-      border: 1px solid #e5e7eb;
-      font-size: 12px;
-      transition: transform 0.18s ease-out, box-shadow 0.18s ease-out,
-        border-color 0.18s ease-out;
-    }
-    .lift-card:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 10px 25px rgba(15, 23, 42, 0.14);
-      border-color: #c7d2fe;
-    }
-
-    /* Shake */
-    .shake-target {
-      border-radius: 999px;
-      padding: 6px 14px;
-      border: 1px solid #f97373;
-      background: #fef2f2;
-      font-size: 12px;
-      color: #b91c1c;
+    .xp-badge {
       display: inline-flex;
       align-items: center;
       gap: 6px;
-    }
-    .shake-target svg {
-      flex-shrink: 0;
-    }
-    .shake {
-      animation: shake 0.35s;
-    }
-    @keyframes shake {
-      0% { transform: translateX(0); }
-      25% { transform: translateX(-4px); }
-      50% { transform: translateX(4px); }
-      75% { transform: translateX(-2px); }
-      100% { transform: translateX(0); }
-    }
-
-    /* Reveal on Scroll */
-    .scroll-section {
-      margin-top: 32px;
-      border-radius: 18px;
-      border: 1px dashed #d1d5db;
-      padding: 12px 14px 14px;
-      background: #f9fafb;
-      max-height: 220px;
-      overflow-y: auto;
-    }
-    .scroll-item {
-      opacity: 0;
-      transform: translateY(18px);
-      transition: all 0.5s ease-out;
-      padding: 8px 10px;
-      border-radius: 10px;
-      background: #eef2ff;
-      font-size: 12px;
-      margin-bottom: 8px;
-      color: #111827;
-    }
-    .scroll-item.visible {
-      opacity: 1;
-      transform: translateY(0);
-    }
-
-    /* Ripple */
-    .ripple-wrapper {
-      position: relative;
-      display: inline-block;
       border-radius: 999px;
-      overflow: hidden;
-    }
-    .ripple-btn {
-      border-radius: 999px;
-      padding: 8px 18px;
-      border: none;
-      background: #111827;
-      color: #f9fafb;
-      font-size: 12px;
-      cursor: pointer;
-      position: relative;
-    }
-    .ripple-circle {
-      position: absolute;
-      border-radius: 50%;
-      transform: scale(0);
-      background: rgba(248, 250, 252, 0.6);
-      animation: ripple 0.6s linear;
-      pointer-events: none;
-    }
-    @keyframes ripple {
-      to {
-        transform: scale(2.8);
-        opacity: 0;
-      }
-    }
-
-    /* Success Pop */
-    .success-container {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-    .success-icon {
-      width: 28px;
-      height: 28px;
-      border-radius: 999px;
-      background: #22c55e;
-      color: #ecfdf5;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 16px;
-      opacity: 0;
-      transform: scale(0.7);
-      transition: all 0.3s ease-out;
-    }
-    .success-icon.show {
-      opacity: 1;
-      transform: scale(1);
-    }
-    .success-text {
-      font-size: 12px;
-      color: #16a34a;
-    }
-
-    /* Code hint */
-    .hint {
-      margin-top: 18px;
-      background: var(--code-bg);
-      color: var(--code-text);
-      padding: 10px 12px;
-      border-radius: 12px;
+      padding: 3px 8px;
       font-size: 11px;
-      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, "Roboto Mono",
-        "Courier New", monospace;
-      white-space: pre-wrap;
+      background: rgba(22, 163, 74, 0.16);
+      border: 1px solid rgba(34, 197, 94, 0.7);
+      color: #bbf7d0;
     }
 
-    /* GAMIFICATION */
-    .reward-area {
-      position: relative;
-      min-height: 80px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      overflow: hidden;
-    }
-    .reward-box {
-      border-radius: 16px;
-      padding: 10px 18px;
-      background: #111827;
-      color: #f9fafb;
-      font-size: 12px;
-      position: relative;
-      z-index: 1;
-    }
-    .confetti-piece {
-      position: absolute;
+    .xp-badge-dot {
       width: 6px;
-      height: 10px;
-      border-radius: 2px;
-      opacity: 0;
-      animation: confettiUp 0.9s ease-out forwards;
-    }
-    @keyframes confettiUp {
-      0% {
-        transform: translateY(20px) rotate(0deg);
-        opacity: 1;
-      }
-      100% {
-        transform: translateY(-40px) rotate(160deg);
-        opacity: 0;
-      }
-    }
-    .pulse-box {
-      animation: boxPulse 0.4s ease-out;
-    }
-    @keyframes boxPulse {
-      0% { transform: scale(1); }
-      50% { transform: scale(1.08); }
-      100% { transform: scale(1); }
-    }
-
-    .xp-wrapper {
-      width: 100%;
-    }
-    .xp-meta {
-      display: flex;
-      justify-content: space-between;
-      font-size: 11px;
-      color: #6b7280;
-      margin-bottom: 4px;
-    }
-    .xp-bar {
-      width: 100%;
-      height: 8px;
-      border-radius: 999px;
-      background: #e5e7eb;
-      overflow: hidden;
-    }
-    .xp-fill {
-      height: 100%;
-      width: 0;
-      background: linear-gradient(90deg, #22c55e, #3b82f6);
-      transition: width 0.6s cubic-bezier(.19,1,.22,1);
-    }
-
-    .quest-card {
-      border-radius: 12px;
-      padding: 10px 14px;
-      background: #f9fafb;
-      border: 1px solid #e5e7eb;
-      font-size: 12px;
-      position: relative;
-      overflow: visible;
-      text-align: center;
-    }
-    .reward-badge {
-      position: absolute;
-      left: 50%;
-      top: 50%;
-      padding: 4px 10px;
+      height: 6px;
       border-radius: 999px;
       background: #22c55e;
-      color: #ecfdf5;
-      font-size: 11px;
-      transform: translate(-50%, 8px) scale(0.9);
-      opacity: 0;
-      animation: rewardFloat 0.8s ease-out forwards;
-    }
-    @keyframes rewardFloat {
-      0% {
-        opacity: 0;
-        transform: translate(-50%, 8px) scale(0.9);
-      }
-      30% {
-        opacity: 1;
-        transform: translate(-50%, 0) scale(1);
-      }
-      100% {
-        opacity: 0;
-        transform: translate(-50%, -20px) scale(1);
-      }
+      box-shadow: 0 0 8px rgba(34, 197, 94, 0.9);
     }
 
-    .avatar-card {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      font-size: 12px;
+    .xp-badge-animate {
+      animation: xp-badge-pop 0.6s cubic-bezier(.16,1,.3,1);
     }
-    .avatar-circle {
-      position: relative;
-      width: 40px;
-      height: 40px;
+
+    @keyframes xp-badge-pop {
+      0% { transform: translateY(6px) scale(0.9); opacity: 0; }
+      40% { transform: translateY(0) scale(1.05); opacity: 1; }
+      100% { transform: translateY(0) scale(1); opacity: 1; }
+    }
+
+    .pill-level {
       border-radius: 999px;
-      background: #111827;
-      color: #f9fafb;
+      padding: 2px 8px;
+      border: 1px solid rgba(148, 163, 184, 0.7);
+      font-size: 11px;
+      color: #e5e7eb;
+      background: radial-gradient(circle at top, #020617, #020617 60%, #000 100%);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow: 0 8px 18px rgba(15, 23, 42, 0.8);
+    }
+
+    .pill-level span {
+      color: #a5b4fc;
+    }
+
+    .avatar-wrapper {
+      position: relative;
+      width: 56px;
+      height: 56px;
+      border-radius: 999px;
+      background: radial-gradient(circle at 30% 20%, #f97316, #c2410c);
+      box-shadow:
+        0 0 0 2px rgba(15, 23, 42, 1),
+        0 0 0 5px rgba(248, 250, 252, 0.12),
+        0 14px 30px rgba(15, 23, 42, 0.9);
       display: flex;
       align-items: center;
       justify-content: center;
-      font-weight: 600;
-      overflow: visible;
+      color: #fef9c3;
+      font-weight: 700;
+      font-size: 20px;
     }
+
     .avatar-glow {
       position: absolute;
-      inset: -4px;
+      inset: -6px;
       border-radius: inherit;
-      border: 2px solid rgba(234, 179, 8, 0.8);
+      background: conic-gradient(from 210deg, rgba(250, 204, 21, 0.35), transparent, rgba(251, 191, 36, 0.5), transparent, rgba(251, 146, 60, 0.35));
       opacity: 0;
-      transform: scale(0.8);
       pointer-events: none;
     }
-    .avatar-label {
-      font-weight: 600;
-      font-size: 12px;
-    }
-    .avatar-sub {
-      font-size: 11px;
-      color: #6b7280;
-      margin-top: 2px;
-    }
-    .avatar-pop {
-      animation: avatarPop 0.4s ease-out;
-    }
-    .avatar-glow-on {
-      animation: avatarGlow 0.4s ease-out;
-    }
-    @keyframes avatarPop {
-      0% { transform: scale(0.95); }
-      50% { transform: scale(1.1); }
-      100% { transform: scale(1); }
-    }
-    @keyframes avatarGlow {
-      0% { opacity: 0; transform: scale(0.8); }
-      50% { opacity: 1; transform: scale(1.05); }
-      100% { opacity: 0; transform: scale(1.1); }
+
+    .avatar-level-up .avatar-glow {
+      animation: avatar-glow-pulse 1s ease-out;
     }
 
-    .wallet-demo {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      width: 100%;
-      gap: 8px;
+    @keyframes avatar-glow-pulse {
+      0% { opacity: 0; transform: scale(0.9); }
+      40% { opacity: 1; transform: scale(1.02); }
+      100% { opacity: 0; transform: scale(1.04); }
     }
-    .coin-fx-area {
-      position: relative;
-      flex: 1;
-      display: flex;
-      justify-content: flex-start;
-    }
-    .wallet-pill {
-      border-radius: 999px;
-      padding: 6px 12px;
-      background: #111827;
-      color: #f9fafb;
-      font-size: 12px;
+
+    .avatar-level-label {
+      font-size: 11px;
+      color: #e5e7eb;
+      margin-top: 6px;
       display: inline-flex;
       align-items: center;
-      gap: 6px;
+      gap: 4px;
     }
+
+    .avatar-level-label strong {
+      color: #fbbf24;
+    }
+
+    .coin-wallet {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 4px 8px;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.7);
+      background: radial-gradient(circle at top, #020617, #020617 60%, #000 100%);
+      color: #e5e7eb;
+      font-size: 12px;
+      box-shadow: 0 8px 20px rgba(15, 23, 42, 0.85);
+    }
+
+    .coin-wallet-pill {
+      border-radius: 999px;
+      padding: 2px 8px;
+      background: rgba(253, 224, 71, 0.16);
+      border: 1px solid rgba(234, 179, 8, 0.8);
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 11px;
+      color: #facc15;
+    }
+
+    .coin-wallet-pill strong {
+      font-weight: 600;
+    }
+
+    .coin-badge {
+      width: 18px;
+      height: 18px;
+      border-radius: 999px;
+      background: radial-gradient(circle at 30% 20%, #fef3c7, #facc15);
+      box-shadow:
+        0 0 0 1px rgba(161, 98, 7, 0.7),
+        0 4px 10px rgba(15, 23, 42, 1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      color: #92400e;
+      font-weight: 700;
+    }
+
+    .coin-wallet-note {
+      font-size: 11px;
+      color: #9ca3af;
+      margin-top: 6px;
+    }
+
     .wallet-pulse {
-      animation: walletPulse 0.3s ease-out;
+      animation: wallet-pulse 0.6s cubic-bezier(.19,1,.22,1);
     }
-    @keyframes walletPulse {
+
+    @keyframes wallet-pulse {
       0% { transform: scale(1); }
-      50% { transform: scale(1.08); }
+      40% { transform: scale(1.05); }
       100% { transform: scale(1); }
     }
-    .coin {
+
+    .coin-fly {
       position: absolute;
-      width: 12px;
-      height: 12px;
+      width: 18px;
+      height: 18px;
       border-radius: 999px;
-      background: radial-gradient(circle at 30% 30%, #fef3c7, #facc15);
-      box-shadow: 0 0 4px rgba(250, 204, 21, 0.7);
+      background: radial-gradient(circle at 30% 20%, #fef3c7, #facc15);
+      box-shadow:
+        0 0 0 1px rgba(161, 98, 7, 0.7),
+        0 4px 10px rgba(15, 23, 42, 1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      color: #92400e;
+      font-weight: 700;
+      pointer-events: none;
       opacity: 0;
-      animation: coinFly 0.7s ease-out forwards;
+      transform: translate(0, 0);
     }
-    @keyframes coinFly {
+
+    .coin-fly.visible {
+      animation: coin-fly-up 0.8s cubic-bezier(.19,1,.22,1);
+    }
+
+    @keyframes coin-fly-up {
       0% {
         transform: translate(0, 0);
+        opacity: 0;
+      }
+      15% {
         opacity: 1;
       }
       100% {
         transform: translate(60px, -50px);
         opacity: 0;
+      }
+    }
+
+    /* ADAPTIVE */
+
+    @media (max-width: 720px) {
+      .page-main {
+        padding: 20px 14px 26px;
+      }
+
+      .section-card {
+        padding: 14px 12px 16px;
+      }
+
+      p, ul, ol {
+        font-size: 13px;
+      }
+
+      .pattern-grid {
+        gap: 12px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      body {
+        padding: 52px 10px 48px;
+      }
+
+      .page-main {
+        border-radius: 22px;
+      }
+
+      h1 {
+        font-size: 20px;
+      }
+
+      .section-title {
+        font-size: 16px;
       }
     }
   </style>
@@ -939,30 +832,8 @@
         <button class="mobile-close" id="mobileClose" aria-label="Закрыть навигацию">&times;</button>
       </div>
       <ul class="mobile-nav-list" id="mobileNavList">
-        <li><a href="#enter">1. Появление (Enter)</a></li>
-        <li><a href="#fade-in">— Fade In</a></li>
-        <li><a href="#slide-up">— Fade + Slide Up</a></li>
-        <li><a href="#scale-in">— Scale In</a></li>
-        <li><a href="#exit">2. Исчезновение (Exit)</a></li>
-        <li><a href="#fade-out">— Fade Out</a></li>
-        <li><a href="#slide-exit">— Slide Exit</a></li>
-        <li><a href="#screens">3. Экраны</a></li>
-        <li><a href="#screen-swipe">— Screen Swipe</a></li>
-        <li><a href="#interactions">4. Взаимодействия</a></li>
-        <li><a href="#button-press">— Button Press</a></li>
-        <li><a href="#hover-lift">— Hover Lift</a></li>
-        <li><a href="#shake">— Shake</a></li>
-        <li><a href="#scroll">5. Scroll</a></li>
-        <li><a href="#reveal-on-scroll">— Reveal on Scroll</a></li>
-        <li><a href="#micro">6. Микро-анимации</a></li>
-        <li><a href="#ripple">— Ripple</a></li>
-        <li><a href="#success-pop">— Success Pop</a></li>
-        <li><a href="#gamification">7. Геймификация</a></li>
-        <li><a href="#reward-confetti">— Reward Confetti</a></li>
-        <li><a href="#xp-progress">— XP Progress</a></li>
-        <li><a href="#floating-reward">— “+XP” Badge</a></li>
-        <li><a href="#level-up-avatar">— Level Up Avatar</a></li>
-        <li><a href="#coin-reward">— Coin Reward</a></li>
+        <li><a href="index.html">Методичка: HTML/JS/CSS</a></li>
+        <li><a href="animation.html" class="active">UI Motion Patterns</a></li>
       </ul>
     </div>
   </div>
@@ -975,563 +846,191 @@
         Методичка по анимациям: название · описание · живой пример.
         Все примеры сделаны на чистых HTML/CSS/JS и подходят для статических сайтов и GitHub Pages.
       </p>
+      <p style="margin-bottom:18px;">
+        <a href="index.html" class="btn">Перейти к методичке по HTML/JS/CSS</a>
+      </p>
 
       <!-- SECTION 1 -->
       <section id="enter">
-        <h2 class="section-title">1. Появление элементов (Enter)</h2>
-        <p class="section-caption">
-          Анимации, которые используются при первом показе элементов: блоков, карточек, модалок, шагов онбординга.
-        </p>
+        <h2 class="section-title">1. Появление (Enter)</h2>
+        <p class="section-caption">Как мягко показать новый блок на экране: модалка, тултип, карточка.</p>
 
         <!-- Fade In -->
-        <article class="pattern" id="fade-in">
-          <div class="pattern-header">
-            <div class="pattern-name">Fade In</div>
-            <div class="pattern-type">Enter</div>
+        <article class="section-card" id="fade-in">
+          <div class="section-card-header">
+            <div class="section-card-title">Fade In</div>
+            <div class="section-card-tag">Opacity + slight motion</div>
           </div>
-          <p class="pattern-description">
-            Плавное проявление без движения. Универсальный паттерн для аккуратного появления текста, иконок и небольших блоков.
-          </p>
-          <div class="pattern-body">
-            <div class="pattern-info">
-              <div class="demo-tag">Параметры</div>
-              <div class="pattern-info-row">
-                <span class="pill">duration: 300ms</span>
-                <span class="pill">easing: ease-out</span>
+          <div class="pattern-grid">
+            <div class="pattern-card">
+              <div class="pattern-header">
+                <span class="badge">
+                  <span class="badge-dot"></span>
+                  Использовать для появления модалок, подсказок и небольших карточек.
+                </span>
               </div>
-              <p style="margin-top:8px;">
-                Используй, когда хочешь минимальной динамики: небольшой fade-in делает интерфейс «живым», но не отвлекает.
+              <div class="pattern-meta">
+                <span class="pill">duration: 220–280ms</span>
+                <span class="pill">easing: cubic-bezier(.16,1,.3,1)</span>
+              </div>
+              <p>
+                Блок появляется с лёгкого увеличения прозрачности и минимального смещения.
+                Главное — без резких скачков: сначала прозрачность, потом финальное положение.
               </p>
             </div>
             <div class="pattern-demo">
               <div class="demo-header">
                 <span>Пример</span>
                 <div class="demo-controls">
-                  <button class="btn btn-secondary" data-demo="fade-in-replay">Показать ещё раз</button>
+                  <button class="btn btn-secondary" data-demo="fade-in-replay">Replay</button>
                 </div>
               </div>
-              <div class="demo-area">
-                <div class="demo-box fade-demo" id="fadeDemo">Fade In</div>
+              <div class="demo-surface">
+                <div id="fadeDemo" style="
+                  width: 100%;
+                  max-width: 260px;
+                  border-radius: 16px;
+                  background: radial-gradient(circle at top, #0f172a, #020617 60%, #000 100%);
+                  border: 1px solid rgba(148, 163, 184, 0.7);
+                  padding: 12px;
+                  color: #e5e7eb;
+                  opacity: 0;
+                  transform: translateY(8px);
+                ">
+                  <div style="font-size:12px; text-transform:uppercase; letter-spacing:0.08em; color:#9ca3af; margin-bottom:6px;">
+                    Tooltip · Fade In
+                  </div>
+                  <div style="font-size:14px; font-weight:500; margin-bottom:4px;">
+                    Новый бонус доступен
+                  </div>
+                  <p style="font-size:12px; margin:0;">
+                    Пользователь видит подсказку после наведения или первого входа в раздел.
+                  </p>
+                </div>
+              </div>
+              <p class="demo-caption">
+                Хорошо работает, когда нужно не отвлекать, а мягко подсветить новый элемент.
+              </p>
+              <div class="code-block" id="code-fade">
+.fade-in {
+  opacity: 0;
+  transform: translateY(8px);
+  transition:
+    opacity 220ms cubic-bezier(.16,1,.3,1),
+    transform 220ms cubic-bezier(.16,1,.3,1);
+}
+
+.fade-in.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+              </div>
+              <div class="copy-row">
+                <button class="copy-btn" data-copy-target="code-fade">
+                  Скопировать CSS
+                </button>
               </div>
             </div>
           </div>
         </article>
 
         <!-- Fade + Slide Up -->
-        <article class="pattern" id="slide-up">
-          <div class="pattern-header">
-            <div class="pattern-name">Fade + Slide Up</div>
-            <div class="pattern-type">Enter</div>
+        <article class="section-card" id="slide-up">
+          <div class="section-card-header">
+            <div class="section-card-title">Fade + Slide Up</div>
+            <div class="section-card-tag">Toasts, bottom-sheets</div>
           </div>
-          <p class="pattern-description">
-            Элемент появляется и слегка поднимается вверх. Это один из самых популярных паттернов в дашбордах и приложениях.
-          </p>
-          <div class="pattern-body">
-            <div class="pattern-info">
-              <div class="demo-tag">Параметры</div>
-              <div class="pattern-info-row">
-                <span class="pill">duration: 350ms</span>
-                <span class="pill">easing: cubic-bezier(.19,1,.22,1)</span>
-              </div>
-              <p style="margin-top:8px;">
-                Хорошо подходит для карточек, блоков с текстом, элементов списка при загрузке страницы или смене секции.
+          <div class="pattern-grid">
+            <div class="pattern-card">
+              <p>
+                Контент появляется снизу с небольшим сдвигом вверх и увеличением прозрачности.
+                Подходит для уведомлений, тостов или панелей, которые выезжают от нижней границы экрана.
               </p>
+              <div class="pattern-meta">
+                <span class="pill">duration: 260–320ms</span>
+                <span class="pill">easing: cubic-bezier(.25, .8, .25, 1)</span>
+              </div>
             </div>
             <div class="pattern-demo">
               <div class="demo-header">
                 <span>Пример</span>
                 <div class="demo-controls">
-                  <button class="btn btn-secondary" data-demo="slide-up-replay">Воспроизвести</button>
+                  <button class="btn btn-secondary" data-demo="toast-replay">Показать тост</button>
                 </div>
               </div>
-              <div class="demo-area">
-                <div class="demo-box demo-box-light slide-up-demo" id="slideUpDemo">
-                  Slide Up + Fade
+              <div class="demo-surface" style="min-height:120px;">
+                <div id="toastDemo" style="
+                  position: absolute;
+                  left: 50%;
+                  bottom: 16px;
+                  transform: translate(-50%, 16px);
+                  opacity: 0;
+                  border-radius: 999px;
+                  background: rgba(15,23,42,0.96);
+                  border: 1px solid rgba(148, 163, 184, 0.8);
+                  padding: 8px 14px;
+                  font-size: 12px;
+                  color: #e5e7eb;
+                  display: inline-flex;
+                  align-items: center;
+                  gap: 8px;
+                ">
+                  <span class="badge-dot"></span>
+                  <span>Изменения сохранены</span>
                 </div>
               </div>
-            </div>
-          </div>
-        </article>
+              <p class="demo-caption">
+                Toast хорошо работает, когда нужно коротко подтвердить действие (сохранение, отправка).
+              </p>
+              <div class="code-block" id="code-toast">
+.toast {
+  opacity: 0;
+  transform: translateY(16px);
+  transition:
+    opacity 260ms cubic-bezier(.25,.8,.25,1),
+    transform 260ms cubic-bezier(.25,.8,.25,1);
+}
 
-        <!-- Scale In -->
-        <article class="pattern" id="scale-in">
-          <div class="pattern-header">
-            <div class="pattern-name">Scale In</div>
-            <div class="pattern-type">Enter</div>
-          </div>
-          <p class="pattern-description">
-            Элемент слегка вырастает из уменьшенного состояния. Чаще всего используется для иконок, бейджей и «успех»-состояний.
-          </p>
-          <div class="pattern-body">
-            <div class="pattern-info">
-              <div class="demo-tag">Параметры</div>
-              <div class="pattern-info-row">
-                <span class="pill">duration: 250ms</span>
-                <span class="pill">easing: ease-out</span>
+.toast.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
               </div>
-              <p style="margin-top:8px;">
-                Не злоупотребляй — scale-эффекты привлекают внимание. Хорошо работают в местах, где хочется акцентировать событие.
-              </p>
-            </div>
-            <div class="pattern-demo">
-              <div class="demo-header">
-                <span>Пример</span>
-                <div class="demo-controls">
-                  <button class="btn btn-secondary" data-demo="scale-in-replay">Пульс</button>
-                </div>
-              </div>
-              <div class="demo-area">
-                <div class="demo-box scale-demo" id="scaleDemo">
-                  Scale In
-                </div>
+              <div class="copy-row">
+                <button class="copy-btn" data-copy-target="code-toast">
+                  Скопировать CSS
+                </button>
               </div>
             </div>
           </div>
         </article>
       </section>
 
-      <!-- SECTION 2 -->
-      <section id="exit">
-        <h2 class="section-title">2. Исчезновение элементов (Exit)</h2>
-        <p class="section-caption">
-          Анимации, отвечающие за скрытие блоков: закрытие баннеров, модалок, карточек, состояний ошибки.
-        </p>
-
-        <!-- Fade Out -->
-        <article class="pattern" id="fade-out">
-          <div class="pattern-header">
-            <div class="pattern-name">Fade Out</div>
-            <div class="pattern-type">Exit</div>
-          </div>
-          <p class="pattern-description">
-            Элемент плавно исчезает без смещения. Подходит для мгновенного скрытия подсказок, чипов, всплывающих сообщений.
-          </p>
-          <div class="pattern-body">
-            <div class="pattern-info">
-              <div class="demo-tag">Параметры</div>
-              <div class="pattern-info-row">
-                <span class="pill">duration: 250ms</span>
-                <span class="pill">easing: ease-in</span>
-              </div>
-              <p style="margin-top:8px;">
-                Хорошее правило: появление — <b>ease-out</b>, исчезновение — <b>ease-in</b>. Это воспринимается естественно.
-              </p>
-            </div>
-            <div class="pattern-demo">
-              <div class="demo-header">
-                <span>Пример</span>
-                <div class="demo-controls">
-                  <button class="btn btn-secondary" data-demo="fade-out-play">Скрыть</button>
-                  <button class="btn btn-secondary" data-demo="fade-out-reset">Сбросить</button>
-                </div>
-              </div>
-              <div class="demo-area">
-                <div class="demo-box demo-box-light fade-out-demo" id="fadeOutDemo">
-                  Fade Out
-                </div>
-              </div>
-            </div>
-          </div>
-        </article>
-
-        <!-- Slide Exit -->
-        <article class="pattern" id="slide-exit">
-          <div class="pattern-header">
-            <div class="pattern-name">Slide + Fade Exit</div>
-            <div class="pattern-type">Exit</div>
-          </div>
-          <p class="pattern-description">
-            Элемент чуть поднимается и исчезает. Хорошо смотрится для заметок, баннеров, временных карточек.
-          </p>
-          <div class="pattern-body">
-            <div class="pattern-info">
-              <div class="demo-tag">Параметры</div>
-              <div class="pattern-info-row">
-                <span class="pill">duration: 280ms</span>
-                <span class="pill">easing: ease-in</span>
-              </div>
-              <p style="margin-top:8px;">
-                Такой выход визуально «освобождает место», делая интерфейс живым, но не перегруженным.
-              </p>
-            </div>
-            <div class="pattern-demo">
-              <div class="demo-header">
-                <span>Пример</span>
-                <div class="demo-controls">
-                  <button class="btn btn-secondary" data-demo="slide-exit-play">Скрыть</button>
-                  <button class="btn btn-secondary" data-demo="slide-exit-reset">Сбросить</button>
-                </div>
-              </div>
-              <div class="demo-area">
-                <div class="demo-box slide-exit-demo demo-box-light" id="slideExitDemo">
-                  Slide Exit
-                </div>
-              </div>
-            </div>
-          </div>
-        </article>
-      </section>
-
-      <!-- SECTION 3 -->
-      <section id="screens">
-        <h2 class="section-title">3. Переходы между экранами</h2>
-        <p class="section-caption">
-          Паттерны для онбордингов, пошаговых мастеров, переключения между псевдо-страницами и вкладками.
-        </p>
-
-        <!-- Screen Swipe -->
-        <article class="pattern" id="screen-swipe">
-          <div class="pattern-header">
-            <div class="pattern-name">Screen Swipe (Left / Right)</div>
-            <div class="pattern-type">Screen transition</div>
-          </div>
-          <p class="pattern-description">
-            Два «окна» внутри области сменяют друг друга горизонтальным свайпом. Можно использовать как прототип мобильной навигации по шагам.
-          </p>
-          <div class="pattern-body">
-            <div class="pattern-info">
-              <div class="demo-tag">Параметры</div>
-              <div class="pattern-info-row">
-                <span class="pill">duration: 400ms</span>
-                <span class="pill">easing: ease-in-out</span>
-              </div>
-              <p style="margin-top:8px;">
-                В примере ниже — два состояния онбординга. Кнопки «Назад»/«Вперёд» двигают трек с окнами влево и вправо.
-              </p>
-            </div>
-            <div class="pattern-demo">
-              <div class="demo-header">
-                <span>Пример (2 шага онбординга)</span>
-                <div class="demo-controls">
-                  <button class="btn btn-secondary" data-demo="screen-prev">Назад</button>
-                  <button class="btn btn-secondary" data-demo="screen-next">Вперёд</button>
-                </div>
-              </div>
-              <div class="demo-area">
-                <div class="screen-frame">
-                  <div class="screen-window-header">
-                    <div class="screen-dot"></div>
-                    <div class="screen-dot"></div>
-                    <div class="screen-dot"></div>
-                    <span class="screen-window-title">Onboarding · Swipe demo</span>
-                  </div>
-                  <div class="screen-track" id="screenTrack">
-                    <div class="screen-window">
-                      <h3>Шаг 1 · Привет!</h3>
-                      <p>Расскажи нам о себе, чтобы персонализировать продукт.</p>
-                    </div>
-                    <div class="screen-window">
-                      <h3>Шаг 2 · Настройки</h3>
-                      <p>Выбери темы и уведомления — потом их можно поменять в профиле.</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </article>
-      </section>
-
-      <!-- SECTION 4 -->
-      <section id="interactions">
-        <h2 class="section-title">4. Анимации взаимодействий</h2>
-        <p class="section-caption">
-          Микро-обратная связь при клике, наведении и ошибках. Именно из таких мелочей складывается ощущение «премиального» интерфейса.
-        </p>
-
-        <!-- Button Press -->
-        <article class="pattern" id="button-press">
-          <div class="pattern-header">
-            <div class="pattern-name">Button Press</div>
-            <div class="pattern-type">Interaction</div>
-          </div>
-          <p class="pattern-description">
-            Лёгкое «сжатие» кнопки при клике. Самый базовый и почти обязательный паттерн для любых интерактивных контролов.
-          </p>
-          <div class="pattern-body">
-            <div class="pattern-info">
-              <div class="demo-tag">Параметры</div>
-              <div class="pattern-info-row">
-                <span class="pill">duration: 120–150ms</span>
-                <span class="pill">easing: ease-out</span>
-              </div>
-              <p style="margin-top:8px;">
-                Воспринимается как физический отклик. Учитывай его на всех основных CTA-кнопках.
-              </p>
-            </div>
-            <div class="pattern-demo">
-              <div class="demo-header">
-                <span>Пример (нажми на кнопку)</span>
-                <span class="demo-tag">:active state</span>
-              </div>
-              <div class="demo-area">
-                <button class="press-demo-btn">Нажми меня</button>
-              </div>
-            </div>
-          </div>
-        </article>
-
-        <!-- Hover Lift -->
-        <article class="pattern" id="hover-lift">
-          <div class="pattern-header">
-            <div class="pattern-name">Hover Lift</div>
-            <div class="pattern-type">Interaction</div>
-          </div>
-          <p class="pattern-description">
-            Карточка слегка поднимается и отбрасывает тень при наведении. Работает как приглашение к действию.
-          </p>
-          <div class="pattern-body">
-            <div class="pattern-info">
-              <div class="demo-tag">Параметры</div>
-              <div class="pattern-info-row">
-                <span class="pill">duration: 180ms</span>
-                <span class="pill">easing: ease-out</span>
-              </div>
-              <p style="margin-top:8px;">
-                Применяй к кликабельным блокам — карточкам тарифов, товарам, плиткам разделов.
-              </p>
-            </div>
-            <div class="pattern-demo">
-              <div class="demo-header">
-                <span>Пример (наведи курсор)</span>
-                <span class="demo-tag">hover</span>
-              </div>
-              <div class="demo-area">
-                <div class="lift-card">
-                  Наведи на карточку — она «поднимется».
-                </div>
-              </div>
-            </div>
-          </div>
-        </article>
-
-        <!-- Shake -->
-        <article class="pattern" id="shake">
-          <div class="pattern-header">
-            <div class="pattern-name">Shake (ошибка)</div>
-            <div class="pattern-type">Interaction</div>
-          </div>
-          <p class="pattern-description">
-            Лёгкое «поддёргивание» поля или блока при ошибке. Сильный визуальный сигнал, поэтому не стоит использовать его слишком часто.
-          </p>
-          <div class="pattern-body">
-            <div class="pattern-info">
-              <div class="demo-tag">Параметры</div>
-              <div class="pattern-info-row">
-                <span class="pill">duration: 300–350ms</span>
-                <span class="pill">easing: ease-in-out</span>
-              </div>
-              <p style="margin-top:8px;">
-                Идеально для форм: поле с ошибкой слегка трясётся и подсвечивается красным.
-              </p>
-            </div>
-            <div class="pattern-demo">
-              <div class="demo-header">
-                <span>Пример</span>
-                <div class="demo-controls">
-                  <button class="btn btn-secondary" data-demo="shake-play">Показать ошибку</button>
-                </div>
-              </div>
-              <div class="demo-area">
-                <div class="shake-target" id="shakeTarget">
-                  <svg width="14" height="14" viewBox="0 0 20 20" fill="none">
-                    <circle cx="10" cy="10" r="9" stroke="#f97373" stroke-width="2"/>
-                    <line x1="10" y1="5" x2="10" y2="11" stroke="#b91c1c" stroke-width="2" stroke-linecap="round"/>
-                    <circle cx="10" cy="14" r="1" fill="#b91c1c"/>
-                  </svg>
-                  Ошибка ввода
-                </div>
-              </div>
-            </div>
-          </div>
-        </article>
-      </section>
-
-      <!-- SECTION 5 -->
-      <section id="scroll">
-        <h2 class="section-title">5. Появление при скролле</h2>
-        <p class="section-caption">
-          Элементы появляются по мере прокрутки, создавая ощущение глубины и последовательности.
-        </p>
-
-        <!-- Reveal on Scroll -->
-        <article class="pattern" id="reveal-on-scroll">
-          <div class="pattern-header">
-            <div class="pattern-name">Reveal on Scroll</div>
-            <div class="pattern-type">Scroll</div>
-          </div>
-          <p class="pattern-description">
-            Элементы по очереди проявляются снизу при попадании в viewport. Подходит для списков преимуществ, шагов, таймлайнов.
-          </p>
-          <div class="pattern-body">
-            <div class="pattern-info">
-              <div class="demo-tag">Параметры</div>
-              <div class="pattern-info-row">
-                <span class="pill">duration: 500ms</span>
-                <span class="pill">easing: ease-out</span>
-              </div>
-              <p style="margin-top:8px;">
-                Ниже — мини-«лента», в которой элементы появляются по мере скролла (используется IntersectionObserver).
-              </p>
-            </div>
-            <div class="pattern-demo">
-              <div class="demo-header">
-                <span>Пример (прокрути внутри)</span>
-                <span class="demo-tag">scroll + observe</span>
-              </div>
-              <div class="demo-area">
-                <div class="scroll-section" id="scrollSection">
-                  <div class="scroll-item">Элемент 1 · Секция</div>
-                  <div class="scroll-item">Элемент 2 · Секция</div>
-                  <div class="scroll-item">Элемент 3 · Секция</div>
-                  <div class="scroll-item">Элемент 4 · Секция</div>
-                  <div class="scroll-item">Элемент 5 · Секция</div>
-                  <div class="scroll-item">Элемент 6 · Секция</div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </article>
-      </section>
-
-      <!-- SECTION 6 -->
-      <section id="micro">
-        <h2 class="section-title">6. Микро-анимации</h2>
-        <p class="section-caption">
-          Небольшие, но заметные эффекты: ripple по клику, «поп» при успешном действии и другие жесты, которые делают продукт «живым».
-        </p>
-
-        <!-- Ripple -->
-        <article class="pattern" id="ripple">
-          <div class="pattern-header">
-            <div class="pattern-name">Ripple</div>
-            <div class="pattern-type">Micro</div>
-          </div>
-          <p class="pattern-description">
-            Волна расходится от точки клика. Этот эффект часто используется в Material Design и очень хорошо читается как «нажатие».
-          </p>
-          <div class="pattern-body">
-            <div class="pattern-info">
-              <div class="demo-tag">Параметры</div>
-              <div class="pattern-info-row">
-                <span class="pill">duration: ~600ms</span>
-                <span class="pill">easing: linear</span>
-              </div>
-              <p style="margin-top:8px;">
-                Работает через создание span-элемента в точке клика и анимацию его масштаба и прозрачности.
-              </p>
-            </div>
-            <div class="pattern-demo">
-              <div class="demo-header">
-                <span>Пример (кликни по кнопке)</span>
-                <span class="demo-tag">JS + keyframes</span>
-              </div>
-              <div class="demo-area">
-                <div class="ripple-wrapper">
-                  <button class="ripple-btn" id="rippleBtn">Клик с ripple</button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </article>
-
-        <!-- Success Pop -->
-        <article class="pattern" id="success-pop">
-          <div class="pattern-header">
-            <div class="pattern-name">Success Pop</div>
-            <div class="pattern-type">Micro</div>
-          </div>
-          <p class="pattern-description">
-            Иконка успеха «выстреливает» с лёгким увеличением. Подходит для подтверждения действий: сохранено, отправлено, завершено.
-          </p>
-          <div class="pattern-body">
-            <div class="pattern-info">
-              <div class="demo-tag">Параметры</div>
-              <div class="pattern-info-row">
-                <span class="pill">duration: 300ms</span>
-                <span class="pill">easing: ease-out</span>
-              </div>
-              <p style="margin-top:8px;">
-                Можно сочетать с изменением текста кнопки или появлением небольшого тултипа «Готово».
-              </p>
-            </div>
-            <div class="pattern-demo">
-              <div class="demo-header">
-                <span>Пример</span>
-                <div class="demo-controls">
-                  <button class="btn btn-secondary" data-demo="success-play">Запустить</button>
-                </div>
-              </div>
-              <div class="demo-area">
-                <div class="success-container">
-                  <div class="success-icon" id="successIcon">✓</div>
-                  <div class="success-text" id="successText">Нажми «Запустить», чтобы показать успех</div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </article>
-      </section>
-
-      <!-- SECTION 7 -->
+      <!-- SECTION 7 (фрагмент геймификации, XP + coin) -->
       <section id="gamification">
-        <h2 class="section-title">7. Геймификационные анимации</h2>
+        <h2 class="section-title">7. Геймификация: XP и награды</h2>
         <p class="section-caption">
-          Анимации награды, прогресса и «+XP» — то, что делает интерфейс похожим на игру и усиливает ощущение достижения.
+          Как визуально показывать прогресс, уровни и награды, чтобы пользователю хотелось «сделать ещё одно действие».
         </p>
-
-        <!-- Reward Confetti -->
-        <article class="pattern" id="reward-confetti">
-          <div class="pattern-header">
-            <div class="pattern-name">Reward Confetti</div>
-            <div class="pattern-type">Gamification</div>
-          </div>
-          <p class="pattern-description">
-            Короткий всплеск конфетти и пульс блока. Используется при завершении онбординга, челенджа или сложного действия — как «мини-праздник».
-          </p>
-          <div class="pattern-body">
-            <div class="pattern-info">
-              <div class="demo-tag">Параметры</div>
-              <div class="pattern-info-row">
-                <span class="pill">duration: ~800–900ms</span>
-                <span class="pill">easing: ease-out</span>
-              </div>
-              <p style="margin-top:8px;">
-                Запускается один раз после успеха: конфетти разлетается, блок подтверждения слегка «дышит» за счёт scale-анимации.
-              </p>
-            </div>
-            <div class="pattern-demo">
-              <div class="demo-header">
-                <span>Пример</span>
-                <div class="demo-controls">
-                  <button class="btn btn-secondary" data-demo="reward-confetti-play">Наградить</button>
-                </div>
-              </div>
-              <div class="demo-area reward-area" id="rewardArea">
-                <div class="reward-box" id="rewardBox">Успех! Награда получена</div>
-              </div>
-            </div>
-          </div>
-        </article>
 
         <!-- XP Progress -->
-        <article class="pattern" id="xp-progress">
-          <div class="pattern-header">
-            <div class="pattern-name">XP Progress Bar</div>
-            <div class="pattern-type">Gamification</div>
+        <article class="section-card" id="xp-progress">
+          <div class="section-card-header">
+            <div class="section-card-title">XP Progress Bar</div>
+            <div class="section-card-tag">Persistent Progress</div>
           </div>
-          <p class="pattern-description">
-            Полоса опыта, заполняющаяся по мере выполнения заданий. Классический игровой паттерн, который отлично ложится на обучение и чек-листы.
-          </p>
-          <div class="pattern-body">
-            <div class="pattern-info">
-              <div class="demo-tag">Параметры</div>
-              <div class="pattern-info-row">
-                <span class="pill">duration: 600ms</span>
-                <span class="pill">easing: cubic-bezier(.19,1,.22,1)</span>
+          <div class="pattern-grid">
+            <div class="pattern-card">
+              <p>
+                Горизонтальный прогресс с подсветкой текущего уровня и расстояния до следующего.
+              </p>
+              <div class="pattern-meta">
+                <div class="pill">duration: 600ms</div>
+                <div class="pill">easing: cubic-bezier(.19,1,.22,1)</div>
               </div>
-              <p style="margin-top:8px;">
-                Хорошая идея — обновлять XP после каждого значимого действия пользователя и визуально показывать приближение к следующему уровню.
+              <p class="muted">
+                Хорошая идея — обновлять XP после каждого значимого действия пользователя
+                и визуально показывать приближение к следующему уровню.
               </p>
             </div>
             <div class="pattern-demo">
@@ -1542,159 +1041,123 @@
                   <button class="btn btn-secondary" data-demo="xp-reset">Сбросить</button>
                 </div>
               </div>
-              <div class="demo-area">
-                <div class="xp-wrapper">
-                  <div class="xp-meta">
-                    <span>Прогресс опыта</span>
-                    <span id="xpValue">0 XP</span>
+              <div class="demo-surface" id="xpDemoSurface">
+                <div class="xp-bar-wrapper">
+                  <div class="xp-bar-track">
+                    <div class="xp-bar-fill" id="xpFill"></div>
+                    <div class="xp-bar-glow"></div>
                   </div>
-                  <div class="xp-bar">
-                    <div class="xp-fill" id="xpFillDemo"></div>
+                  <div class="xp-label-row">
+                    <span>Уровень <strong id="xpLevelLabel">3</strong></span>
+                    <span>Осталось <strong id="xpRemainingLabel">40 XP</strong></span>
                   </div>
                 </div>
+                <div style="margin-top:10px; display:flex; justify-content:space-between; align-items:center; gap:8px;">
+                  <div class="xp-badge" id="xpBadge">
+                    <span class="xp-badge-dot"></span>
+                    <span id="xpBadgeText">+10 XP за действие</span>
+                  </div>
+                  <span style="font-size:11px; color:#9ca3af;">
+                    Всего XP: <span id="xpTotalLabel">60</span>/100
+                  </span>
+                </div>
               </div>
-            </div>
-          </div>
-        </article>
-
-        <!-- Floating Reward Badge -->
-        <article class="pattern" id="floating-reward">
-          <div class="pattern-header">
-            <div class="pattern-name">Floating “+XP” Badge</div>
-            <div class="pattern-type">Gamification</div>
-          </div>
-          <p class="pattern-description">
-            Плашка «+50 XP» всплывает над карточкой задания и исчезает. Это лёгкая, но очень понятная визуальная награда.
-          </p>
-          <div class="pattern-body">
-            <div class="pattern-info">
-              <div class="demo-tag">Параметры</div>
-              <div class="pattern-info-row">
-                <span class="pill">duration: ~800ms</span>
-                <span class="pill">easing: ease-out</span>
-              </div>
-              <p style="margin-top:8px;">
-                Используй этот паттерн, когда пользователь выполняет отдельные задания: плюс к XP и моментальное визуальное подкрепление.
+              <p class="demo-caption">
+                Такой бар можно показывать в профиле, в хедере или в онбординге, привязав XP к ключевым действиям.
               </p>
-            </div>
-            <div class="pattern-demo">
-              <div class="demo-header">
-                <span>Пример</span>
-                <div class="demo-controls">
-                  <button class="btn btn-secondary" data-demo="reward-badge-play">Показать +50 XP</button>
-                </div>
-              </div>
-              <div class="demo-area">
-                <div class="quest-card" id="questCard">
-                  Завершите задание, чтобы получить +50 XP.
-                </div>
-              </div>
-            </div>
-          </div>
-        </article>
+              <div class="code-block" id="code-xp">
+/* HTML: контейнер */
 
-        <!-- Level Up Avatar -->
-        <article class="pattern" id="level-up-avatar">
-          <div class="pattern-header">
-            <div class="pattern-name">Level Up Avatar</div>
-            <div class="pattern-type">Gamification</div>
-          </div>
-          <p class="pattern-description">
-            Аватар пользователя “выстреливает” и подсвечивается, а уровень растёт. Чистый игровой паттерн для статусов и рангов.
-          </p>
-          <div class="pattern-body">
-            <div class="pattern-info">
-              <div class="demo-tag">Параметры</div>
-              <div class="pattern-info-row">
-                <span class="pill">duration: ~400ms</span>
-                <span class="pill">easing: ease-out</span>
+&lt;div class="xp-bar-wrapper"&gt;
+  &lt;div class="xp-bar-track"&gt;
+    &lt;div class="xp-bar-fill"&gt;&lt;/div&gt;
+    &lt;div class="xp-bar-glow"&gt;&lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+
+/* JS-логика (упрощённая) */
+
+const fill = document.querySelector(".xp-bar-fill");
+let progress = 0.4;
+
+function setXP(value) {
+  progress = Math.max(0, Math.min(1, value));
+  fill.style.transform = `scaleX(${progress})`;
+}
               </div>
-              <p style="margin-top:8px;">
-                Можно запускать при повышении уровня, завершении серии заданий или достижении streak — аватар становится центральной точкой внимания.
-              </p>
-            </div>
-            <div class="pattern-demo">
-              <div class="demo-header">
-                <span>Пример</span>
-                <div class="demo-controls">
-                  <button class="btn btn-secondary" data-demo="level-up-play">Level Up</button>
-                </div>
-              </div>
-              <div class="demo-area">
-                <div class="avatar-card">
-                  <div class="avatar-circle" id="avatarCircle">
-                    <div class="avatar-glow" id="avatarGlow"></div>
-                    <span>U</span>
-                  </div>
-                  <div class="avatar-text">
-                    <div class="avatar-label">Уровень <span id="avatarLevel">1</span></div>
-                    <div class="avatar-sub">
-                      Нажми «Level Up», чтобы показать анимацию повышения уровня.
-                    </div>
-                  </div>
-                </div>
+              <div class="copy-row">
+                <button class="copy-btn" data-copy-target="code-xp">
+                  Скопировать код
+                </button>
               </div>
             </div>
           </div>
         </article>
 
         <!-- Coin Reward -->
-        <article class="pattern" id="coin-reward">
-          <div class="pattern-header">
-            <div class="pattern-name">Coin Reward to Wallet</div>
-            <div class="pattern-type">Gamification</div>
+        <article class="section-card" id="coin-reward">
+          <div class="section-card-header">
+            <div class="section-card-title">Coin Reward + Wallet</div>
+            <div class="section-card-tag">Micro-reward</div>
           </div>
-          <p class="pattern-description">
-            Монетки вылетают из кнопки и улетают в кошелёк, а счётчик баланса пульсирует. Очень наглядный паттерн для бонусов и кэшбэка.
-          </p>
-          <div class="pattern-body">
-            <div class="pattern-info">
-              <div class="demo-tag">Параметры</div>
-              <div class="pattern-info-row">
-                <span class="pill">duration монет: ~700ms</span>
-                <span class="pill">easing: ease-out</span>
+          <div class="pattern-grid">
+            <div class="pattern-card">
+              <p>
+                Мини-наградой может быть монетка, полёт которой связывает действие и кошелёк.
+              </p>
+              <div class="pattern-meta">
+                <span class="pill">duration: 700–900ms</span>
+                <span class="pill">easing: cubic-bezier(.19,1,.22,1)</span>
               </div>
-              <p style="margin-top:8px;">
-                Используй при выдаче кэшбэка, бонусных монет или валюты. Важно: анимация должна быть короткой, но приятной.
+              <p class="muted">
+                Такой паттерн хорошо работает в обучении, задачах, чек-листах и квестах.
               </p>
             </div>
             <div class="pattern-demo">
               <div class="demo-header">
                 <span>Пример</span>
                 <div class="demo-controls">
-                  <button class="btn btn-secondary" id="coinEarnBtn">Получить монеты</button>
+                  <button class="btn btn-secondary" data-demo="coin-reward-btn">Получить +5</button>
                 </div>
               </div>
-              <div class="demo-area">
-                <div class="wallet-demo">
-                  <div class="coin-fx-area" id="coinFxArea"></div>
-                  <div class="wallet-pill" id="walletPill">
-                    <span>💰</span>
-                    <span id="walletAmount">0</span>
+              <div class="demo-surface" id="coinDemoSurface" style="min-height:110px;">
+                <div class="coin-wallet" id="wallet">
+                  <div class="coin-badge">₵</div>
+                  <div>
+                    <div class="coin-wallet-pill" id="walletPill">
+                      Баланс: <strong id="walletAmount">120</strong>
+                    </div>
+                    <div class="coin-wallet-note">
+                      Ещё 30 до следующего бонуса
+                    </div>
                   </div>
                 </div>
+                <div class="coin-fly" id="coinFly">+5</div>
+              </div>
+              <p class="demo-caption">
+                Монетка вылетает из кнопки и «падает» в кошелёк, усиливая связь между действием и наградой.
+              </p>
+              <div class="code-block" id="code-coin">
+/* HTML: кнопку и кошелёк можно расположить в одном контейнере */
+
+&lt;div class="coin-wallet"&gt;...&lt;/div&gt;
+&lt;div class="coin-fly"&gt;+5&lt;/div&gt;
+
+/* JS-идея:
+  1. При клике на кнопку — позиционировать .coin-fly возле кнопки.
+  2. Через CSS-анимацию смещать её по диагонали к кошельку.
+  3. По окончании анимации обновить баланс.
+*/
+              </div>
+              <div class="copy-row">
+                <button class="copy-btn" data-copy-target="code-coin">
+                  Скопировать код
+                </button>
               </div>
             </div>
           </div>
         </article>
       </section>
-
-      <div class="hint">
-TIMING SYSTEM:
-  · Микроэффекты: 100–150ms
-  · Появление блоков: 250–350ms
-  · Переходы между экранами: 300–450ms
-  · Ошибки: ~300ms
-  · Scroll-просветы: 400–600ms
-
-Геймификационные анимации:
-  · Награда/конфетти: ~800–1000ms
-  · XP-прогресс: ~600ms
-  · Плашки «+XP»: ~700–900ms
-  · Level Up / Coins: ~300–700ms
-
-Используй единые тайминги и easing-кривые, чтобы анимации ощущались частью одной системы.
-      </div>
     </main>
   </div>
 
@@ -1748,343 +1211,199 @@ TIMING SYSTEM:
         });
       }
 
+      // COPY BUTTONS
+      var copyButtons = document.querySelectorAll(".copy-btn");
+      copyButtons.forEach(function (btn) {
+        btn.addEventListener("click", function () {
+          var targetId = btn.getAttribute("data-copy-target");
+          var block = document.getElementById(targetId);
+          if (!block) return;
+
+          var text = block.innerText.trim();
+          var originalText = btn.textContent;
+
+          function onSuccess() {
+            btn.textContent = "Скопировано!";
+            btn.style.backgroundColor = "#22c55e";
+            btn.style.color = "#ecfdf5";
+            setTimeout(function () {
+              btn.textContent = originalText;
+              btn.style.backgroundColor = "";
+              btn.style.color = "";
+            }, 1500);
+          }
+
+          function onError() {
+            btn.textContent = "Ошибка копирования";
+            btn.style.backgroundColor = "#b91c1c";
+            btn.style.color = "#fef2f2";
+            setTimeout(function () {
+              btn.textContent = originalText;
+              btn.style.backgroundColor = "";
+              btn.style.color = "";
+            }, 2000);
+          }
+
+          if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(text).then(onSuccess).catch(function () {
+              onError();
+            });
+          } else {
+            try {
+              var ta = document.createElement("textarea");
+              ta.value = text;
+              ta.style.position = "fixed";
+              ta.style.opacity = "0";
+              document.body.appendChild(ta);
+              ta.select();
+              document.execCommand("copy");
+              document.body.removeChild(ta);
+              onSuccess();
+            } catch (e) {
+              onError();
+            }
+          }
+        });
+      });
+
       // ENTER ANIMATIONS
       var fadeDemo = document.getElementById("fadeDemo");
       var fadeReplayBtn = document.querySelector('[data-demo="fade-in-replay"]');
 
-      if (fadeDemo) {
-        setTimeout(function () {
-          fadeDemo.classList.add("visible");
-        }, 200);
-      }
-
-      if (fadeReplayBtn && fadeDemo) {
-        fadeReplayBtn.addEventListener("click", function () {
-          fadeDemo.classList.remove("visible");
+      if (fadeDemo && fadeReplayBtn) {
+        function playFade() {
+          fadeDemo.style.opacity = "0";
+          fadeDemo.style.transform = "translateY(8px)";
           void fadeDemo.offsetWidth;
-          fadeDemo.classList.add("visible");
-        });
-      }
-
-      var slideUpDemo = document.getElementById("slideUpDemo");
-      var slideUpBtn = document.querySelector('[data-demo="slide-up-replay"]');
-
-      if (slideUpDemo) {
-        setTimeout(function () {
-          slideUpDemo.classList.add("visible");
-        }, 300);
-      }
-
-      if (slideUpBtn && slideUpDemo) {
-        slideUpBtn.addEventListener("click", function () {
-          slideUpDemo.classList.remove("visible");
-          void slideUpDemo.offsetWidth;
-          slideUpDemo.classList.add("visible");
-        });
-      }
-
-      var scaleDemo = document.getElementById("scaleDemo");
-      var scaleBtn = document.querySelector('[data-demo="scale-in-replay"]');
-
-      if (scaleDemo) {
-        setTimeout(function () {
-          scaleDemo.classList.add("visible");
-        }, 400);
-      }
-
-      if (scaleBtn && scaleDemo) {
-        scaleBtn.addEventListener("click", function () {
-          scaleDemo.classList.remove("visible");
-          void scaleDemo.offsetWidth;
-          scaleDemo.classList.add("visible");
-        });
-      }
-
-      // EXIT ANIMATIONS
-      var fadeOutDemo = document.getElementById("fadeOutDemo");
-      var fadeOutPlay = document.querySelector('[data-demo="fade-out-play"]');
-      var fadeOutReset = document.querySelector('[data-demo="fade-out-reset"]');
-
-      if (fadeOutPlay && fadeOutDemo) {
-        fadeOutPlay.addEventListener("click", function () {
-          fadeOutDemo.classList.add("hidden");
-        });
-      }
-
-      if (fadeOutReset && fadeOutDemo) {
-        fadeOutReset.addEventListener("click", function () {
-          fadeOutDemo.classList.remove("hidden");
-        });
-      }
-
-      var slideExitDemo = document.getElementById("slideExitDemo");
-      var slideExitPlay = document.querySelector('[data-demo="slide-exit-play"]');
-      var slideExitReset = document.querySelector('[data-demo="slide-exit-reset"]');
-
-      if (slideExitPlay && slideExitDemo) {
-        slideExitPlay.addEventListener("click", function () {
-          slideExitDemo.classList.add("hidden");
-        });
-      }
-
-      if (slideExitReset && slideExitDemo) {
-        slideExitReset.addEventListener("click", function () {
-          slideExitDemo.classList.remove("hidden");
-        });
-      }
-
-      // SCREEN SWIPE
-      var screenTrack = document.getElementById("screenTrack");
-      var screenNextBtn = document.querySelector('[data-demo="screen-next"]');
-      var screenPrevBtn = document.querySelector('[data-demo="screen-prev"]');
-      var screenIndex = 0;
-
-      function updateScreenTrack() {
-        if (!screenTrack) return;
-        var shift = -screenIndex * 50;
-        screenTrack.style.transform = "translateX(" + shift + "%)";
-      }
-
-      if (screenNextBtn) {
-        screenNextBtn.addEventListener("click", function () {
-          screenIndex = 1;
-          updateScreenTrack();
-        });
-      }
-
-      if (screenPrevBtn) {
-        screenPrevBtn.addEventListener("click", function () {
-          screenIndex = 0;
-          updateScreenTrack();
-        });
-      }
-
-      updateScreenTrack();
-
-      // SHAKE
-      var shakeTarget = document.getElementById("shakeTarget");
-      var shakeBtn = document.querySelector('[data-demo="shake-play"]');
-
-      if (shakeBtn && shakeTarget) {
-        shakeBtn.addEventListener("click", function () {
-          shakeTarget.classList.remove("shake");
-          void shakeTarget.offsetWidth;
-          shakeTarget.classList.add("shake");
-        });
-      }
-
-      // REVEAL ON SCROLL
-      var scrollSection = document.getElementById("scrollSection");
-      if (scrollSection) {
-        var items = scrollSection.querySelectorAll(".scroll-item");
-
-        if ("IntersectionObserver" in window) {
-          var observer = new IntersectionObserver(
-            function (entries) {
-              entries.forEach(function (entry) {
-                if (entry.isIntersecting) {
-                  entry.target.classList.add("visible");
-                  observer.unobserve(entry.target);
-                }
-              });
-            },
-            {
-              root: scrollSection,
-              threshold: 0.1
-            }
-          );
-
-          items.forEach(function (item) {
-            observer.observe(item);
+          fadeDemo.style.transition =
+            "opacity 220ms cubic-bezier(.16,1,.3,1), transform 220ms cubic-bezier(.16,1,.3,1)";
+          requestAnimationFrame(function () {
+            fadeDemo.style.opacity = "1";
+            fadeDemo.style.transform = "translateY(0)";
           });
-        } else {
-          items.forEach(function (item) {
-            item.classList.add("visible");
+        }
+        fadeReplayBtn.addEventListener("click", playFade);
+        playFade();
+      }
+
+      var toastDemo = document.getElementById("toastDemo");
+      var toastBtn = document.querySelector('[data-demo="toast-replay"]');
+      var toastTimeout;
+
+      if (toastDemo && toastBtn) {
+        function showToast() {
+          clearTimeout(toastTimeout);
+          toastDemo.style.opacity = "0";
+          toastDemo.style.transform = "translate(-50%, 16px)";
+          toastDemo.style.transition =
+            "opacity 260ms cubic-bezier(.25,.8,.25,1), transform 260ms cubic-bezier(.25,.8,.25,1)";
+          requestAnimationFrame(function () {
+            toastDemo.style.opacity = "1";
+            toastDemo.style.transform = "translate(-50%, 0)";
           });
+          toastTimeout = setTimeout(function () {
+            toastDemo.style.opacity = "0";
+            toastDemo.style.transform = "translate(-50%, 16px)";
+          }, 2000);
+        }
+
+        toastBtn.addEventListener("click", showToast);
+        showToast();
+      }
+
+      // XP DEMO
+      var xpFill = document.getElementById("xpFill");
+      var xpLevelLabel = document.getElementById("xpLevelLabel");
+      var xpRemainingLabel = document.getElementById("xpRemainingLabel");
+      var xpTotalLabel = document.getElementById("xpTotalLabel");
+      var xpAddBtn = document.querySelector('[data-demo="xp-add"]');
+      var xpResetBtn = document.querySelector('[data-demo="xp-reset"]');
+      var xpBadge = document.getElementById("xpBadge");
+      var xpBadgeText = document.getElementById("xpBadgeText");
+
+      var xpTotal = 60;
+      var xpMax = 100;
+      var xpLevel = 3;
+
+      function renderXP() {
+        var progress = Math.max(0, Math.min(1, xpTotal / xpMax));
+        if (xpFill) {
+          xpFill.style.transform = "scaleX(" + progress + ")";
+        }
+        if (xpLevelLabel) {
+          xpLevelLabel.textContent = xpLevel;
+        }
+        var remaining = Math.max(0, xpMax - xpTotal);
+        if (xpRemainingLabel) {
+          xpRemainingLabel.textContent = remaining + " XP";
+        }
+        if (xpTotalLabel) {
+          xpTotalLabel.textContent = xpTotal;
         }
       }
 
-      // RIPPLE
-      var rippleBtn = document.getElementById("rippleBtn");
-      if (rippleBtn) {
-        rippleBtn.addEventListener("click", function (e) {
-          var rect = rippleBtn.getBoundingClientRect();
-          var circle = document.createElement("span");
-          var d = Math.max(rect.width, rect.height);
-
-          circle.className = "ripple-circle";
-          circle.style.width = d + "px";
-          circle.style.height = d + "px";
-
-          var x = e.clientX - rect.left - d / 2;
-          var y = e.clientY - rect.top - d / 2;
-          circle.style.left = x + "px";
-          circle.style.top = y + "px";
-
-          rippleBtn.appendChild(circle);
-          setTimeout(function () {
-            if (circle.parentNode) {
-              circle.parentNode.removeChild(circle);
-            }
-          }, 650);
-        });
-      }
-
-      // SUCCESS POP
-      var successIcon = document.getElementById("successIcon");
-      var successText = document.getElementById("successText");
-      var successBtn = document.querySelector('[data-demo="success-play"]');
-
-      if (successBtn && successIcon && successText) {
-        successBtn.addEventListener("click", function () {
-          successIcon.classList.remove("show");
-          void successIcon.offsetWidth;
-          successIcon.classList.add("show");
-          successText.textContent = "Готово! Действие успешно выполнено.";
-        });
-      }
-
-      // REWARD CONFETTI
-      var rewardArea = document.getElementById("rewardArea");
-      var rewardBox = document.getElementById("rewardBox");
-      var rewardConfettiBtn = document.querySelector('[data-demo="reward-confetti-play"]');
-
-      if (rewardArea && rewardConfettiBtn) {
-        rewardConfettiBtn.addEventListener("click", function () {
-          if (rewardBox) {
-            rewardBox.classList.remove("pulse-box");
-            void rewardBox.offsetWidth;
-            rewardBox.classList.add("pulse-box");
-          }
-
-          var colors = ["#f97316", "#22c55e", "#3b82f6", "#e11d48", "#eab308"];
-          for (var i = 0; i < 18; i++) {
-            (function (index) {
-              var piece = document.createElement("div");
-              piece.className = "confetti-piece";
-              piece.style.backgroundColor = colors[index % colors.length];
-              var left = Math.random() * 100;
-              var top = 20 + Math.random() * 40;
-              piece.style.left = left + "%";
-              piece.style.top = top + "%";
-              rewardArea.appendChild(piece);
-              setTimeout(function () {
-                if (piece.parentNode) {
-                  piece.parentNode.removeChild(piece);
-                }
-              }, 900);
-            })(i);
-          }
-        });
-      }
-
-      // XP PROGRESS
-      var xpFillDemo = document.getElementById("xpFillDemo");
-      var xpValueLabel = document.getElementById("xpValue");
-      var xpAddBtn = document.querySelector('[data-demo="xp-add"]');
-      var xpResetBtn = document.querySelector('[data-demo="xp-reset"]');
-      var xpCurrent = 0;
-
-      function updateXP() {
-        if (!xpFillDemo || !xpValueLabel) return;
-        var percent = Math.max(0, Math.min(100, xpCurrent));
-        xpFillDemo.style.width = percent + "%";
-        xpValueLabel.textContent = percent + " XP";
+      function addXP(amount) {
+        xpTotal += amount;
+        if (xpTotal >= xpMax) {
+          xpTotal = xpTotal - xpMax;
+          xpLevel += 1;
+        }
+        renderXP();
+        if (xpBadge && xpBadgeText) {
+          xpBadgeText.textContent = "+" + amount + " XP";
+          xpBadge.classList.remove("xp-badge-animate");
+          void xpBadge.offsetWidth;
+          xpBadge.classList.add("xp-badge-animate");
+        }
       }
 
       if (xpAddBtn) {
         xpAddBtn.addEventListener("click", function () {
-          xpCurrent += 10;
-          if (xpCurrent > 100) xpCurrent = 100;
-          updateXP();
+          addXP(10);
         });
       }
 
       if (xpResetBtn) {
         xpResetBtn.addEventListener("click", function () {
-          xpCurrent = 0;
-          updateXP();
+          xpTotal = 60;
+          xpLevel = 3;
+          renderXP();
         });
       }
 
-      updateXP();
-
-      // FLOATING +XP BADGE
-      var questCard = document.getElementById("questCard");
-      var rewardBadgeBtn = document.querySelector('[data-demo="reward-badge-play"]');
-
-      if (questCard && rewardBadgeBtn) {
-        rewardBadgeBtn.addEventListener("click", function () {
-          var badge = document.createElement("div");
-          badge.className = "reward-badge";
-          badge.textContent = "+50 XP";
-          questCard.appendChild(badge);
-          setTimeout(function () {
-            if (badge.parentNode) {
-              badge.parentNode.removeChild(badge);
-            }
-          }, 800);
-        });
-      }
-
-      // LEVEL UP AVATAR
-      var avatarCircle = document.getElementById("avatarCircle");
-      var avatarGlow = document.getElementById("avatarGlow");
-      var avatarLevelLabel = document.getElementById("avatarLevel");
-      var levelBtn = document.querySelector('[data-demo="level-up-play"]');
-      var avatarLevel = 1;
-
-      function updateAvatarLevel() {
-        if (!avatarLevelLabel) return;
-        avatarLevelLabel.textContent = avatarLevel;
-      }
-
-      if (levelBtn && avatarCircle && avatarGlow) {
-        levelBtn.addEventListener("click", function () {
-          avatarLevel++;
-          if (avatarLevel > 10) avatarLevel = 1;
-          updateAvatarLevel();
-
-          avatarCircle.classList.remove("avatar-pop");
-          avatarGlow.classList.remove("avatar-glow-on");
-          void avatarCircle.offsetWidth;
-          avatarCircle.classList.add("avatar-pop");
-          avatarGlow.classList.add("avatar-glow-on");
-        });
-      }
-
-      updateAvatarLevel();
+      renderXP();
 
       // COIN REWARD
-      var coinFxArea = document.getElementById("coinFxArea");
-      var coinEarnBtn = document.getElementById("coinEarnBtn");
+      var coinDemoSurface = document.getElementById("coinDemoSurface");
+      var wallet = document.getElementById("wallet");
+      var coinFly = document.getElementById("coinFly");
+      var walletAmountEl = document.getElementById("walletAmount");
       var walletPill = document.getElementById("walletPill");
-      var walletAmountLabel = document.getElementById("walletAmount");
-      var walletAmount = 0;
+      var coinBtn = document.querySelector('[data-demo="coin-reward-btn"]');
+
+      var walletAmount = 120;
 
       function updateWallet() {
-        if (!walletAmountLabel) return;
-        walletAmountLabel.textContent = walletAmount;
+        if (walletAmountEl) {
+          walletAmountEl.textContent = walletAmount;
+        }
       }
 
-      if (coinFxArea && coinEarnBtn && walletPill) {
-        coinEarnBtn.addEventListener("click", function () {
-          for (var i = 0; i < 5; i++) {
-            (function (index) {
-              var coin = document.createElement("div");
-              coin.className = "coin";
-              var offsetX = 8 + Math.random() * 20;
-              var offsetY = 4 + Math.random() * 8;
-              coin.style.left = offsetX + "px";
-              coin.style.bottom = offsetY + "px";
-              coinFxArea.appendChild(coin);
-              setTimeout(function () {
-                if (coin.parentNode) {
-                  coin.parentNode.removeChild(coin);
-                }
-              }, 700);
-            })(i);
-          }
+      if (coinBtn && coinFly && wallet && walletPill) {
+        coinBtn.addEventListener("click", function () {
+          var btnRect = coinBtn.getBoundingClientRect();
+          var walletRect = wallet.getBoundingClientRect();
+          var surfaceRect = coinDemoSurface.getBoundingClientRect();
+
+          var startX = btnRect.left + btnRect.width / 2 - surfaceRect.left - 9;
+          var startY = btnRect.top + btnRect.height / 2 - surfaceRect.top - 9;
+
+          coinFly.style.left = startX + "px";
+          coinFly.style.top = startY + "px";
+
+          coinFly.classList.remove("visible");
+          void coinFly.offsetWidth;
+          coinFly.classList.add("visible");
 
           walletAmount += 5;
           updateWallet();
