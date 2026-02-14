@@ -1,0 +1,344 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Валентинка — наши приключения</title>
+  <style>
+    :root{
+      --paper:#f6f0df;
+      --paper-2:#efe2c3;
+      --ink:#2a1d12;
+      --accent:#7a1f1f;
+      --gold:#b08a2e;
+      --shadow: rgba(42,29,18,.18);
+    }
+    *{ box-sizing:border-box; }
+    html,body{ height:100%; }
+    body{
+      margin:0;
+      color:var(--ink);
+      background:
+        radial-gradient(1200px 600px at 10% -10%, rgba(176,138,46,.16), transparent 55%),
+        radial-gradient(900px 500px at 120% 10%, rgba(122,31,31,.12), transparent 55%),
+        linear-gradient(180deg, var(--paper), var(--paper-2));
+      font-family: ui-serif, "Georgia", "Times New Roman", serif;
+      -webkit-font-smoothing: antialiased;
+      text-rendering: geometricPrecision;
+      display:flex;
+      justify-content:center;
+      overflow:hidden;
+    }
+
+    .app{
+      width:min(430px, 100%);
+      height:100%;
+      padding: 16px;
+      position:relative;
+      display:flex;
+      flex-direction:column;
+      gap: 14px;
+    }
+
+    /* лёгкий пергаментный шум */
+    .app::before{
+      content:"";
+      position:absolute; inset:0;
+      background:
+        radial-gradient(circle at 20% 30%, rgba(42,29,18,.05), transparent 35%),
+        radial-gradient(circle at 70% 60%, rgba(42,29,18,.045), transparent 38%),
+        radial-gradient(circle at 50% 90%, rgba(42,29,18,.03), transparent 40%);
+      mix-blend-mode:multiply;
+      pointer-events:none;
+    }
+
+    .frame{
+      position:relative;
+      flex:1;
+      border-radius: 22px;
+      overflow:hidden;
+      border: 1px solid rgba(42,29,18,.18);
+      box-shadow: 0 16px 34px var(--shadow);
+      background: rgba(246,240,223,.45);
+      transform: translateZ(0);
+    }
+
+    .frame img{
+      width:100%;
+      height:100%;
+      object-fit: cover;
+      display:block;
+      filter: saturate(1.02) contrast(1.02);
+    }
+
+    /* мягкая виньетка + “чернила” */
+    .frame::after{
+      content:"";
+      position:absolute; inset:0;
+      background:
+        radial-gradient(100% 70% at 50% 30%, rgba(0,0,0,.0), rgba(0,0,0,.25)),
+        linear-gradient(180deg, rgba(42,29,18,.15), transparent 35%, rgba(42,29,18,.18));
+      pointer-events:none;
+      opacity:.85;
+    }
+
+    header{
+      position:relative;
+      text-align:center;
+      padding: 4px 6px 0;
+      z-index:2;
+    }
+    .title{
+      margin: 2px 0 6px;
+      font-size: clamp(20px, 5.2vw, 30px);
+      line-height: 1.2;
+      font-weight: 650;
+      letter-spacing: .01em;
+      text-shadow: 0 1px 0 rgba(246,240,223,.35);
+    }
+
+    .ornament{
+      width: 86%;
+      margin: 6px auto 0;
+      height: 18px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:10px;
+      opacity:.95;
+    }
+    .ornament .line{
+      height:1px;
+      flex:1;
+      background: linear-gradient(90deg, transparent, rgba(246,240,223,.7), transparent);
+    }
+    .ornament .dot{
+      width:8px;height:8px;border-radius:999px;
+      border:1px solid rgba(246,240,223,.85);
+      box-shadow: 0 0 0 2px rgba(176,138,46,.12);
+    }
+
+    /* нижний блок с кнопкой */
+    .bottom{
+      position:relative;
+      z-index:2;
+      display:flex;
+      flex-direction:column;
+      gap: 10px;
+      padding-bottom: 2px;
+    }
+
+    button{
+      width:100%;
+      border:none;
+      border-radius: 16px;
+      padding: 16px 16px;
+      font-size: 18px;
+      font-weight: 650;
+      color: var(--paper);
+      background: linear-gradient(180deg, rgba(122,31,31,.95), rgba(90,18,18,.96));
+      box-shadow: 0 12px 22px rgba(42,29,18,.22), inset 0 0 0 1px rgba(255,255,255,.14);
+      letter-spacing: .02em;
+      cursor:pointer;
+      -webkit-tap-highlight-color: transparent;
+      position:relative;
+      overflow:hidden;
+    }
+    button::before{
+      content:"";
+      position:absolute;
+      inset:0;
+      background: radial-gradient(320px 80px at 50% 0%, rgba(255,255,255,.18), transparent 60%);
+      pointer-events:none;
+    }
+    button:active{
+      transform: translateY(1px);
+      box-shadow: 0 8px 16px rgba(42,29,18,.20), inset 0 0 0 1px rgba(255,255,255,.12);
+    }
+
+    .progress{
+      text-align:center;
+      font-size: 13px;
+      letter-spacing: .06em;
+      opacity: .8;
+      color: rgba(42,29,18,.85);
+    }
+
+    /* экран поздравления — “лист” */
+    .final{
+      flex:1;
+      border-radius: 22px;
+      border: 1px solid rgba(42,29,18,.18);
+      box-shadow: 0 16px 34px var(--shadow);
+      background: linear-gradient(180deg, rgba(246,240,223,.92), rgba(239,226,195,.92));
+      display:none;
+      align-items:center;
+      justify-content:center;
+      text-align:center;
+      padding: 26px 18px;
+      position:relative;
+      overflow:hidden;
+    }
+    .final::before{
+      content:"";
+      position:absolute; inset:0;
+      background:
+        radial-gradient(520px 240px at 20% 0%, rgba(176,138,46,.18), transparent 60%),
+        radial-gradient(520px 260px at 120% 30%, rgba(122,31,31,.10), transparent 62%);
+      pointer-events:none;
+    }
+    .final h2{
+      position:relative;
+      margin:0;
+      font-size: clamp(26px, 6.5vw, 40px);
+      line-height: 1.12;
+      font-weight: 750;
+    }
+    .final p{
+      position:relative;
+      margin: 14px 0 0;
+      font-size: 16px;
+      opacity: .85;
+    }
+
+    /* небольшая анимация перехода */
+    @media (prefers-reduced-motion: no-preference){
+      .frame, .final{ transition: opacity .25s ease, transform .25s ease; }
+      .frame.fadeout{ opacity:0; transform: translateY(8px) scale(.99); }
+      .frame.fadein{ opacity:1; transform: translateY(0) scale(1); }
+    }
+  </style>
+</head>
+<body>
+  <div class="app" role="application" aria-label="Валентинка">
+    <header>
+      <div class="title" id="title"></div>
+      <div class="ornament" aria-hidden="true">
+        <span class="line"></span><span class="dot"></span><span class="line"></span>
+      </div>
+    </header>
+
+    <div class="frame" id="frame" aria-live="polite">
+      <img id="img" alt="" />
+    </div>
+
+    <div class="final" id="final">
+      <div>
+        <h2>С днем Святого Валентина, солнышко!</h2>
+        <p>Спасибо за наши миры и приключения ✨</p>
+      </div>
+    </div>
+
+    <div class="bottom">
+      <button id="btn" type="button"></button>
+      <div class="progress" id="progress"></div>
+    </div>
+  </div>
+
+  <script>
+    // Положи рядом с этим файлом изображения:
+    // sc0.jpg, sc1.jpg, sc2.jpg, sc3.jpg, sc4.jpg
+    const steps = [
+      {
+        img: "sc0.jpg",
+        title: "В этой валентинке кроются наши миры и приключения",
+        btn: "Открыть"
+      },
+      {
+        img: "sc1.jpg",
+        title: "Мы оседлали дракона",
+        btn: "Вот это да!"
+      },
+      {
+        img: "sc2.jpg",
+        title: "Мы встретили грибное божество",
+        btn: "Ого"
+      },
+      {
+        img: "sc3.jpg",
+        title: "Мы сражаемся против зомби",
+        btn: "Что еще?)"
+      },
+      {
+        img: "sc4.jpg",
+        title: "Мы пьем чай во время извержения вулкана",
+        btn: "Круто"
+      }
+    ];
+
+    let i = 0;
+
+    const titleEl = document.getElementById("title");
+    const imgEl = document.getElementById("img");
+    const btnEl = document.getElementById("btn");
+    const progressEl = document.getElementById("progress");
+    const frameEl = document.getElementById("frame");
+    const finalEl = document.getElementById("final");
+
+    function setProgress(){
+      // показываем прогресс только пока не финал
+      progressEl.textContent = `Сцена ${Math.min(i + 1, steps.length)} / ${steps.length}`;
+    }
+
+    function renderStep(index){
+      const s = steps[index];
+
+      // мини-переход
+      if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches){
+        frameEl.classList.add("fadeout");
+        setTimeout(() => {
+          titleEl.textContent = s.title;
+          imgEl.src = s.img;
+          imgEl.alt = s.title;
+          btnEl.textContent = s.btn;
+
+          frameEl.classList.remove("fadeout");
+          frameEl.classList.add("fadein");
+          setTimeout(() => frameEl.classList.remove("fadein"), 260);
+
+          setProgress();
+        }, 170);
+      } else {
+        titleEl.textContent = s.title;
+        imgEl.src = s.img;
+        imgEl.alt = s.title;
+        btnEl.textContent = s.btn;
+        setProgress();
+      }
+    }
+
+    function showFinal(){
+      // скрываем картинку и показываем поздравление
+      frameEl.style.display = "none";
+      finalEl.style.display = "flex";
+      titleEl.textContent = ""; // можно оставить пустым
+      btnEl.textContent = "Еще раз ❤️";
+      progressEl.textContent = "";
+      btnEl.setAttribute("aria-label", "Показать валентинку заново");
+    }
+
+    btnEl.addEventListener("click", () => {
+      if (i < steps.length - 1){
+        i++;
+        renderStep(i);
+        return;
+      }
+
+      // после пятого экрана -> финал
+      if (i === steps.length - 1 && frameEl.style.display !== "none"){
+        showFinal();
+        return;
+      }
+
+      // на финале кнопка перезапускает
+      i = 0;
+      frameEl.style.display = "block";
+      finalEl.style.display = "none";
+      renderStep(i);
+    });
+
+    // старт
+    renderStep(i);
+  </script>
+</body>
+</html>
