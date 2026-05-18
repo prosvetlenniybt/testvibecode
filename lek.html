@@ -1,0 +1,737 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Лекарства</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg:        #080808;
+  --bg2:       #0f0f0f;
+  --surface:   #141414;
+  --surface2:  #1c1c1c;
+  --border:    rgba(255,255,255,0.07);
+  --border2:   rgba(255,255,255,0.12);
+
+  --text:      #ece8e1;
+  --text2:     #999;
+  --text3:     #555;
+
+  --green:     #3ce87a;
+  --green-bg:  rgba(60, 232, 122, 0.08);
+  --green-bdr: rgba(60, 232, 122, 0.22);
+
+  --amber:     #f5a623;
+  --amber-bg:  rgba(245, 166, 35, 0.08);
+  --amber-bdr: rgba(245, 166, 35, 0.22);
+
+  --mono: 'DM Mono', monospace;
+  --sans: 'DM Sans', sans-serif;
+  --r:   14px;
+  --r-sm: 10px;
+}
+
+html, body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--sans);
+  min-height: 100dvh;
+  -webkit-font-smoothing: antialiased;
+  -webkit-text-size-adjust: 100%;
+}
+body {
+  max-width: 430px;
+  margin: 0 auto;
+  padding-bottom: 48px;
+}
+
+/* ─── HEADER ─────────────────────────────── */
+.hdr {
+  padding: 52px 22px 0;
+  margin-bottom: 28px;
+}
+.hdr-eyebrow {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text3);
+  margin-bottom: 10px;
+}
+.hdr-title {
+  font-size: 30px;
+  font-weight: 600;
+  letter-spacing: -0.7px;
+  line-height: 1;
+  margin-bottom: 6px;
+}
+.hdr-sub {
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--text2);
+  letter-spacing: 0.03em;
+}
+
+/* ─── GLOBAL PROGRESS ────────────────────── */
+.gbar {
+  margin: 0 22px 28px;
+  padding: 16px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+}
+.gbar-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+.gbar-label {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text3);
+}
+.gbar-count {
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--text2);
+}
+.gbar-count span {
+  color: var(--text);
+  font-weight: 500;
+}
+.bar-track {
+  height: 2px;
+  background: var(--border);
+  border-radius: 2px;
+  overflow: hidden;
+}
+.bar-fill {
+  height: 100%;
+  border-radius: 2px;
+  background: var(--green);
+  transition: width 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+/* ─── DAY STRIP ──────────────────────────── */
+.strip-section {
+  padding: 0 22px;
+  margin-bottom: 28px;
+}
+.strip-label {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text3);
+  margin-bottom: 12px;
+}
+.strip {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 6px;
+}
+
+.dchip {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 10px 0 9px;
+  border-radius: var(--r-sm);
+  border: 1px solid var(--border);
+  background: var(--surface);
+  cursor: pointer;
+  position: relative;
+  transition: border-color 0.2s, background 0.2s;
+  -webkit-tap-highlight-color: transparent;
+  gap: 3px;
+}
+.dchip:active { opacity: 0.7; }
+
+.dchip.is-selected {
+  border-color: var(--border2);
+  background: var(--surface2);
+}
+.dchip.is-complete {
+  border-color: var(--green-bdr);
+  background: var(--green-bg);
+}
+.dchip.is-today::before {
+  content: '';
+  position: absolute;
+  top: 5px; right: 5px;
+  width: 4px; height: 4px;
+  border-radius: 50%;
+  background: var(--amber);
+}
+.dchip-num {
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: -0.3px;
+}
+.dchip-mo {
+  font-family: var(--mono);
+  font-size: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text3);
+  line-height: 1;
+}
+.dchip.is-complete .dchip-num { color: var(--green); }
+.dchip.is-complete .dchip-mo  { color: rgba(60,232,122,0.5); }
+
+/* check icon in complete chip */
+.dchip-check {
+  display: none;
+  width: 10px;
+  height: 10px;
+}
+.dchip.is-complete .dchip-check { display: block; }
+.dchip.is-complete .dchip-num   { display: none; }
+
+/* ─── DAY HEADER ─────────────────────────── */
+.day-hdr {
+  padding: 0 22px;
+  margin-bottom: 16px;
+}
+.day-hdr-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.day-hdr-title {
+  font-size: 17px;
+  font-weight: 600;
+  letter-spacing: -0.3px;
+}
+.badge {
+  font-family: var(--mono);
+  font-size: 9.5px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 4px 9px;
+  border-radius: 20px;
+}
+.badge-today {
+  background: var(--amber-bg);
+  border: 1px solid var(--amber-bdr);
+  color: var(--amber);
+}
+.badge-done {
+  background: var(--green-bg);
+  border: 1px solid var(--green-bdr);
+  color: var(--green);
+}
+.badge-past {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  color: var(--text3);
+}
+
+/* day progress mini bar */
+.day-mini-bar {
+  margin: 10px 22px 20px;
+}
+.day-mini-bar .bar-track { background: var(--surface); }
+
+/* ─── SPECIAL NOTE ───────────────────────── */
+.special {
+  margin: 0 22px 18px;
+  padding: 13px 14px;
+  background: var(--amber-bg);
+  border: 1px solid var(--amber-bdr);
+  border-radius: var(--r-sm);
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+}
+.special-ico {
+  font-size: 14px;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+.special-txt {
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: var(--amber);
+}
+
+/* ─── MED SECTION ────────────────────────── */
+.med-section {
+  padding: 0 22px;
+  margin-bottom: 18px;
+}
+.sec-lbl {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text3);
+  margin-bottom: 9px;
+  padding-left: 1px;
+}
+.med-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  overflow: hidden;
+}
+
+/* ─── MED ITEM ───────────────────────────── */
+.med-item {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  padding: 13px 15px;
+  cursor: pointer;
+  transition: background 0.15s;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+  position: relative;
+}
+.med-item + .med-item {
+  border-top: 1px solid var(--border);
+}
+.med-item:active {
+  background: rgba(255,255,255,0.02);
+}
+
+.cc {
+  width: 26px; height: 26px;
+  border-radius: 50%;
+  border: 1.5px solid var(--text3);
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s, border-color 0.2s;
+  position: relative;
+}
+.cc-svg {
+  opacity: 0;
+  transform: scale(0.4) rotate(-10deg);
+  transition: opacity 0.2s, transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.med-item.is-taken .cc {
+  background: var(--green);
+  border-color: var(--green);
+}
+.med-item.is-taken .cc-svg {
+  opacity: 1;
+  transform: scale(1) rotate(0deg);
+}
+
+.med-info { flex: 1; min-width: 0; }
+.med-name {
+  font-size: 15px;
+  font-weight: 500;
+  letter-spacing: -0.2px;
+  line-height: 1.2;
+  transition: color 0.2s;
+}
+.med-item.is-taken .med-name {
+  color: var(--text3);
+  text-decoration: line-through;
+  text-decoration-color: var(--text3);
+}
+.med-meta {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 3px;
+}
+.med-dose {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--text3);
+  background: var(--surface2);
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+.med-note {
+  font-size: 11.5px;
+  color: var(--text3);
+}
+
+/* ─── ALL DONE CARD ──────────────────────── */
+.all-done {
+  margin: 0 22px;
+  padding: 20px;
+  background: var(--green-bg);
+  border: 1px solid var(--green-bdr);
+  border-radius: var(--r);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  text-align: center;
+}
+.all-done-ico {
+  width: 36px; height: 36px;
+  background: var(--green);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.all-done-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--green);
+}
+.all-done-sub {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  color: rgba(60,232,122,0.5);
+  letter-spacing: 0.05em;
+}
+
+/* ─── FUTURE DAY PLACEHOLDER ─────────────── */
+.future-ph {
+  margin: 0 22px;
+  padding: 28px 20px;
+  border: 1px dashed var(--border);
+  border-radius: var(--r);
+  text-align: center;
+}
+.future-ph-ico {
+  font-size: 22px;
+  margin-bottom: 8px;
+  opacity: 0.3;
+}
+.future-ph-text {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  color: var(--text3);
+}
+
+/* ─── DIVIDER ─────────────────────────────── */
+.divider {
+  height: 1px;
+  background: var(--border);
+  margin: 0 22px 20px;
+}
+
+/* ─── ANIMATIONS ─────────────────────────── */
+@keyframes fadeSlide {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.day-content {
+  animation: fadeSlide 0.22s ease both;
+}
+</style>
+</head>
+<body>
+<div id="app"></div>
+
+<script>
+// ═══════════════════════════════════════════
+//  DATA
+// ═══════════════════════════════════════════
+const START_DATE = new Date(2026, 4, 17); // May 17 2026
+const TOTAL_DAYS = 7;
+
+const BASE = {
+  morning: [
+    { id: 'pant',   name: 'Пантапразол',   dose: '1 табл', note: 'за 30 мин до еды' },
+    { id: 'amox_m', name: 'Амоксицилин',   dose: '1 табл', note: 'до еды' },
+    { id: 'lac_m',  name: 'Лацидофил',     dose: '1 капс', note: 'после еды' },
+  ],
+  lunch: [
+    { id: 'clar',   name: 'Кларитромицин', dose: '1 табл', note: 'после обеда' },
+  ],
+  evening: [
+    { id: 'amox_e', name: 'Амоксицилин',   dose: '1 табл', note: 'до еды' },
+    { id: 'lac_e',  name: 'Лацидофил',     dose: '1 капс', note: 'после еды' },
+  ],
+};
+
+function getSchedule(di) { // di = day index 0-6
+  const dayNum = di + 1;
+  const s = {
+    morning: [...BASE.morning.map(m => ({...m}))],
+    lunch:   [...BASE.lunch.map(m => ({...m}))],
+    evening: [...BASE.evening.map(m => ({...m}))],
+  };
+  if (dayNum === 5) {
+    s.morning = [
+      { id: 'fluc', name: 'Флуконазол', dose: '1 табл', note: 'однократно' },
+      ...s.morning,
+    ];
+  }
+  return s;
+}
+
+function allMeds(di) {
+  const s = getSchedule(di);
+  return [...s.morning, ...s.lunch, ...s.evening];
+}
+
+// ═══════════════════════════════════════════
+//  STORAGE
+// ═══════════════════════════════════════════
+function storageKey(di) {
+  const d = new Date(START_DATE);
+  d.setDate(START_DATE.getDate() + di);
+  return `rx_${d.getFullYear()}_${String(d.getMonth()+1).padStart(2,'0')}_${String(d.getDate()).padStart(2,'0')}`;
+}
+
+function getTaken(di) {
+  try { return JSON.parse(localStorage.getItem(storageKey(di)) || '{}'); }
+  catch { return {}; }
+}
+
+function toggleMed(di, medId) {
+  const t = getTaken(di);
+  t[medId] = !t[medId];
+  localStorage.setItem(storageKey(di), JSON.stringify(t));
+}
+
+function isComplete(di) {
+  const t = getTaken(di);
+  return allMeds(di).every(m => t[m.id]);
+}
+
+function progress(di) {
+  const t = getTaken(di);
+  const all = allMeds(di);
+  return { done: all.filter(m => t[m.id]).length, total: all.length };
+}
+
+// ═══════════════════════════════════════════
+//  STATE
+// ═══════════════════════════════════════════
+const now = new Date();
+const todayDi = Math.max(0, Math.min(
+  TOTAL_DAYS - 1,
+  Math.floor((now - START_DATE) / 86400000)
+));
+
+let selectedDi = (todayDi >= 0 && todayDi < TOTAL_DAYS) ? todayDi : 0;
+
+// ═══════════════════════════════════════════
+//  HELPERS
+// ═══════════════════════════════════════════
+const MONTHS_GEN = ['января','февраля','марта','апреля','мая','июня','июля','августа','сентября','октября','ноября','декабря'];
+const MONTHS_SH  = ['янв','фев','мар','апр','май','июн','июл','авг','сен','окт','ноя','дек'];
+
+function dayDate(di) {
+  const d = new Date(START_DATE);
+  d.setDate(START_DATE.getDate() + di);
+  return d;
+}
+
+function isFuture(di) { return di > todayDi; }
+function isPast(di)   { return di < todayDi; }
+function isToday(di)  { return di === todayDi; }
+
+function el(tag, cls) {
+  const e = document.createElement(tag);
+  if (cls) e.className = cls;
+  return e;
+}
+
+function svgCheck(color = '#080808') {
+  return `<svg class="cc-svg" width="11" height="8" viewBox="0 0 11 8" fill="none">
+    <path d="M1 3.8L4 7L10 1" stroke="${color}" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+  </svg>`;
+}
+
+function svgCheckWhite() {
+  return `<svg width="16" height="12" viewBox="0 0 16 12" fill="none">
+    <path d="M1.5 6L6 10.5L14.5 1.5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  </svg>`;
+}
+
+// ═══════════════════════════════════════════
+//  RENDER
+// ═══════════════════════════════════════════
+function render() {
+  const app = document.getElementById('app');
+  app.innerHTML = '';
+
+  // — Header
+  const hdr = el('div', 'hdr');
+  hdr.innerHTML = `
+    <div class="hdr-eyebrow">Курс лечения · 7 дней</div>
+    <div class="hdr-title">Лекарства</div>
+    <div class="hdr-sub">17.05 — 23.05.2026</div>
+  `;
+  app.appendChild(hdr);
+
+  // — Global progress bar
+  const completedCount = Array.from({length: TOTAL_DAYS}, (_, i) => isComplete(i)).filter(Boolean).length;
+  const gbar = el('div', 'gbar');
+  gbar.innerHTML = `
+    <div class="gbar-row">
+      <span class="gbar-label">Прогресс курса</span>
+      <span class="gbar-count"><span>${completedCount}</span> / ${TOTAL_DAYS} дней</span>
+    </div>
+    <div class="bar-track">
+      <div class="bar-fill" style="width:${(completedCount/TOTAL_DAYS)*100}%"></div>
+    </div>
+  `;
+  app.appendChild(gbar);
+
+  // — Day strip
+  const stripSec = el('div', 'strip-section');
+  const stripLbl = el('div', 'strip-label');
+  stripLbl.textContent = 'По дням';
+  const strip = el('div', 'strip');
+
+  for (let i = 0; i < TOTAL_DAYS; i++) {
+    const d = dayDate(i);
+    const chip = el('div', 'dchip');
+    if (i === selectedDi) chip.classList.add('is-selected');
+    if (isComplete(i))     chip.classList.add('is-complete');
+    if (isToday(i))        chip.classList.add('is-today');
+
+    chip.innerHTML = `
+      <svg class="dchip-check" viewBox="0 0 10 8" fill="none">
+        <path d="M1 3.8L3.8 7L9 1" stroke="#3ce87a" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <span class="dchip-num">${d.getDate()}</span>
+      <span class="dchip-mo">${MONTHS_SH[d.getMonth()]}</span>
+    `;
+    chip.addEventListener('click', () => { selectedDi = i; render(); });
+    strip.appendChild(chip);
+  }
+
+  stripSec.appendChild(stripLbl);
+  stripSec.appendChild(strip);
+  app.appendChild(stripSec);
+
+  // — Divider
+  app.appendChild(el('div', 'divider'));
+
+  // — Day content
+  const content = el('div', 'day-content');
+  renderDayContent(content, selectedDi);
+  app.appendChild(content);
+}
+
+function renderDayContent(wrap, di) {
+  const d = dayDate(di);
+  const dayNum = di + 1;
+  const complete = isComplete(di);
+  const future = isFuture(di);
+  const { done, total } = progress(di);
+
+  // Day header
+  const dhdr = el('div', 'day-hdr');
+  let badge = '';
+  if (isToday(di) && !complete) badge = `<span class="badge badge-today">Сегодня</span>`;
+  else if (complete) badge = `<span class="badge badge-done">Выполнено</span>`;
+  else if (future)   badge = `<span class="badge badge-past">Впереди</span>`;
+  else               badge = `<span class="badge badge-past">Прошедший</span>`;
+
+  dhdr.innerHTML = `
+    <div class="day-hdr-inner">
+      <div class="day-hdr-title">${d.getDate()} ${MONTHS_GEN[d.getMonth()]}, день ${dayNum}</div>
+      ${badge}
+    </div>
+  `;
+  wrap.appendChild(dhdr);
+
+  // Mini progress bar for current day
+  if (!complete && !future) {
+    const miniBar = el('div', 'day-mini-bar');
+    miniBar.innerHTML = `
+      <div class="bar-track">
+        <div class="bar-fill" style="width:${(done/total)*100}%"></div>
+      </div>
+    `;
+    wrap.appendChild(miniBar);
+  }
+
+  // Future placeholder
+  if (future) {
+    const ph = el('div', 'future-ph');
+    ph.innerHTML = `<div class="future-ph-ico">○</div><div class="future-ph-text">Ещё не наступил</div>`;
+    wrap.appendChild(ph);
+    return;
+  }
+
+  // Day 5 special note
+  if (dayNum === 5) {
+    const note = el('div', 'special');
+    note.innerHTML = `
+      <span class="special-ico">⚡</span>
+      <span class="special-txt"><strong>День 5:</strong> дополнительно принять Флуконазол — 1 таблетку</span>
+    `;
+    wrap.appendChild(note);
+  }
+
+  // Med sections
+  const s = getSchedule(di);
+  const taken = getTaken(di);
+
+  renderSection(wrap, 'Утро',  s.morning, di, taken);
+  renderSection(wrap, 'Обед',  s.lunch,   di, taken);
+  renderSection(wrap, 'Вечер', s.evening, di, taken);
+
+  // All done card
+  if (complete) {
+    const allDone = el('div', 'all-done');
+    allDone.innerHTML = `
+      <div class="all-done-ico">${svgCheckWhite()}</div>
+      <div class="all-done-title">Все лекарства приняты</div>
+      <div class="all-done-sub">День ${dayNum} завершён</div>
+    `;
+    wrap.appendChild(allDone);
+  }
+}
+
+function renderSection(wrap, label, meds, di, taken) {
+  const sec = el('div', 'med-section');
+
+  const lbl = el('div', 'sec-lbl');
+  lbl.textContent = label;
+  sec.appendChild(lbl);
+
+  const card = el('div', 'med-card');
+  meds.forEach(med => {
+    const isTaken = !!taken[med.id];
+    const item = el('div', 'med-item');
+    if (isTaken) item.classList.add('is-taken');
+
+    item.innerHTML = `
+      <div class="cc">${svgCheck()}</div>
+      <div class="med-info">
+        <div class="med-name">${med.name}</div>
+        <div class="med-meta">
+          <span class="med-dose">${med.dose}</span>
+          ${med.note ? `<span class="med-note">${med.note}</span>` : ''}
+        </div>
+      </div>
+    `;
+
+    item.addEventListener('click', () => {
+      toggleMed(di, med.id);
+      render();
+    });
+
+    card.appendChild(item);
+  });
+
+  sec.appendChild(card);
+  wrap.appendChild(sec);
+}
+
+// ═══════════════════════════════════════════
+//  BOOT
+// ═══════════════════════════════════════════
+render();
+</script>
+</body>
+</html>
