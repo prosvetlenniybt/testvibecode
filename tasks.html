@@ -1,0 +1,723 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Неделя / Tasks</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #0B0D11;
+    --surface: #13151B;
+    --surface2: #1A1D26;
+    --border: rgba(255,255,255,0.07);
+    --border-hover: rgba(255,255,255,0.14);
+    --text: #E8EAF0;
+    --muted: #5A5F72;
+    --accent: #C8F04D;
+    --accent-dim: rgba(200,240,77,0.12);
+    --accent-dim2: rgba(200,240,77,0.06);
+    --fire: #FF6B3D;
+    --fire-dim: rgba(255,107,61,0.12);
+    --done-text: #3A3E4A;
+    --tag-product: rgba(96,165,250,0.15);
+    --tag-product-text: #93C5FD;
+    --tag-event: rgba(52,211,153,0.12);
+    --tag-event-text: #6EE7B7;
+    --tag-people: rgba(167,139,250,0.12);
+    --tag-people-text: #C4B5FD;
+    --mono: 'IBM Plex Mono', monospace;
+    --sans: 'IBM Plex Sans', sans-serif;
+  }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    font-size: 14px;
+    line-height: 1.6;
+    min-height: 100vh;
+    padding: 48px 24px;
+  }
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.025'/%3E%3C/svg%3E");
+    background-size: 200px 200px;
+    pointer-events: none;
+    z-index: 0;
+  }
+  .container { max-width: 720px; margin: 0 auto; position: relative; z-index: 1; }
+
+  /* SETUP SCREEN */
+  .setup-screen {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 60vh;
+    text-align: center;
+  }
+  .setup-screen.visible { display: flex; }
+  .setup-logo {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 32px;
+  }
+  .setup-title {
+    font-size: 20px;
+    font-weight: 300;
+    color: var(--text);
+    margin-bottom: 8px;
+    letter-spacing: -0.02em;
+  }
+  .setup-sub {
+    font-size: 13px;
+    color: var(--muted);
+    margin-bottom: 32px;
+    line-height: 1.7;
+    max-width: 400px;
+  }
+  .setup-sub a { color: var(--accent); text-decoration: none; }
+  .setup-sub a:hover { text-decoration: underline; }
+  .setup-field {
+    width: 100%;
+    max-width: 400px;
+    margin-bottom: 12px;
+  }
+  .setup-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 6px;
+    text-align: left;
+    display: block;
+  }
+  .setup-input {
+    width: 100%;
+    padding: 10px 14px;
+    background: var(--surface);
+    border: 1px solid var(--border-hover);
+    border-radius: 6px;
+    color: var(--text);
+    font-family: var(--mono);
+    font-size: 12px;
+    outline: none;
+    transition: border-color .15s;
+  }
+  .setup-input:focus { border-color: rgba(200,240,77,0.4); }
+  .setup-btn {
+    width: 100%;
+    max-width: 400px;
+    padding: 11px;
+    background: var(--accent);
+    color: #0B0D11;
+    border: none;
+    border-radius: 6px;
+    font-family: var(--mono);
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    cursor: pointer;
+    margin-top: 8px;
+    transition: opacity .15s;
+  }
+  .setup-btn:hover { opacity: 0.85; }
+  .setup-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+  .setup-error {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--fire);
+    margin-top: 10px;
+    min-height: 16px;
+  }
+
+  /* MAIN APP */
+  .app { display: none; }
+  .app.visible { display: block; }
+
+  /* SYNC BAR */
+  .sync-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 32px;
+    padding: 8px 14px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background: var(--surface);
+  }
+  .sync-status {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--muted);
+    letter-spacing: 0.08em;
+  }
+  .sync-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--muted);
+    transition: background .3s;
+    flex-shrink: 0;
+  }
+  .sync-dot.ok { background: var(--accent); }
+  .sync-dot.saving { background: #f59e0b; animation: pulse 0.8s infinite; }
+  .sync-dot.error { background: var(--fire); }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
+  .sync-reset {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--muted);
+    background: none;
+    border: none;
+    cursor: pointer;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    transition: color .15s;
+  }
+  .sync-reset:hover { color: var(--fire); }
+
+  /* HEADER */
+  .header { margin-bottom: 32px; }
+  .header-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--muted);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+  .header-title {
+    font-size: 24px;
+    font-weight: 300;
+    color: var(--text);
+    letter-spacing: -0.02em;
+    margin-bottom: 20px;
+  }
+  .header-title span { color: var(--accent); font-weight: 500; }
+  .stats {
+    display: flex;
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  .stat { flex: 1; padding: 12px 16px; background: var(--surface); text-align: center; }
+  .stat-val {
+    font-family: var(--mono);
+    font-size: 20px;
+    font-weight: 500;
+    color: var(--text);
+    display: block;
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+  .stat-val.accent { color: var(--accent); }
+  .stat-val.fire { color: var(--fire); }
+  .stat-label { font-size: 10px; color: var(--muted); font-family: var(--mono); letter-spacing: 0.08em; text-transform: uppercase; }
+  .progress-bar { margin: 16px 0 0; height: 2px; background: var(--surface2); border-radius: 2px; overflow: hidden; }
+  .progress-fill { height: 100%; background: var(--accent); border-radius: 2px; transition: width .4s ease; width: 0%; }
+
+  /* SECTION */
+  .section { margin-bottom: 28px; }
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--border);
+  }
+  .section-title { font-family: var(--mono); font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); }
+  .section-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--fire); flex-shrink: 0; }
+  .section-dot.normal { background: var(--muted); }
+  .section-count { margin-left: auto; font-family: var(--mono); font-size: 10px; color: var(--muted); }
+
+  /* TASK */
+  .task {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 14px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    margin-bottom: 6px;
+    background: var(--surface);
+    transition: border-color .15s, background .15s;
+  }
+  .task:hover { border-color: var(--border-hover); }
+  .task.fire-task { border-color: rgba(255,107,61,0.2); background: var(--fire-dim); }
+  .task.fire-task:hover { border-color: rgba(255,107,61,0.35); }
+  .task.done-task { opacity: 0.38; background: var(--surface); border-color: var(--border); }
+  .cb {
+    width: 16px; height: 16px; border-radius: 4px;
+    border: 1px solid var(--border-hover);
+    flex-shrink: 0; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: all .15s; background: transparent;
+  }
+  .cb:hover { border-color: var(--accent); }
+  .cb.checked { background: var(--accent); border-color: var(--accent); }
+  .cb.checked::after {
+    content: ''; width: 8px; height: 5px;
+    border-left: 1.5px solid #0B0D11; border-bottom: 1.5px solid #0B0D11;
+    transform: rotate(-45deg) translateY(-1px); display: block;
+  }
+  .task-main { flex: 1; min-width: 0; }
+  .task-text {
+    font-size: 13px; color: var(--text); font-weight: 400;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    cursor: pointer; border: none; background: transparent;
+    outline: none; width: 100%; font-family: var(--sans); padding: 0; line-height: 1.5;
+  }
+  .task-text:focus { white-space: normal; overflow: visible; }
+  .done-task .task-text { text-decoration: line-through; color: var(--done-text); }
+  .badges { display: flex; align-items: center; gap: 6px; margin-top: 4px; flex-wrap: wrap; }
+  .fire-badge {
+    font-family: var(--mono); font-size: 9px; letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--fire);
+    padding: 2px 6px; border: 1px solid rgba(255,107,61,0.3); border-radius: 3px; flex-shrink: 0;
+  }
+  .tag { font-family: var(--mono); font-size: 9px; letter-spacing: 0.08em; text-transform: uppercase; padding: 2px 6px; border-radius: 3px; flex-shrink: 0; }
+  .tag-product { background: var(--tag-product); color: var(--tag-product-text); }
+  .tag-event { background: var(--tag-event); color: var(--tag-event-text); }
+  .tag-people { background: var(--tag-people); color: var(--tag-people-text); }
+  .time-wrap { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
+  .time-btn {
+    width: 18px; height: 18px; border-radius: 3px;
+    border: 1px solid var(--border-hover); background: transparent;
+    color: var(--muted); font-size: 12px; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: all .15s; font-family: var(--mono); flex-shrink: 0;
+  }
+  .time-btn:hover { border-color: var(--accent); color: var(--accent); }
+  .time-display {
+    font-family: var(--mono); font-size: 11px; color: var(--accent);
+    min-width: 42px; text-align: center; cursor: pointer;
+    padding: 2px 4px; border-radius: 3px;
+    border: 1px solid transparent; background: var(--accent-dim2);
+    transition: all .15s; white-space: nowrap;
+  }
+  .time-display:hover { border-color: rgba(200,240,77,0.25); background: var(--accent-dim); }
+  .time-input {
+    font-family: var(--mono); font-size: 11px; color: var(--accent);
+    width: 52px; text-align: center; padding: 2px 4px; border-radius: 3px;
+    border: 1px solid rgba(200,240,77,0.4); background: var(--accent-dim); outline: none;
+  }
+  .delete-btn {
+    width: 20px; height: 20px; border-radius: 4px; border: none;
+    background: transparent; color: var(--muted); cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px; transition: all .15s; opacity: 0; flex-shrink: 0;
+  }
+  .task:hover .delete-btn { opacity: 1; }
+  .delete-btn:hover { color: var(--fire); background: var(--fire-dim); }
+
+  /* ADD FORM */
+  .add-form {
+    display: flex; gap: 8px; padding: 12px 14px;
+    border: 1px dashed var(--border-hover); border-radius: 8px;
+    margin-top: 8px; background: var(--surface); flex-wrap: wrap;
+  }
+  .add-input { flex: 1; min-width: 200px; background: transparent; border: none; outline: none; font-family: var(--sans); font-size: 13px; color: var(--text); padding: 0; }
+  .add-input::placeholder { color: var(--muted); }
+  .add-select { background: var(--surface2); border: 1px solid var(--border-hover); border-radius: 4px; color: var(--muted); font-family: var(--mono); font-size: 10px; padding: 4px 6px; outline: none; cursor: pointer; }
+  .add-time-input { width: 64px; background: var(--surface2); border: 1px solid var(--border-hover); border-radius: 4px; color: var(--muted); font-family: var(--mono); font-size: 11px; padding: 4px 6px; outline: none; text-align: center; }
+  .add-time-input:focus { border-color: rgba(200,240,77,0.4); color: var(--accent); }
+  .add-fire-toggle { display: flex; align-items: center; gap: 5px; cursor: pointer; font-family: var(--mono); font-size: 10px; color: var(--muted); letter-spacing: 0.08em; text-transform: uppercase; padding: 4px 8px; border: 1px solid var(--border-hover); border-radius: 4px; transition: all .15s; user-select: none; background: transparent; }
+  .add-fire-toggle.active { border-color: rgba(255,107,61,0.4); color: var(--fire); background: var(--fire-dim); }
+  .add-btn { padding: 5px 14px; background: var(--accent); color: #0B0D11; border: none; border-radius: 4px; font-family: var(--mono); font-size: 11px; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; cursor: pointer; transition: opacity .15s; }
+  .add-btn:hover { opacity: 0.85; }
+
+  /* FOOTER */
+  .footer { margin-top: 40px; padding-top: 20px; border-top: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
+  .footer-total { font-family: var(--mono); font-size: 11px; color: var(--muted); }
+  .footer-total span { color: var(--accent); }
+  .clear-btn { font-family: var(--mono); font-size: 10px; color: var(--muted); background: none; border: none; cursor: pointer; letter-spacing: 0.06em; text-transform: uppercase; transition: color .15s; }
+  .clear-btn:hover { color: var(--fire); }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <!-- SETUP SCREEN -->
+  <div class="setup-screen" id="setup">
+    <div class="setup-logo">Task tracker · origin</div>
+    <div class="setup-title">Настройка синхронизации</div>
+    <div class="setup-sub">
+      Задачи будут храниться в JSONBin и синхронизироваться между устройствами.<br>
+      Зарегистрируйся на <a href="https://jsonbin.io" target="_blank">jsonbin.io</a> → Account Settings → API Keys → Master Key.
+    </div>
+    <div class="setup-field">
+      <label class="setup-label">Master API Key</label>
+      <input class="setup-input" id="apikey-input" type="password" placeholder="$2a$10$..." autocomplete="off" />
+    </div>
+    <button class="setup-btn" id="setup-btn" onclick="initSetup()">Подключить и создать хранилище</button>
+    <div class="setup-error" id="setup-error"></div>
+  </div>
+
+  <!-- MAIN APP -->
+  <div class="app" id="app">
+
+    <div class="sync-bar">
+      <div class="sync-status">
+        <div class="sync-dot" id="sync-dot"></div>
+        <span id="sync-text">загрузка...</span>
+      </div>
+      <button class="sync-reset" onclick="resetSetup()">× сбросить настройки</button>
+    </div>
+
+    <div class="header">
+      <div class="header-label">Task tracker · week sprint</div>
+      <div class="header-title">Планы <span>/ до пятницы</span></div>
+      <div class="stats">
+        <div class="stat"><span class="stat-val fire" id="s-fire">—</span><span class="stat-label">горит</span></div>
+        <div class="stat"><span class="stat-val" id="s-remain">—</span><span class="stat-label">осталось</span></div>
+        <div class="stat"><span class="stat-val accent" id="s-time">—</span><span class="stat-label">оценка</span></div>
+        <div class="stat"><span class="stat-val" id="s-done">—</span><span class="stat-label">готово</span></div>
+      </div>
+      <div class="progress-bar"><div class="progress-fill" id="progress"></div></div>
+    </div>
+
+    <div class="section">
+      <div class="section-header">
+        <div class="section-dot"></div>
+        <div class="section-title">Горит</div>
+        <div class="section-count" id="fire-count"></div>
+      </div>
+      <div id="fire-list"></div>
+    </div>
+
+    <div class="section">
+      <div class="section-header">
+        <div class="section-dot normal"></div>
+        <div class="section-title">Остальное</div>
+        <div class="section-count" id="normal-count"></div>
+      </div>
+      <div id="normal-list"></div>
+    </div>
+
+    <div class="add-form">
+      <input class="add-input" id="new-text" placeholder="Новая задача..." />
+      <select class="add-select" id="new-tag">
+        <option value="product">продукт</option>
+        <option value="event">событие</option>
+        <option value="people">люди</option>
+      </select>
+      <input class="add-time-input" id="new-time" placeholder="30 мин" />
+      <button class="add-fire-toggle" id="fire-toggle" onclick="toggleFire()">горит</button>
+      <button class="add-btn" onclick="addTask()">+ добавить</button>
+    </div>
+
+    <div class="footer">
+      <div class="footer-total" id="footer-total"></div>
+      <button class="clear-btn" onclick="clearDone()">× очистить выполненные</button>
+    </div>
+
+  </div>
+</div>
+
+<script>
+const DEFAULT_TASKS = [
+  {id:1, text:'Написать Наде — билеты + материалы для мероприятия', fire:true,  tag:'event',   mins:15,  done:false},
+  {id:2, text:'Выкатить эксперимент двойного прикладывания',         fire:true,  tag:'product', mins:30,  done:false},
+  {id:3, text:'Дизайн эксперимента ИИ-сервиса',                     fire:true,  tag:'product', mins:120, done:false},
+  {id:4, text:'Поставить встречу с Катей для презентации результатов',fire:true, tag:'people',  mins:5,   done:false},
+  {id:5, text:'Дизайн профайлера для Ани',                           fire:true,  tag:'people',  mins:180, done:false},
+  {id:6, text:'Зафиналить презентацию для мероприятия',              fire:false, tag:'event',   mins:120, done:false},
+  {id:7, text:'Направить презентацию дизайнеру',                     fire:false, tag:'event',   mins:10,  done:false},
+  {id:8, text:'Сделать презентацию результатов для Кати',            fire:false, tag:'people',  mins:120, done:false},
+  {id:9, text:'Показать дизайн профайлера Кириллу',                  fire:false, tag:'people',  mins:30,  done:false},
+  {id:10,text:'Отдать дизайн профайлера Кате',                       fire:false, tag:'people',  mins:15,  done:false},
+  {id:11,text:'Погрузить Мишу в проекты',                            fire:false, tag:'people',  mins:60,  done:false},
+];
+
+const TIME_STEPS = [5,10,15,20,30,45,60,90,120,150,180,240,300];
+const tagLabels = {product:'продукт', event:'событие', people:'люди'};
+
+let tasks = [];
+let nextId = 20;
+let fireToggleActive = false;
+let saveTimer = null;
+let apiKey = '';
+let binId = '';
+
+function getLS(k) { try { return localStorage.getItem(k); } catch(e) { return null; } }
+function setLS(k,v) { try { localStorage.setItem(k,v); } catch(e) {} }
+
+function setSyncStatus(state, text) {
+  const dot = document.getElementById('sync-dot');
+  const label = document.getElementById('sync-text');
+  dot.className = 'sync-dot' + (state ? ' ' + state : '');
+  label.textContent = text;
+}
+
+// ── SETUP ──────────────────────────────────────────────
+async function initSetup() {
+  const key = document.getElementById('apikey-input').value.trim();
+  const errEl = document.getElementById('setup-error');
+  const btn = document.getElementById('setup-btn');
+  if (!key) { errEl.textContent = 'Введи API key'; return; }
+  btn.disabled = true;
+  btn.textContent = 'Создаём хранилище...';
+  errEl.textContent = '';
+  try {
+    const res = await fetch('https://api.jsonbin.io/v3/b', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'X-Master-Key': key, 'X-Bin-Name': 'week-tasks', 'X-Bin-Private': 'true' },
+      body: JSON.stringify({ tasks: DEFAULT_TASKS, nextId: 20 })
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.message || 'Ошибка создания бина');
+    const id = data.metadata.id;
+    setLS('jb_key', key);
+    setLS('jb_bin', id);
+    apiKey = key;
+    binId = id;
+    tasks = JSON.parse(JSON.stringify(DEFAULT_TASKS));
+    nextId = 20;
+    showApp();
+    setSyncStatus('ok', 'синхронизировано · ' + now());
+  } catch(e) {
+    errEl.textContent = e.message || 'Не удалось подключиться';
+    btn.disabled = false;
+    btn.textContent = 'Подключить и создать хранилище';
+  }
+}
+
+function resetSetup() {
+  if (!confirm('Сбросить настройки? Данные в JSONBin сохранятся.')) return;
+  setLS('jb_key', '');
+  setLS('jb_bin', '');
+  location.reload();
+}
+
+// ── LOAD / SAVE ────────────────────────────────────────
+async function loadFromBin() {
+  setSyncStatus('saving', 'загрузка...');
+  try {
+    const res = await fetch('https://api.jsonbin.io/v3/b/' + binId + '/latest', {
+      headers: { 'X-Master-Key': apiKey }
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.message);
+    tasks = data.record.tasks || [];
+    nextId = data.record.nextId || (tasks.length + 10);
+    render();
+    setSyncStatus('ok', 'синхронизировано · ' + now());
+  } catch(e) {
+    setSyncStatus('error', 'ошибка загрузки');
+  }
+}
+
+async function saveToBin() {
+  setSyncStatus('saving', 'сохранение...');
+  try {
+    const res = await fetch('https://api.jsonbin.io/v3/b/' + binId, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json', 'X-Master-Key': apiKey },
+      body: JSON.stringify({ tasks, nextId })
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.message);
+    setSyncStatus('ok', 'синхронизировано · ' + now());
+  } catch(e) {
+    setSyncStatus('error', 'ошибка сохранения');
+  }
+}
+
+function scheduleSave() {
+  clearTimeout(saveTimer);
+  setSyncStatus('saving', 'несохранённые изменения...');
+  saveTimer = setTimeout(saveToBin, 800);
+}
+
+function now() {
+  return new Date().toLocaleTimeString('ru', { hour: '2-digit', minute: '2-digit' });
+}
+
+// ── ROUTING ────────────────────────────────────────────
+function showApp() {
+  document.getElementById('setup').classList.remove('visible');
+  document.getElementById('app').classList.add('visible');
+  render();
+}
+
+window.addEventListener('DOMContentLoaded', () => {
+  const k = getLS('jb_key');
+  const b = getLS('jb_bin');
+  if (k && b) {
+    apiKey = k;
+    binId = b;
+    document.getElementById('app').classList.add('visible');
+    loadFromBin();
+  } else {
+    document.getElementById('setup').classList.add('visible');
+  }
+});
+
+// ── HELPERS ────────────────────────────────────────────
+function fmt(mins) {
+  if (mins < 60) return mins + 'м';
+  const h = Math.floor(mins/60), m = mins%60;
+  return m ? h + 'ч ' + m + 'м' : h + 'ч';
+}
+
+function parseTime(str) {
+  str = str.toLowerCase().replace(/\s/g,'');
+  let m = 0;
+  const hMatch = str.match(/(\d+)[чh]/);
+  const mMatch = str.match(/(\d+)[мm]/);
+  if (hMatch) m += parseInt(hMatch[1])*60;
+  if (mMatch) m += parseInt(mMatch[1]);
+  if (!hMatch && !mMatch) { const n=parseInt(str); if(!isNaN(n)) m=n; }
+  return m;
+}
+
+function declension(n, one, two, five) {
+  const m10=n%10, m100=n%100;
+  if(m100>=11&&m100<=19) return five;
+  if(m10===1) return one;
+  if(m10>=2&&m10<=4) return two;
+  return five;
+}
+
+// ── TASK ACTIONS ───────────────────────────────────────
+function changeTime(id, dir) {
+  const t = tasks.find(x=>x.id===id);
+  const idx = TIME_STEPS.indexOf(t.mins);
+  if (dir>0 && idx<TIME_STEPS.length-1) t.mins = TIME_STEPS[idx+1];
+  else if (dir<0 && idx>0) t.mins = TIME_STEPS[idx-1];
+  else if (idx===-1) {
+    const ni = TIME_STEPS.indexOf(TIME_STEPS.reduce((a,b)=>Math.abs(b-t.mins)<Math.abs(a-t.mins)?b:a));
+    t.mins = TIME_STEPS[Math.max(0, Math.min(TIME_STEPS.length-1, dir>0?ni+1:ni-1))];
+  }
+  render(); scheduleSave();
+}
+
+function startEditTime(id) {
+  const t = tasks.find(x=>x.id===id);
+  const el = document.getElementById('time-disp-'+id);
+  const inp = document.createElement('input');
+  inp.className = 'time-input';
+  inp.value = fmt(t.mins);
+  el.replaceWith(inp);
+  inp.focus(); inp.select();
+  function save() {
+    const p = parseTime(inp.value.trim());
+    if (p>0) t.mins = p;
+    render(); scheduleSave();
+  }
+  inp.addEventListener('blur', save);
+  inp.addEventListener('keydown', e => { if(e.key==='Enter') save(); if(e.key==='Escape') render(); });
+}
+
+function toggleDone(id) {
+  const t = tasks.find(x=>x.id===id);
+  t.done = !t.done;
+  render(); scheduleSave();
+}
+
+function updateText(id, val) {
+  const t = tasks.find(x=>x.id===id);
+  if (t && val.trim()) { t.text = val.trim(); scheduleSave(); }
+}
+
+function deleteTask(id) {
+  tasks = tasks.filter(x=>x.id!==id);
+  render(); scheduleSave();
+}
+
+function toggleFire() {
+  fireToggleActive = !fireToggleActive;
+  document.getElementById('fire-toggle').classList.toggle('active', fireToggleActive);
+}
+
+function addTask() {
+  const text = document.getElementById('new-text').value.trim();
+  if (!text) return;
+  const tag = document.getElementById('new-tag').value;
+  const timeStr = document.getElementById('new-time').value.trim();
+  const mins = timeStr ? (parseTime(timeStr)||30) : 30;
+  tasks.push({ id: nextId++, text, fire: fireToggleActive, tag, mins, done: false });
+  document.getElementById('new-text').value = '';
+  document.getElementById('new-time').value = '';
+  fireToggleActive = false;
+  document.getElementById('fire-toggle').classList.remove('active');
+  render(); scheduleSave();
+}
+
+function clearDone() {
+  tasks = tasks.filter(x=>!x.done);
+  render(); scheduleSave();
+}
+
+document.addEventListener('keydown', e => {
+  if (e.target.id==='new-text' && e.key==='Enter') addTask();
+});
+
+// ── RENDER ─────────────────────────────────────────────
+function makeTaskEl(t) {
+  const div = document.createElement('div');
+  div.className = 'task' + (t.fire&&!t.done?' fire-task':'') + (t.done?' done-task':'');
+  div.innerHTML = `
+    <div class="cb${t.done?' checked':''}" onclick="toggleDone(${t.id})"></div>
+    <div class="task-main">
+      <input class="task-text" value="${t.text.replace(/"/g,'&quot;')}"
+        onblur="updateText(${t.id}, this.value)"
+        onkeydown="if(event.key==='Enter')this.blur()" />
+      <div class="badges">
+        ${t.fire?'<span class="fire-badge">горит</span>':''}
+        <span class="tag tag-${t.tag}">${tagLabels[t.tag]}</span>
+      </div>
+    </div>
+    <div class="time-wrap" id="time-wrap-${t.id}">
+      <button class="time-btn" onclick="changeTime(${t.id},-1)">−</button>
+      <div class="time-display" id="time-disp-${t.id}" onclick="startEditTime(${t.id})">${fmt(t.mins)}</div>
+      <button class="time-btn" onclick="changeTime(${t.id},1)">+</button>
+    </div>
+    <button class="delete-btn" onclick="deleteTask(${t.id})">×</button>
+  `;
+  return div;
+}
+
+function render() {
+  const fl = document.getElementById('fire-list');
+  const nl = document.getElementById('normal-list');
+  if (!fl) return;
+  fl.innerHTML = ''; nl.innerHTML = '';
+  const fireTasks = tasks.filter(x=>x.fire);
+  const normalTasks = tasks.filter(x=>!x.fire);
+  fireTasks.forEach(t => fl.appendChild(makeTaskEl(t)));
+  normalTasks.forEach(t => nl.appendChild(makeTaskEl(t)));
+  const total = tasks.length;
+  const done = tasks.filter(x=>x.done).length;
+  const remain = total - done;
+  const fireActive = fireTasks.filter(x=>!x.done).length;
+  const remainMins = tasks.filter(x=>!x.done).reduce((s,x)=>s+x.mins,0);
+  const totalMins = tasks.reduce((s,x)=>s+x.mins,0);
+  document.getElementById('s-fire').textContent = fireActive;
+  document.getElementById('s-remain').textContent = remain;
+  document.getElementById('s-done').textContent = done;
+  document.getElementById('s-time').textContent = fmt(totalMins);
+  document.getElementById('progress').style.width = total ? (done/total*100)+'%' : '0%';
+  document.getElementById('fire-count').textContent = fireTasks.length + ' ' + declension(fireTasks.length,'задача','задачи','задач');
+  document.getElementById('normal-count').textContent = normalTasks.length + ' ' + declension(normalTasks.length,'задача','задачи','задач');
+  document.getElementById('footer-total').innerHTML = 'Осталось: <span>' + fmt(remainMins) + '</span> из ' + fmt(totalMins);
+}
+</script>
+</body>
+</html>
