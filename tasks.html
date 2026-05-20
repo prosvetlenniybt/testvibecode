@@ -358,15 +358,29 @@
     <div class="setup-logo">Task tracker · origin</div>
     <div class="setup-title">Настройка синхронизации</div>
     <div class="setup-sub">
-      Задачи будут храниться в JSONBin и синхронизироваться между устройствами.<br>
-      Зарегистрируйся на <a href="https://jsonbin.io" target="_blank">jsonbin.io</a> → Account Settings → API Keys → Master Key.
+      Зарегистрируйся на <a href="https://jsonbin.io" target="_blank">jsonbin.io</a> → Account Settings → API Keys → Master Key.<br>
+      Bin ID оставь пустым на первом устройстве — он создастся автоматически.
     </div>
     <div class="setup-field">
       <label class="setup-label">Master API Key</label>
       <input class="setup-input" id="apikey-input" type="password" placeholder="$2a$10$..." autocomplete="off" />
     </div>
-    <button class="setup-btn" id="setup-btn" onclick="initSetup()">Подключить и создать хранилище</button>
+    <div class="setup-field">
+      <label class="setup-label">Bin ID <span style="color:var(--muted);font-size:9px;letter-spacing:0">(оставь пустым на первом устройстве)</span></label>
+      <input class="setup-input" id="binid-input" type="text" placeholder="67abc123def..." autocomplete="off" style="font-family:var(--mono);font-size:12px" />
+    </div>
+    <button class="setup-btn" id="setup-btn" onclick="initSetup()">Подключить</button>
     <div class="setup-error" id="setup-error"></div>
+    <!-- shown after first create -->
+    <div id="binid-result" style="display:none;margin-top:20px;width:100%;max-width:400px;padding:14px;background:var(--surface);border:1px solid rgba(200,240,77,0.25);border-radius:8px">
+      <div style="font-family:var(--mono);font-size:10px;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;margin-bottom:8px">Хранилище создано · скопируй Bin ID</div>
+      <div style="display:flex;align-items:center;gap:8px">
+        <code id="binid-display" style="flex:1;font-family:var(--mono);font-size:12px;color:var(--accent);word-break:break-all"></code>
+        <button onclick="copyBinId()" style="padding:5px 12px;background:var(--accent);color:#0B0D11;border:none;border-radius:4px;font-family:var(--mono);font-size:10px;font-weight:500;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;flex-shrink:0">копировать</button>
+      </div>
+      <div style="font-size:11px;color:var(--muted);margin-top:10px;line-height:1.6">Введи этот ID на других устройствах вместе с тем же API Key.</div>
+      <button onclick="showApp()" style="margin-top:12px;width:100%;padding:10px;background:transparent;border:1px solid var(--border-hover);border-radius:6px;font-family:var(--mono);font-size:11px;color:var(--text);letter-spacing:.06em;text-transform:uppercase;cursor:pointer">открыть трекер →</button>
+    </div>
   </div>
 
   <!-- MAIN APP -->
@@ -468,34 +482,73 @@ function setSyncStatus(state, text) {
 // ── SETUP ──────────────────────────────────────────────
 async function initSetup() {
   const key = document.getElementById('apikey-input').value.trim();
+  const existingId = document.getElementById('binid-input').value.trim();
   const errEl = document.getElementById('setup-error');
   const btn = document.getElementById('setup-btn');
-  if (!key) { errEl.textContent = 'Введи API key'; return; }
+  if (!key) { errEl.textContent = 'Введи API Key'; return; }
   btn.disabled = true;
-  btn.textContent = 'Создаём хранилище...';
   errEl.textContent = '';
-  try {
-    const res = await fetch('https://api.jsonbin.io/v3/b', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'X-Master-Key': key, 'X-Bin-Name': 'week-tasks', 'X-Bin-Private': 'true' },
-      body: JSON.stringify({ tasks: DEFAULT_TASKS, nextId: 20 })
-    });
-    const data = await res.json();
-    if (!res.ok) throw new Error(data.message || 'Ошибка создания бина');
-    const id = data.metadata.id;
-    setLS('jb_key', key);
-    setLS('jb_bin', id);
-    apiKey = key;
-    binId = id;
-    tasks = JSON.parse(JSON.stringify(DEFAULT_TASKS));
-    nextId = 20;
-    showApp();
-    setSyncStatus('ok', 'синхронизировано · ' + now());
-  } catch(e) {
-    errEl.textContent = e.message || 'Не удалось подключиться';
-    btn.disabled = false;
-    btn.textContent = 'Подключить и создать хранилище';
+
+  if (existingId) {
+    // Connect to existing bin
+    btn.textContent = 'Подключение...';
+    try {
+      const res = await fetch('https://api.jsonbin.io/v3/b/' + existingId + '/latest', {
+        headers: { 'X-Master-Key': key }
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.message || 'Не удалось подключиться к бину');
+      setLS('jb_key', key);
+      setLS('jb_bin', existingId);
+      apiKey = key;
+      binId = existingId;
+      tasks = data.record.tasks || [];
+      nextId = data.record.nextId || 20;
+      showApp();
+      setSyncStatus('ok', 'синхронизировано · ' + now());
+    } catch(e) {
+      errEl.textContent = e.message || 'Ошибка подключения';
+      btn.disabled = false;
+      btn.textContent = 'Подключить';
+    }
+  } else {
+    // Create new bin
+    btn.textContent = 'Создаём хранилище...';
+    try {
+      const res = await fetch('https://api.jsonbin.io/v3/b', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'X-Master-Key': key, 'X-Bin-Name': 'week-tasks', 'X-Bin-Private': 'true' },
+        body: JSON.stringify({ tasks: DEFAULT_TASKS, nextId: 20 })
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.message || 'Ошибка создания бина');
+      const id = data.metadata.id;
+      setLS('jb_key', key);
+      setLS('jb_bin', id);
+      apiKey = key;
+      binId = id;
+      tasks = JSON.parse(JSON.stringify(DEFAULT_TASKS));
+      nextId = 20;
+      // Show bin ID to copy before opening app
+      document.getElementById('binid-display').textContent = id;
+      document.getElementById('binid-result').style.display = 'block';
+      btn.style.display = 'none';
+      document.getElementById('binid-input').closest('.setup-field').style.display = 'none';
+      render();
+    } catch(e) {
+      errEl.textContent = e.message || 'Не удалось создать хранилище';
+      btn.disabled = false;
+      btn.textContent = 'Подключить';
+    }
   }
+}
+
+function copyBinId() {
+  const id = document.getElementById('binid-display').textContent;
+  navigator.clipboard.writeText(id).catch(() => {});
+  const btn = event.target;
+  btn.textContent = 'скопировано ✓';
+  setTimeout(() => btn.textContent = 'копировать', 2000);
 }
 
 function resetSetup() {
