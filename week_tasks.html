@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Неделя / Tasks</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #0B0D11;
+    --surface: #13151B;
+    --surface2: #1A1D26;
+    --border: rgba(255,255,255,0.07);
+    --border-hover: rgba(255,255,255,0.14);
+    --text: #E8EAF0;
+    --muted: #5A5F72;
+    --accent: #C8F04D;
+    --accent-dim: rgba(200,240,77,0.12);
+    --accent-dim2: rgba(200,240,77,0.06);
+    --fire: #FF6B3D;
+    --fire-dim: rgba(255,107,61,0.12);
+    --done: #3A3E4A;
+    --done-text: #3A3E4A;
+    --tag-product: rgba(96,165,250,0.15);
+    --tag-product-text: #93C5FD;
+    --tag-event: rgba(52,211,153,0.12);
+    --tag-event-text: #6EE7B7;
+    --tag-people: rgba(167,139,250,0.12);
+    --tag-people-text: #C4B5FD;
+    --mono: 'IBM Plex Mono', monospace;
+    --sans: 'IBM Plex Sans', sans-serif;
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    font-size: 14px;
+    line-height: 1.6;
+    min-height: 100vh;
+    padding: 48px 24px;
+  }
+
+  /* subtle noise overlay */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.025'/%3E%3C/svg%3E");
+    background-size: 200px 200px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .container {
+    max-width: 720px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* HEADER */
+  .header {
+    margin-bottom: 40px;
+  }
+  .header-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: 20px;
+  }
+  .header-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--muted);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+  .header-title {
+    font-size: 24px;
+    font-weight: 300;
+    color: var(--text);
+    letter-spacing: -0.02em;
+  }
+  .header-title span {
+    color: var(--accent);
+    font-weight: 500;
+  }
+
+  /* STATS */
+  .stats {
+    display: flex;
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  .stat {
+    flex: 1;
+    padding: 12px 16px;
+    background: var(--surface);
+    text-align: center;
+  }
+  .stat-val {
+    font-family: var(--mono);
+    font-size: 20px;
+    font-weight: 500;
+    color: var(--text);
+    display: block;
+    line-height: 1;
+    margin-bottom: 4px;
+    transition: color .2s;
+  }
+  .stat-val.accent { color: var(--accent); }
+  .stat-val.fire { color: var(--fire); }
+  .stat-label {
+    font-size: 10px;
+    color: var(--muted);
+    font-family: var(--mono);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  /* PROGRESS */
+  .progress-bar {
+    margin: 20px 0 0;
+    height: 2px;
+    background: var(--surface2);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    background: var(--accent);
+    border-radius: 2px;
+    transition: width .4s ease;
+    width: 0%;
+  }
+
+  /* SECTION */
+  .section {
+    margin-bottom: 32px;
+  }
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--border);
+  }
+  .section-title {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .section-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--fire);
+    flex-shrink: 0;
+  }
+  .section-dot.normal { background: var(--muted); }
+  .section-count {
+    margin-left: auto;
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--muted);
+  }
+
+  /* TASK */
+  .task {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 14px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    margin-bottom: 6px;
+    background: var(--surface);
+    transition: border-color .15s, background .15s;
+    cursor: default;
+  }
+  .task:hover { border-color: var(--border-hover); }
+  .task.fire-task { border-color: rgba(255,107,61,0.2); background: var(--fire-dim); }
+  .task.fire-task:hover { border-color: rgba(255,107,61,0.35); }
+  .task.done-task {
+    opacity: 0.38;
+    background: var(--surface);
+    border-color: var(--border);
+  }
+
+  /* CHECKBOX */
+  .cb {
+    width: 16px;
+    height: 16px;
+    border-radius: 4px;
+    border: 1px solid var(--border-hover);
+    flex-shrink: 0;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all .15s;
+    background: transparent;
+  }
+  .cb:hover { border-color: var(--accent); }
+  .cb.checked { background: var(--accent); border-color: var(--accent); }
+  .cb.checked::after {
+    content: '';
+    width: 8px;
+    height: 5px;
+    border-left: 1.5px solid #0B0D11;
+    border-bottom: 1.5px solid #0B0D11;
+    transform: rotate(-45deg) translateY(-1px);
+    display: block;
+  }
+
+  /* TASK TEXT */
+  .task-main { flex: 1; min-width: 0; }
+  .task-text {
+    font-size: 13px;
+    color: var(--text);
+    font-weight: 400;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    cursor: pointer;
+    border: none;
+    background: transparent;
+    outline: none;
+    width: 100%;
+    font-family: var(--sans);
+    padding: 0;
+    line-height: 1.5;
+  }
+  .task-text:focus {
+    white-space: normal;
+    overflow: visible;
+    color: var(--text);
+  }
+  .done-task .task-text { text-decoration: line-through; color: var(--done-text); }
+
+  /* TAGS & BADGES */
+  .badges { display: flex; align-items: center; gap: 6px; margin-top: 4px; flex-wrap: wrap; }
+  .fire-badge {
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--fire);
+    padding: 2px 6px;
+    border: 1px solid rgba(255,107,61,0.3);
+    border-radius: 3px;
+    flex-shrink: 0;
+  }
+  .tag {
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 2px 6px;
+    border-radius: 3px;
+    flex-shrink: 0;
+  }
+  .tag-product { background: var(--tag-product); color: var(--tag-product-text); }
+  .tag-event { background: var(--tag-event); color: var(--tag-event-text); }
+  .tag-people { background: var(--tag-people); color: var(--tag-people-text); }
+
+  /* TIME EDITOR */
+  .time-wrap {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-shrink: 0;
+  }
+  .time-btn {
+    width: 18px;
+    height: 18px;
+    border-radius: 3px;
+    border: 1px solid var(--border-hover);
+    background: transparent;
+    color: var(--muted);
+    font-size: 12px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+    transition: all .15s;
+    font-family: var(--mono);
+    flex-shrink: 0;
+  }
+  .time-btn:hover { border-color: var(--accent); color: var(--accent); }
+  .time-display {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--accent);
+    min-width: 42px;
+    text-align: center;
+    cursor: pointer;
+    padding: 2px 4px;
+    border-radius: 3px;
+    border: 1px solid transparent;
+    background: var(--accent-dim2);
+    transition: all .15s;
+    white-space: nowrap;
+  }
+  .time-display:hover { border-color: rgba(200,240,77,0.25); background: var(--accent-dim); }
+  .time-input {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--accent);
+    width: 52px;
+    text-align: center;
+    padding: 2px 4px;
+    border-radius: 3px;
+    border: 1px solid rgba(200,240,77,0.4);
+    background: var(--accent-dim);
+    outline: none;
+  }
+
+  /* DELETE */
+  .delete-btn {
+    width: 20px;
+    height: 20px;
+    border-radius: 4px;
+    border: none;
+    background: transparent;
+    color: var(--muted);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    transition: all .15s;
+    opacity: 0;
+    flex-shrink: 0;
+  }
+  .task:hover .delete-btn { opacity: 1; }
+  .delete-btn:hover { color: var(--fire); background: var(--fire-dim); }
+
+  /* ADD FORM */
+  .add-form {
+    display: flex;
+    gap: 8px;
+    padding: 12px 14px;
+    border: 1px dashed var(--border-hover);
+    border-radius: 8px;
+    margin-top: 8px;
+    background: var(--surface);
+    flex-wrap: wrap;
+  }
+  .add-input {
+    flex: 1;
+    min-width: 200px;
+    background: transparent;
+    border: none;
+    outline: none;
+    font-family: var(--sans);
+    font-size: 13px;
+    color: var(--text);
+    padding: 0;
+  }
+  .add-input::placeholder { color: var(--muted); }
+  .add-select {
+    background: var(--surface2);
+    border: 1px solid var(--border-hover);
+    border-radius: 4px;
+    color: var(--muted);
+    font-family: var(--mono);
+    font-size: 10px;
+    padding: 4px 6px;
+    outline: none;
+    cursor: pointer;
+  }
+  .add-select:focus { border-color: rgba(200,240,77,0.4); color: var(--text); }
+  .add-time-input {
+    width: 64px;
+    background: var(--surface2);
+    border: 1px solid var(--border-hover);
+    border-radius: 4px;
+    color: var(--muted);
+    font-family: var(--mono);
+    font-size: 11px;
+    padding: 4px 6px;
+    outline: none;
+    text-align: center;
+  }
+  .add-time-input:focus { border-color: rgba(200,240,77,0.4); color: var(--accent); }
+  .add-fire-toggle {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    cursor: pointer;
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--muted);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 4px 8px;
+    border: 1px solid var(--border-hover);
+    border-radius: 4px;
+    transition: all .15s;
+    user-select: none;
+    background: transparent;
+  }
+  .add-fire-toggle.active { border-color: rgba(255,107,61,0.4); color: var(--fire); background: var(--fire-dim); }
+  .add-btn {
+    padding: 5px 14px;
+    background: var(--accent);
+    color: #0B0D11;
+    border: none;
+    border-radius: 4px;
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: opacity .15s;
+  }
+  .add-btn:hover { opacity: 0.85; }
+
+  /* FOOTER */
+  .footer {
+    margin-top: 40px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .footer-total {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--muted);
+  }
+  .footer-total span { color: var(--accent); }
+  .clear-btn {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--muted);
+    background: none;
+    border: none;
+    cursor: pointer;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    transition: color .15s;
+  }
+  .clear-btn:hover { color: var(--fire); }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="header">
+    <div class="header-top">
+      <div>
+        <div class="header-label">Task tracker · week sprint</div>
+        <div class="header-title">Планы <span>/ до пятницы</span></div>
+      </div>
+    </div>
+    <div class="stats">
+      <div class="stat">
+        <span class="stat-val fire" id="s-fire">5</span>
+        <span class="stat-label">горит</span>
+      </div>
+      <div class="stat">
+        <span class="stat-val" id="s-remain">11</span>
+        <span class="stat-label">осталось</span>
+      </div>
+      <div class="stat">
+        <span class="stat-val accent" id="s-time">12ч 20м</span>
+        <span class="stat-label">оценка</span>
+      </div>
+      <div class="stat">
+        <span class="stat-val" id="s-done">0</span>
+        <span class="stat-label">готово</span>
+      </div>
+    </div>
+    <div class="progress-bar"><div class="progress-fill" id="progress"></div></div>
+  </div>
+
+  <div class="section" id="section-fire">
+    <div class="section-header">
+      <div class="section-dot"></div>
+      <div class="section-title">Горит</div>
+      <div class="section-count" id="fire-count">5 задач</div>
+    </div>
+    <div id="fire-list"></div>
+  </div>
+
+  <div class="section" id="section-normal">
+    <div class="section-header">
+      <div class="section-dot normal"></div>
+      <div class="section-title">Остальное</div>
+      <div class="section-count" id="normal-count">6 задач</div>
+    </div>
+    <div id="normal-list"></div>
+  </div>
+
+  <!-- ADD FORM -->
+  <div class="add-form">
+    <input class="add-input" id="new-text" placeholder="Новая задача..." />
+    <select class="add-select" id="new-tag">
+      <option value="product">продукт</option>
+      <option value="event">событие</option>
+      <option value="people">люди</option>
+    </select>
+    <input class="add-time-input" id="new-time" placeholder="30 мин" />
+    <button class="add-fire-toggle" id="fire-toggle" onclick="toggleFire()">🔥 горит</button>
+    <button class="add-btn" onclick="addTask()">+ добавить</button>
+  </div>
+
+  <div class="footer">
+    <div class="footer-total" id="footer-total">Осталось времени: <span>—</span></div>
+    <button class="clear-btn" onclick="clearDone()">× очистить выполненные</button>
+  </div>
+
+</div>
+
+<script>
+const TIME_STEPS = [5,10,15,20,30,45,60,90,120,150,180,240,300];
+
+function fmt(mins) {
+  if (mins < 60) return mins + 'м';
+  const h = Math.floor(mins/60), m = mins%60;
+  return m ? h + 'ч ' + m + 'м' : h + 'ч';
+}
+
+let tasks = [
+  {id:1, text:'Написать Наде — билеты + материалы для мероприятия', fire:true,  tag:'event',   mins:15,  done:false},
+  {id:2, text:'Выкатить эксперимент двойного прикладывания',         fire:true,  tag:'product', mins:30,  done:false},
+  {id:3, text:'Дизайн эксперимента ИИ-сервиса',                     fire:true,  tag:'product', mins:120, done:false},
+  {id:4, text:'Поставить встречу с Катей для презентации результатов',fire:true, tag:'people',  mins:5,   done:false},
+  {id:5, text:'Дизайн профайлера для Ани',                           fire:true,  tag:'people',  mins:180, done:false},
+  {id:6, text:'Зафиналить презентацию для мероприятия',              fire:false, tag:'event',   mins:120, done:false},
+  {id:7, text:'Направить презентацию дизайнеру',                     fire:false, tag:'event',   mins:10,  done:false},
+  {id:8, text:'Сделать презентацию результатов для Кати',            fire:false, tag:'people',  mins:120, done:false},
+  {id:9, text:'Показать дизайн профайлера Кириллу',                  fire:false, tag:'people',  mins:30,  done:false},
+  {id:10,text:'Отдать дизайн профайлера Кате',                       fire:false, tag:'people',  mins:15,  done:false},
+  {id:11,text:'Погрузить Мишу в проекты',                            fire:false, tag:'people',  mins:60,  done:false},
+];
+
+let fireToggleActive = false;
+let nextId = 20;
+const tagLabels = {product:'продукт', event:'событие', people:'люди'};
+
+function toggleFire() {
+  fireToggleActive = !fireToggleActive;
+  document.getElementById('fire-toggle').classList.toggle('active', fireToggleActive);
+}
+
+function changeTime(id, dir) {
+  const t = tasks.find(x=>x.id===id);
+  const idx = TIME_STEPS.indexOf(t.mins);
+  if (dir > 0 && idx < TIME_STEPS.length-1) t.mins = TIME_STEPS[idx+1];
+  else if (dir < 0 && idx > 0) t.mins = TIME_STEPS[idx-1];
+  else if (idx === -1) {
+    const nearest = TIME_STEPS.reduce((a,b)=>Math.abs(b-t.mins)<Math.abs(a-t.mins)?b:a);
+    const ni = TIME_STEPS.indexOf(nearest);
+    if (dir>0) t.mins = TIME_STEPS[Math.min(ni+1,TIME_STEPS.length-1)];
+    else t.mins = TIME_STEPS[Math.max(ni-1,0)];
+  }
+  render();
+}
+
+function startEditTime(id) {
+  const t = tasks.find(x=>x.id===id);
+  const el = document.getElementById('time-disp-'+id);
+  const wrap = document.getElementById('time-wrap-'+id);
+  const inp = document.createElement('input');
+  inp.className = 'time-input';
+  inp.value = fmt(t.mins);
+  inp.style.width = '60px';
+  el.replaceWith(inp);
+  inp.focus();
+  inp.select();
+  function save() {
+    const raw = inp.value.trim();
+    const parsed = parseTime(raw);
+    if (parsed > 0) t.mins = parsed;
+    render();
+  }
+  inp.addEventListener('blur', save);
+  inp.addEventListener('keydown', e => { if (e.key==='Enter') save(); if (e.key==='Escape') render(); });
+}
+
+function parseTime(str) {
+  str = str.toLowerCase().replace(/\s/g,'');
+  let m = 0;
+  const hMatch = str.match(/(\d+)[чh]/);
+  const mMatch = str.match(/(\d+)[мm]/);
+  if (hMatch) m += parseInt(hMatch[1])*60;
+  if (mMatch) m += parseInt(mMatch[1]);
+  if (!hMatch && !mMatch) {
+    const n = parseInt(str);
+    if (!isNaN(n)) m = n;
+  }
+  return m;
+}
+
+function toggleDone(id) {
+  const t = tasks.find(x=>x.id===id);
+  t.done = !t.done;
+  render();
+}
+
+function deleteTask(id) {
+  tasks = tasks.filter(x=>x.id!==id);
+  render();
+}
+
+function addTask() {
+  const text = document.getElementById('new-text').value.trim();
+  if (!text) return;
+  const tag = document.getElementById('new-tag').value;
+  const timeStr = document.getElementById('new-time').value.trim();
+  const mins = timeStr ? (parseTime(timeStr)||30) : 30;
+  tasks.push({ id: nextId++, text, fire: fireToggleActive, tag, mins, done: false });
+  document.getElementById('new-text').value = '';
+  document.getElementById('new-time').value = '';
+  fireToggleActive = false;
+  document.getElementById('fire-toggle').classList.remove('active');
+  render();
+}
+
+function clearDone() {
+  tasks = tasks.filter(x=>!x.done);
+  render();
+}
+
+document.getElementById('new-text').addEventListener('keydown', e => {
+  if (e.key === 'Enter') addTask();
+});
+
+function makeTaskEl(t) {
+  const div = document.createElement('div');
+  div.className = 'task' + (t.fire && !t.done ? ' fire-task' : '') + (t.done ? ' done-task' : '');
+  div.innerHTML = `
+    <div class="cb${t.done?' checked':''}" onclick="toggleDone(${t.id})"></div>
+    <div class="task-main">
+      <input class="task-text" value="${t.text.replace(/"/g,'&quot;')}" 
+        onblur="updateText(${t.id}, this.value)"
+        onkeydown="if(event.key==='Enter'){this.blur()}" />
+      <div class="badges">
+        ${t.fire ? '<span class="fire-badge">горит</span>' : ''}
+        <span class="tag tag-${t.tag}">${tagLabels[t.tag]}</span>
+      </div>
+    </div>
+    <div class="time-wrap" id="time-wrap-${t.id}">
+      <button class="time-btn" onclick="changeTime(${t.id},-1)">−</button>
+      <div class="time-display" id="time-disp-${t.id}" onclick="startEditTime(${t.id})">${fmt(t.mins)}</div>
+      <button class="time-btn" onclick="changeTime(${t.id},1)">+</button>
+    </div>
+    <button class="delete-btn" onclick="deleteTask(${t.id})">×</button>
+  `;
+  return div;
+}
+
+function updateText(id, val) {
+  const t = tasks.find(x=>x.id===id);
+  if (t) t.text = val;
+}
+
+function render() {
+  const fireList = document.getElementById('fire-list');
+  const normalList = document.getElementById('normal-list');
+  fireList.innerHTML = '';
+  normalList.innerHTML = '';
+
+  const fireTasks = tasks.filter(x=>x.fire);
+  const normalTasks = tasks.filter(x=>!x.fire);
+
+  fireTasks.forEach(t => fireList.appendChild(makeTaskEl(t)));
+  normalTasks.forEach(t => normalList.appendChild(makeTaskEl(t)));
+
+  const totalTasks = tasks.length;
+  const doneTasks = tasks.filter(x=>x.done).length;
+  const remainTasks = totalTasks - doneTasks;
+  const fireCount = fireTasks.filter(x=>!x.done).length;
+  const remainMins = tasks.filter(x=>!x.done).reduce((s,x)=>s+x.mins,0);
+  const totalMins = tasks.reduce((s,x)=>s+x.mins,0);
+
+  document.getElementById('s-fire').textContent = fireCount;
+  document.getElementById('s-remain').textContent = remainTasks;
+  document.getElementById('s-done').textContent = doneTasks;
+  document.getElementById('s-time').textContent = fmt(totalMins);
+  document.getElementById('progress').style.width = totalTasks ? (doneTasks/totalTasks*100)+'%' : '0%';
+  document.getElementById('fire-count').textContent = fireTasks.length + ' ' + declension(fireTasks.length,'задача','задачи','задач');
+  document.getElementById('normal-count').textContent = normalTasks.length + ' ' + declension(normalTasks.length,'задача','задачи','задач');
+  document.getElementById('footer-total').innerHTML = 'Осталось: <span>' + fmt(remainMins) + '</span> из ' + fmt(totalMins);
+}
+
+function declension(n, one, two, five) {
+  const mod10 = n%10, mod100 = n%100;
+  if (mod100>=11&&mod100<=19) return five;
+  if (mod10===1) return one;
+  if (mod10>=2&&mod10<=4) return two;
+  return five;
+}
+
+render();
+</script>
+</body>
+</html>
