@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>Лекарства</title>
+<title>Лекарства · Этап 2</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet">
 <style>
@@ -28,6 +28,10 @@
   --amber:     #f5a623;
   --amber-bg:  rgba(245, 166, 35, 0.08);
   --amber-bdr: rgba(245, 166, 35, 0.22);
+
+  --blue:      #5b9cf6;
+  --blue-bg:   rgba(91, 156, 246, 0.08);
+  --blue-bdr:  rgba(91, 156, 246, 0.22);
 
   --mono: 'DM Mono', monospace;
   --sans: 'DM Sans', sans-serif;
@@ -119,6 +123,55 @@ body {
   transition: width 0.5s cubic-bezier(0.25, 1, 0.5, 1);
 }
 
+/* ─── COURSE PILLS ────────────────────────── */
+.pills {
+  margin: 0 22px 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+.pills-label {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text3);
+  margin-bottom: 4px;
+}
+.pill-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.pill-name {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text2);
+  min-width: 100px;
+}
+.pill-track {
+  flex: 1;
+  height: 3px;
+  background: var(--border);
+  border-radius: 2px;
+  overflow: hidden;
+}
+.pill-fill {
+  height: 100%;
+  border-radius: 2px;
+  background: var(--blue);
+  transition: width 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+}
+.pill-fill.green { background: var(--green); }
+.pill-fill.amber { background: var(--amber); }
+.pill-days {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--text3);
+  min-width: 32px;
+  text-align: right;
+}
+
 /* ─── DAY STRIP ──────────────────────────── */
 .strip-section {
   padding: 0 22px;
@@ -187,7 +240,6 @@ body {
 .dchip.is-complete .dchip-num { color: var(--green); }
 .dchip.is-complete .dchip-mo  { color: rgba(60,232,122,0.5); }
 
-/* check icon in complete chip */
 .dchip-check {
   display: none;
   width: 10px;
@@ -241,26 +293,26 @@ body {
 }
 .day-mini-bar .bar-track { background: var(--surface); }
 
-/* ─── SPECIAL NOTE ───────────────────────── */
-.special {
+/* ─── INFO NOTE ──────────────────────────── */
+.info-note {
   margin: 0 22px 18px;
   padding: 13px 14px;
-  background: var(--amber-bg);
-  border: 1px solid var(--amber-bdr);
+  background: var(--blue-bg);
+  border: 1px solid var(--blue-bdr);
   border-radius: var(--r-sm);
   display: flex;
   gap: 10px;
   align-items: flex-start;
 }
-.special-ico {
+.info-note-ico {
   font-size: 14px;
   flex-shrink: 0;
   margin-top: 1px;
 }
-.special-txt {
+.info-note-txt {
   font-size: 12.5px;
   line-height: 1.5;
-  color: var(--amber);
+  color: var(--blue);
 }
 
 /* ─── MED SECTION ────────────────────────── */
@@ -312,7 +364,6 @@ body {
   align-items: center;
   justify-content: center;
   transition: background 0.2s, border-color 0.2s;
-  position: relative;
 }
 .cc-svg {
   opacity: 0;
@@ -429,6 +480,25 @@ body {
 .day-content {
   animation: fadeSlide 0.22s ease both;
 }
+
+/* ─── STRIP SCROLL WRAPPER ───────────────── */
+.strip-wrap {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  margin: 0 -22px;
+  padding: 0 22px;
+}
+.strip-wrap::-webkit-scrollbar { display: none; }
+.strip {
+  display: flex;
+  gap: 6px;
+  width: max-content;
+}
+.dchip {
+  width: 46px;
+  min-width: 46px;
+}
 </style>
 </head>
 <body>
@@ -438,43 +508,72 @@ body {
 // ═══════════════════════════════════════════
 //  DATA
 // ═══════════════════════════════════════════
-const START_DATE = new Date(2026, 4, 17); // May 17 2026
-const TOTAL_DAYS = 7;
+const START_DATE = new Date(2026, 4, 31); // 31 мая 2026
+const TOTAL_DAYS = 20; // Урсосан — самый длинный курс
 
-const BASE = {
-  morning: [
-    { id: 'pant',   name: 'Пантапразол',   dose: '1 табл', note: 'за 30 мин до еды' },
-    { id: 'amox_m', name: 'Амоксицилин',   dose: '1 табл', note: 'до еды' },
-    { id: 'lac_m',  name: 'Лацидофил',     dose: '1 капс', note: 'после еды' },
-  ],
-  lunch: [
-    { id: 'clar',   name: 'Кларитромицин', dose: '1 табл', note: 'после обеда' },
-  ],
-  evening: [
-    { id: 'amox_e', name: 'Амоксицилин',   dose: '1 табл', note: 'до еды' },
-    { id: 'lac_e',  name: 'Лацидофил',     dose: '1 капс', note: 'после еды' },
-  ],
-};
+// Каждый приём имеет уникальный id
+// Улькавис и Креон — только дни 1–14
+// Пантапразол и Урсосан — все 20 дней
 
-function getSchedule(di) { // di = day index 0-6
+function getSchedule(di) {
   const dayNum = di + 1;
-  const s = {
-    morning: [...BASE.morning.map(m => ({...m}))],
-    lunch:   [...BASE.lunch.map(m => ({...m}))],
-    evening: [...BASE.evening.map(m => ({...m}))],
-  };
-  if (dayNum === 5) {
-    s.morning = [
-      { id: 'fluc', name: 'Флуконазол', dose: '1 табл', note: 'однократно' },
-      ...s.morning,
-    ];
+  const withUlk  = dayNum <= 14; // Улькавис
+  const withKreon = dayNum <= 14; // Креон
+
+  const schedule = {};
+
+  // Утро: за 30 мин до завтрака
+  schedule.morning = [
+    { id: 'pant', name: 'Пантапразол', dose: '1 табл', note: 'за 30 мин до завтрака' },
+  ];
+  if (withUlk) {
+    schedule.morning.push({ id: 'ulk_m', name: 'Улькавис', dose: '2 табл', note: 'за 30 мин до завтрака' });
   }
-  return s;
+
+  // Завтрак: во время еды
+  if (withKreon) {
+    schedule.breakfast = [
+      { id: 'kreon_m', name: 'Креон 10000', dose: '1 капс', note: 'во время завтрака' },
+    ];
+  } else {
+    schedule.breakfast = null;
+  }
+
+  // Вечер: за 30 мин до ужина
+  if (withUlk) {
+    schedule.evening = [
+      { id: 'ulk_e', name: 'Улькавис', dose: '2 табл', note: 'за 30 мин до ужина' },
+    ];
+  } else {
+    schedule.evening = null;
+  }
+
+  // Ужин: во время еды
+  if (withKreon) {
+    schedule.dinner = [
+      { id: 'kreon_e', name: 'Креон 10000', dose: '1 капс', note: 'во время ужина' },
+    ];
+  } else {
+    schedule.dinner = null;
+  }
+
+  // Ночь: перед сном
+  schedule.night = [
+    { id: 'urs', name: 'Урсосан 250 мг', dose: '2 капс', note: 'перед сном' },
+  ];
+
+  return schedule;
 }
 
 function allMeds(di) {
   const s = getSchedule(di);
-  return [...s.morning, ...s.lunch, ...s.evening];
+  const result = [];
+  if (s.morning)   result.push(...s.morning);
+  if (s.breakfast) result.push(...s.breakfast);
+  if (s.evening)   result.push(...s.evening);
+  if (s.dinner)    result.push(...s.dinner);
+  if (s.night)     result.push(...s.night);
+  return result;
 }
 
 // ═══════════════════════════════════════════
@@ -483,7 +582,7 @@ function allMeds(di) {
 function storageKey(di) {
   const d = new Date(START_DATE);
   d.setDate(START_DATE.getDate() + di);
-  return `rx_${d.getFullYear()}_${String(d.getMonth()+1).padStart(2,'0')}_${String(d.getDate()).padStart(2,'0')}`;
+  return `rx2_${d.getFullYear()}_${String(d.getMonth()+1).padStart(2,'0')}_${String(d.getDate()).padStart(2,'0')}`;
 }
 
 function getTaken(di) {
@@ -563,9 +662,9 @@ function render() {
   // — Header
   const hdr = el('div', 'hdr');
   hdr.innerHTML = `
-    <div class="hdr-eyebrow">Курс лечения · 7 дней</div>
+    <div class="hdr-eyebrow">Этап 2 · 20 дней</div>
     <div class="hdr-title">Лекарства</div>
-    <div class="hdr-sub">17.05 — 23.05.2026</div>
+    <div class="hdr-sub">31.05 — 19.06.2026</div>
   `;
   app.appendChild(hdr);
 
@@ -583,10 +682,39 @@ function render() {
   `;
   app.appendChild(gbar);
 
+  // — Course pills legend
+  const pills = el('div', 'pills');
+  const currentDay = Math.min(todayDi + 1, TOTAL_DAYS);
+  pills.innerHTML = `
+    <div class="pills-label">Курсы препаратов</div>
+    <div class="pill-row">
+      <span class="pill-name">Пантапразол</span>
+      <div class="pill-track"><div class="pill-fill amber" style="width:${Math.min((currentDay/TOTAL_DAYS)*100,100)}%"></div></div>
+      <span class="pill-days">20 дн</span>
+    </div>
+    <div class="pill-row">
+      <span class="pill-name">Улькавис</span>
+      <div class="pill-track"><div class="pill-fill green" style="width:${Math.min((currentDay/14)*100,100)}%"></div></div>
+      <span class="pill-days">14 дн</span>
+    </div>
+    <div class="pill-row">
+      <span class="pill-name">Креон 10000</span>
+      <div class="pill-track"><div class="pill-fill green" style="width:${Math.min((currentDay/14)*100,100)}%"></div></div>
+      <span class="pill-days">14 дн</span>
+    </div>
+    <div class="pill-row">
+      <span class="pill-name">Урсосан</span>
+      <div class="pill-track"><div class="pill-fill" style="width:${Math.min((currentDay/TOTAL_DAYS)*100,100)}%"></div></div>
+      <span class="pill-days">20 дн</span>
+    </div>
+  `;
+  app.appendChild(pills);
+
   // — Day strip
   const stripSec = el('div', 'strip-section');
   const stripLbl = el('div', 'strip-label');
   stripLbl.textContent = 'По дням';
+  const stripWrap = el('div', 'strip-wrap');
   const strip = el('div', 'strip');
 
   for (let i = 0; i < TOTAL_DAYS; i++) {
@@ -603,12 +731,16 @@ function render() {
       <span class="dchip-num">${d.getDate()}</span>
       <span class="dchip-mo">${MONTHS_SH[d.getMonth()]}</span>
     `;
-    chip.addEventListener('click', () => { selectedDi = i; render(); });
+    chip.addEventListener('click', () => {
+      selectedDi = i;
+      render();
+    });
     strip.appendChild(chip);
   }
 
+  stripWrap.appendChild(strip);
   stripSec.appendChild(stripLbl);
-  stripSec.appendChild(strip);
+  stripSec.appendChild(stripWrap);
   app.appendChild(stripSec);
 
   // — Divider
@@ -618,6 +750,14 @@ function render() {
   const content = el('div', 'day-content');
   renderDayContent(content, selectedDi);
   app.appendChild(content);
+
+  // Scroll selected chip into view
+  setTimeout(() => {
+    const chips = document.querySelectorAll('.dchip');
+    if (chips[selectedDi]) {
+      chips[selectedDi].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+    }
+  }, 50);
 }
 
 function renderDayContent(wrap, di) {
@@ -643,7 +783,6 @@ function renderDayContent(wrap, di) {
   `;
   wrap.appendChild(dhdr);
 
-  // Mini progress bar for current day
   if (!complete && !future) {
     const miniBar = el('div', 'day-mini-bar');
     miniBar.innerHTML = `
@@ -654,7 +793,6 @@ function renderDayContent(wrap, di) {
     wrap.appendChild(miniBar);
   }
 
-  // Future placeholder
   if (future) {
     const ph = el('div', 'future-ph');
     ph.innerHTML = `<div class="future-ph-ico">○</div><div class="future-ph-text">Ещё не наступил</div>`;
@@ -662,25 +800,25 @@ function renderDayContent(wrap, di) {
     return;
   }
 
-  // Day 5 special note
-  if (dayNum === 5) {
-    const note = el('div', 'special');
+  // Инфо-нота: смена состава с дня 15
+  if (dayNum === 15) {
+    const note = el('div', 'info-note');
     note.innerHTML = `
-      <span class="special-ico">⚡</span>
-      <span class="special-txt"><strong>День 5:</strong> дополнительно принять Флуконазол — 1 таблетку</span>
+      <span class="info-note-ico">ℹ️</span>
+      <span class="info-note-txt"><strong>С сегодня:</strong> Улькавис и Креон завершены. Продолжаем Пантапразол + Урсосан до конца курса.</span>
     `;
     wrap.appendChild(note);
   }
 
-  // Med sections
   const s = getSchedule(di);
   const taken = getTaken(di);
 
-  renderSection(wrap, 'Утро',  s.morning, di, taken);
-  renderSection(wrap, 'Обед',  s.lunch,   di, taken);
-  renderSection(wrap, 'Вечер', s.evening, di, taken);
+  renderSection(wrap, '☀ Утро · до завтрака',     s.morning,   di, taken);
+  if (s.breakfast) renderSection(wrap, '🍳 Завтрак · во время еды', s.breakfast, di, taken);
+  if (s.evening)   renderSection(wrap, '🌆 Вечер · до ужина',        s.evening,   di, taken);
+  if (s.dinner)    renderSection(wrap, '🍽 Ужин · во время еды',      s.dinner,    di, taken);
+  renderSection(wrap, '🌙 Перед сном',             s.night,     di, taken);
 
-  // All done card
   if (complete) {
     const allDone = el('div', 'all-done');
     allDone.innerHTML = `
@@ -693,6 +831,7 @@ function renderDayContent(wrap, di) {
 }
 
 function renderSection(wrap, label, meds, di, taken) {
+  if (!meds || meds.length === 0) return;
   const sec = el('div', 'med-section');
 
   const lbl = el('div', 'sec-lbl');
